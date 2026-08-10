@@ -26,6 +26,9 @@ defineProps<{ siteName: string, tagline: string }>()
   text-align: center;
   padding: 2rem;
 }
+.home-hero__content {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
 .home-hero__title {
   font-family: 'Veneer', Georgia, serif;
   font-size: clamp(2.5rem, 6vw, 4.5rem);
