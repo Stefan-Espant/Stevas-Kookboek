@@ -13,7 +13,9 @@ export function useRecipes() {
 
   async function getLatestRecipes(limit = 6): Promise<RecipeSummary[]> {
     const slugs = await getSitemapSlugs()
-    const pages = await Promise.all(slugs.map((slug) => getPage(slug)))
+    const pages = await Promise.all(
+      slugs.map((slug) => getPage(slug).catch(() => null))
+    )
 
     const recipes: RecipeSummary[] = []
     for (const page of pages) {
