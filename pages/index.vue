@@ -1,10 +1,12 @@
 <script setup lang="ts">
-const { getPage, getSiteSettings } = useCms()
+import type { CentaurSiteSettings } from '~/composables/useCms'
+
+const { getPage } = useCms()
 const { getLatestRecipes } = useRecipes()
 
-const [{ data: page }, { data: site }, { data: recipes }] = await Promise.all([
+const { data: site } = useNuxtData<CentaurSiteSettings | null>('site-settings')
+const [{ data: page }, { data: recipes }] = await Promise.all([
   useAsyncData('page-home', () => getPage('home')),
-  useAsyncData('site-settings', () => getSiteSettings()),
   useAsyncData('latest-recipes', () => getLatestRecipes(6))
 ])
 

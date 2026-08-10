@@ -1,6 +1,7 @@
 <script setup lang="ts">
-const { getSiteSettings } = useCms()
-const { data: site } = await useAsyncData('site-settings', () => getSiteSettings())
+import type { CentaurSiteSettings } from '~/composables/useCms'
+
+const { data: site } = useNuxtData<CentaurSiteSettings | null>('site-settings')
 </script>
 
 <template>

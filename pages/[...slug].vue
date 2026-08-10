@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { CentaurSiteSettings } from '~/composables/useCms'
+
 const route = useRoute()
-const { getPage, getBlockTypes, getSiteSettings } = useCms()
+const { getPage, getBlockTypes } = useCms()
 
 const slug = computed(() =>
   Array.isArray(route.params.slug)
@@ -8,10 +10,10 @@ const slug = computed(() =>
     : route.params.slug || 'home'
 )
 
-const [{ data: page }, { data: blockTypes }, { data: site }] = await Promise.all([
+const { data: site } = useNuxtData<CentaurSiteSettings | null>('site-settings')
+const [{ data: page }, { data: blockTypes }] = await Promise.all([
   useAsyncData(`page-${slug.value}`, () => getPage(slug.value)),
-  useAsyncData('block-types', () => getBlockTypes()),
-  useAsyncData('site-settings', () => getSiteSettings())
+  useAsyncData('block-types', () => getBlockTypes())
 ])
 
 if (!page.value) {
