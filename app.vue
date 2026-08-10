@@ -29,7 +29,9 @@ useHead(() => ({
   <div :style="site?.primaryColor ? { '--brand-primary': site.primaryColor } : {}">
     <MaintenanceScreen v-if="site?.maintenanceMode" :message="site.maintenanceMessage" :site-name="site.siteName" />
     <template v-else>
-      <NuxtPage />
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
       <CookieBanner
         v-if="site"
         :enabled="site.cookieBannerEnabled"

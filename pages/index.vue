@@ -18,7 +18,6 @@ useHead(() => ({
 
 <template>
   <div class="home">
-    <SiteHeader :site-name="site?.siteName ?? ''" />
     <HomeHero :site-name="site?.siteName ?? ''" :tagline="site?.tagline ?? ''" />
     <section class="home__recipes">
       <h2 class="home__recipes-title">Nieuwste recepten</h2>
@@ -27,13 +26,6 @@ useHead(() => ({
       </div>
       <p v-else class="home__recipes-empty">Binnenkort verschijnen hier de eerste recepten!</p>
     </section>
-    <SiteFooter
-      :site-name="site?.siteName ?? ''"
-      :instagram="site?.instagram ?? ''"
-      :facebook="site?.facebook ?? ''"
-      :linked-in="site?.linkedIn ?? ''"
-      :twitter="site?.twitter ?? ''"
-    />
   </div>
 </template>
 
