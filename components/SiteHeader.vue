@@ -8,7 +8,7 @@ defineProps<{ siteName: string }>()
       <img src="/logo.svg" alt="" class="site-header__logo" />
       <span class="site-header__name">{{ siteName }}</span>
     </NuxtLink>
-    <nav class="site-header__nav">
+    <nav class="site-header__nav" aria-label="Hoofdnavigatie">
       <NuxtLink to="/">Home</NuxtLink>
       <NuxtLink to="/recepten">Recepten</NuxtLink>
       <NuxtLink to="/over">Over</NuxtLink>
