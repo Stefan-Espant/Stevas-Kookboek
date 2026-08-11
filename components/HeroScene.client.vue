@@ -100,7 +100,16 @@ async function setupScene() {
   camera = new three.PerspectiveCamera(50, width / height, 0.1, 100)
   camera.position.set(0, 0, 12)
 
-  renderer = new three.WebGLRenderer({ canvas, alpha: true, antialias: true })
+  try {
+    renderer = new three.WebGLRenderer({ canvas, alpha: true, antialias: true })
+  } catch {
+    // Genuinely no WebGL support (not the reduced-motion case, which never
+    // gets here). Fail silently: the canvas stays empty and the CSS
+    // gradient on .home-hero remains the visible result.
+    scene = null
+    camera = null
+    return
+  }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
   renderer.setSize(width, height, false)
 
