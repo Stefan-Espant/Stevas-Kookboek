@@ -12,7 +12,11 @@ let animationFrameId: number | null = null
 let isUnmounted = false
 
 interface FallingShape {
-  mesh: THREE.Mesh
+  // A Group so multi-mesh pieces (fruit body + stem) fall/rotate/dispose as
+  // one unit. Single-mesh pieces (bread, meat, rice) are still wrapped in a
+  // Group of one child, purely for structural consistency with the fruit
+  // case — it keeps the animation and disposal code uniform for every kind.
+  object: THREE.Group
   fallSpeed: number
   rotationSpeed: { x: number; y: number; z: number }
   topBound: number
@@ -21,19 +25,16 @@ interface FallingShape {
 
 const shapes: FallingShape[] = []
 
-// Warm, food-appropriate palette that stays harmonious with the brand colours
-// (petrol #125668, coral #ef6a70, orange-coral #ff775c) plus a few extra
-// food-plausible hues (yellow, green, brown, cream).
-const PALETTE = [
-  0xef6a70, // coral (tomato/apple)
-  0xff775c, // orange-coral (orange/carrot)
-  0x125668, // petrol (accent, e.g. unripe fruit)
-  0xf4b942, // warm yellow (banana/bread crust)
-  0x8a9b4f, // olive green (herbs/vegetable)
-  0xa9652e, // brown (bread crust/meat)
-  0xf3e1c4, // cream (rice/bread crumb)
-  0xd94f4f  // deeper red (berries/meat)
-]
+// Per-food-type palettes. Kept separate (rather than one shared palette)
+// so bread reads as bread (tan/golden-brown), meat as meat (reddish-brown),
+// rice as rice (white/cream), while fruit/veg still spans the wider,
+// brand-harmonious range (petrol #125668, coral #ef6a70, orange-coral #ff775c
+// plus yellow/green/red).
+const FRUIT_COLORS = [0xef6a70, 0xff775c, 0x125668, 0xf4b942, 0x8a9b4f, 0xd94f4f]
+const BREAD_COLORS = [0xd7a25c, 0xc98a3f, 0xa9652e, 0xe0b96a]
+const MEAT_COLORS = [0xa9652e, 0x8b3a3a, 0x7a3b2e, 0xb5533f]
+const RICE_COLORS = [0xf3e1c4, 0xfaf6ec, 0xf7f0e3]
+const STEM_COLORS = [0x4a3520, 0x5a6b3a]
 
 function pick<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
@@ -43,36 +44,89 @@ function randomBetween(min: number, max: number): number {
   return min + Math.random() * (max - min)
 }
 
-function createShapeMesh(three: typeof THREE): THREE.Mesh {
+function standardMaterial(three: typeof THREE, color: number, roughnessRange: [number, number], metalness = 0.05) {
+  return new three.MeshStandardMaterial({
+    color,
+    roughness: randomBetween(roughnessRange[0], roughnessRange[1]),
+    metalness
+  })
+}
+
+function createFoodPiece(three: typeof THREE): THREE.Group {
   const kind = Math.random()
-  let geometry: THREE.BufferGeometry
+  const group = new three.Group()
 
   if (kind < 0.35) {
-    // Fruit / vegetable: sphere
+    // Fruit / vegetable: sphere body, slightly squashed (not a perfect
+    // ball) + a small stem on top so it reads as produce, not candy.
     const radius = randomBetween(0.35, 0.7)
-    geometry = new three.SphereGeometry(radius, 16, 12)
+    const squashY = 0.82 + Math.random() * 0.16
+
+    const body = new three.Mesh(
+      new three.SphereGeometry(radius, 16, 12),
+      standardMaterial(three, pick(FRUIT_COLORS), [0.6, 0.9])
+    )
+    body.scale.set(1, squashY, 1)
+    group.add(body)
+
+    const stemRadius = randomBetween(0.05, 0.08)
+    const stemHeight = randomBetween(0.15, 0.2)
+    const stem = new three.Mesh(
+      new three.CylinderGeometry(stemRadius, stemRadius, stemHeight, 6),
+      standardMaterial(three, pick(STEM_COLORS), [0.7, 0.9], 0.02)
+    )
+    stem.position.y = radius * squashY + stemHeight / 2
+    group.add(stem)
   } else if (kind < 0.55) {
-    // Bread loaf: elongated capsule
-    const radius = randomBetween(0.25, 0.4)
-    const height = randomBetween(0.5, 0.9)
-    geometry = new three.CapsuleGeometry(radius, height, 4, 8)
+    // Bread roll: a dome/cap cut from a sphere (thetaLength < PI) so it
+    // reads as a rounded bun silhouette instead of a full ball or a pill.
+    const radius = randomBetween(0.35, 0.55)
+    const thetaLength = Math.PI * randomBetween(0.55, 0.7)
+    const bread = new three.Mesh(
+      new three.SphereGeometry(radius, 16, 12, 0, Math.PI * 2, 0, thetaLength),
+      standardMaterial(three, pick(BREAD_COLORS), [0.7, 0.95], 0.02)
+    )
+    group.add(bread)
   } else if (kind < 0.75) {
-    // Meat chunk: irregular icosahedron
+    // Meat chunk: irregular icosahedron, flattened so it reads as a cut of
+    // meat rather than a gem-like faceted ball.
     const radius = randomBetween(0.35, 0.65)
-    geometry = new three.IcosahedronGeometry(radius, 0)
+    const meat = new three.Mesh(
+      new three.IcosahedronGeometry(radius, 0),
+      standardMaterial(three, pick(MEAT_COLORS), [0.55, 0.8])
+    )
+    meat.scale.set(1, 0.55, 0.85)
+    group.add(meat)
   } else {
-    // Rice grain: small sphere, higher quantity feel via small scale
+    // Rice grain: small sphere stretched along one axis into a grain shape.
     const radius = randomBetween(0.08, 0.16)
-    geometry = new three.SphereGeometry(radius, 8, 6)
+    const rice = new three.Mesh(
+      new three.SphereGeometry(radius, 8, 6),
+      standardMaterial(three, pick(RICE_COLORS), [0.5, 0.7], 0.02)
+    )
+    rice.scale.set(1.8, 0.6, 0.6)
+    group.add(rice)
   }
 
-  const material = new three.MeshStandardMaterial({
-    color: pick(PALETTE),
-    roughness: randomBetween(0.6, 0.9),
-    metalness: 0.05
-  })
+  return group
+}
 
-  return new three.Mesh(geometry, material)
+function disposeFoodPiece(object: THREE.Group) {
+  // Walk every descendant (traverse visits the object itself plus all
+  // children exactly once each) and dispose any mesh's geometry/material.
+  // Groups/plain Object3D nodes have no geometry/material so the optional
+  // chaining below is a no-op for them — nothing is skipped, nothing is
+  // disposed twice.
+  object.traverse((child) => {
+    const maybeMesh = child as Partial<THREE.Mesh>
+    maybeMesh.geometry?.dispose()
+    const material = maybeMesh.material
+    if (Array.isArray(material)) {
+      material.forEach(m => m.dispose())
+    } else {
+      material?.dispose()
+    }
+  })
 }
 
 function layoutBounds() {
@@ -122,21 +176,21 @@ async function setupScene() {
   const shapeCount = 23
 
   for (let i = 0; i < shapeCount; i++) {
-    const mesh = createShapeMesh(three)
-    mesh.position.set(
+    const object = createFoodPiece(three)
+    object.position.set(
       randomBetween(bounds.left, bounds.right),
       randomBetween(bounds.bottom, bounds.top),
       randomBetween(-4, 2)
     )
-    mesh.rotation.set(
+    object.rotation.set(
       randomBetween(0, Math.PI * 2),
       randomBetween(0, Math.PI * 2),
       randomBetween(0, Math.PI * 2)
     )
-    scene.add(mesh)
+    scene.add(object)
 
     shapes.push({
-      mesh,
+      object,
       fallSpeed: randomBetween(0.015, 0.045),
       rotationSpeed: {
         x: randomBetween(-0.01, 0.01),
@@ -150,14 +204,16 @@ async function setupScene() {
 
   const tick = () => {
     for (const shape of shapes) {
-      shape.mesh.position.y -= shape.fallSpeed
-      shape.mesh.rotation.x += shape.rotationSpeed.x
-      shape.mesh.rotation.y += shape.rotationSpeed.y
-      shape.mesh.rotation.z += shape.rotationSpeed.z
+      // Moving/rotating the Group as a whole keeps multi-mesh pieces (e.g.
+      // fruit body + stem) rigidly attached to each other.
+      shape.object.position.y -= shape.fallSpeed
+      shape.object.rotation.x += shape.rotationSpeed.x
+      shape.object.rotation.y += shape.rotationSpeed.y
+      shape.object.rotation.z += shape.rotationSpeed.z
 
-      if (shape.mesh.position.y < shape.bottomBound) {
-        shape.mesh.position.y = shape.topBound
-        shape.mesh.position.x = randomBetween(bounds.left, bounds.right)
+      if (shape.object.position.y < shape.bottomBound) {
+        shape.object.position.y = shape.topBound
+        shape.object.position.x = randomBetween(bounds.left, bounds.right)
       }
     }
 
@@ -194,13 +250,7 @@ function teardownScene() {
   }
 
   for (const shape of shapes) {
-    shape.mesh.geometry.dispose()
-    const material = shape.mesh.material
-    if (Array.isArray(material)) {
-      material.forEach(m => m.dispose())
-    } else {
-      material.dispose()
-    }
+    disposeFoodPiece(shape.object)
   }
   shapes.length = 0
 
