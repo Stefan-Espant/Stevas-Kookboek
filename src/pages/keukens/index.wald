@@ -1,0 +1,49 @@
+---
+import Layout from '../../layouts/Layout.wald'
+import PageHeader from '../../components/PageHeader.wald'
+import TileCard from '../../components/TileCard.wald'
+import { cuisineTile, getCuisines } from '../../lib/recipes'
+import { breadcrumbSchema, clipDescription, collectionSchema } from '../../lib/site'
+const cuisines = await getCuisines()
+const lead = 'Reis mee langs de keukens van Europa en daarbuiten. Kies een keuken en ontdek de recepten die erbij horen.'
+const description = clipDescription(`Recepten per keuken: ${cuisines.map(c => c.name).join(', ')}. ${lead}`)
+const schema = [
+  breadcrumbSchema([['Home', '/'], ['Keukens', '/keukens']]),
+  collectionSchema('Keukens', description, '/keukens', cuisines.map(c => [`De ${c.adjective} keuken`, `/keukens/${c.slug}`]))
+]
+const usedImages = new Set<string>()
+// Byzantium 12-kolomsgrid: 12 kolommen op mobiel, 6 vanaf sm, 4 vanaf lg.
+const cells = await Promise.all(cuisines.map(async (cuisine) =>
+  `<div class="byz-col-span-12 byz-col-span-sm-6 byz-col-span-lg-4">${await TileCard.render(cuisineTile(cuisine, usedImages))}</div>`
+))
+const gridHtml = cuisines.length
+  ? `<div class="cuisines__grid byz-grid byz-grid--12 byz-gap-lg">${cells.join('')}</div>`
+  : '<p class="cuisines__empty">Binnenkort verschijnen hier de eerste keukens!</p>'
+---
+<Layout title="Recepten per keuken" description={description} path="/keukens" schema={schema}>
+  <main class="cuisines">
+    <PageHeader kicker="Keukens" title="Kook de wereld rond" lead={lead} />
+    {new SafeHtml(gridHtml)}
+  </main>
+</Layout>
+
+<style>
+/* Grid en lege staat zijn conditioneel, dus in de frontmatter opgebouwd — genest onder de gescopete main. */
+.cuisines {
+  max-width: var(--steva-pagina-breedte);
+  margin: 0 auto;
+  padding: var(--byz-space-12) var(--steva-pagina-marge) var(--byz-space-24);
+
+  & .cuisines__empty {
+    color: var(--byz-color-text-secondary);
+    font-family: var(--steva-font-script);
+    font-size: var(--byz-text-xl);
+    text-align: center;
+  }
+  @media (min-width: 1024px) {
+    & .cuisines__grid {
+      gap: var(--byz-space-10);
+    }
+  }
+}
+</style>

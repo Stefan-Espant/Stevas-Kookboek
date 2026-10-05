@@ -1,0 +1,499 @@
+---
+import type { Recipe } from '../lib/recipes'
+import { absoluteUrl, siteUrl } from '../lib/site'
+import { formatQuantity, forms, ingredientText } from '../lib/quantity'
+type Props = { recipe: Recipe }
+const { recipe } = $$props
+const { title, image, imageAlt, prepTime, cookTime, servings, difficulty, tags } = recipe
+const stripHtml = (html: string) => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+
+const facts = [
+  prepTime ? ['Voorbereiding', `${prepTime} min`] : null,
+  cookTime ? ['Bereiding', `${cookTime} min`] : null,
+  prepTime && cookTime ? ['Totaal', `${prepTime + cookTime} min`] : null,
+  servings ? ['Personen', String(servings)] : null,
+  difficulty ? ['Niveau', difficulty] : null
+].filter((fact): fact is string[] => fact !== null)
+
+// Conditionele stukken worden als string opgebouwd (geen if/each in Wald-templates);
+// de styling ervan staat genest onder gescopete containers, zie de <style> hieronder.
+// Zonder foto in Centaur: placeholder in de huisstijl (marmertextuur uit het ontwerp + logo).
+const imageHtml = image
+  ? renderTemplate`<img src="${image}" alt="${imageAlt}" class="recipe__image">`
+  : '<div class="recipe__image recipe__image--placeholder" role="img" aria-label="Nog geen foto"><img src="/logo-steva.svg" alt=""></div>'
+const factsHtml = facts
+  .map(([label, value]) => renderTemplate`<div class="recipe__fact"><dt>${label}</dt><dd>${value}</dd></div>`)
+  .join('')
+const cuisineHtml = recipe.cuisine
+  ? renderTemplate`<a class="recipe__cuisine" href="/keukens/${recipe.cuisine.slug}">${recipe.cuisine.adjective} keuken</a>`
+  : ''
+const tagsHtml = tags.length
+  ? renderTemplate`<ul class="recipe__tags" aria-label="Tags">${new SafeHtml(tags.map(tag => renderTemplate`<li>${tag}</li>`).join(''))}</ul>`
+  : ''
+// Richtext (intro, tips) komt van je eigen CMS-redacteuren en wordt ongesaneerd gerenderd.
+const tipsHtml = recipe.tipsHtml
+  ? renderTemplate`<section class="recipe__tips"><h2 class="recipe__heading">Tips &amp; variaties</h2>${new SafeHtml(recipe.tipsHtml)}</section>`
+  : ''
+
+// Ingrediënten per groep. Elke regel heeft de hoeveelheid, eenheid en naam in een eigen element
+// met beide vormen (data-one/data-many), zodat de personen-rekentool hieronder alleen hoeft te
+// kiezen: "1 teen knoflook" ↔ "2 tenen knoflook", "1 sjalot" ↔ "2 sjalotten".
+const ingredientLine = (ingredient: Recipe['ingredients'][number]) => {
+  const f = forms(ingredient)
+  const many = ingredient.quantity !== null && ingredient.quantity > 1
+  const qty = ingredient.quantity !== null
+    ? renderTemplate`<span class="recipe__qty" data-base="${ingredient.quantity}">${formatQuantity(ingredient.quantity)}</span> `
+    : ''
+  const unit = ingredient.unit
+    ? renderTemplate`<span class="recipe__unit" data-one="${f.unitOne}" data-many="${f.unitMany}">${many ? f.unitMany : f.unitOne}</span> `
+    : ''
+  const name = renderTemplate`<span class="recipe__name" data-one="${f.nameOne}" data-many="${f.nameMany}">${many ? f.nameMany : f.nameOne}</span>`
+  const note = ingredient.note ? renderTemplate`<span class="recipe__note">, ${ingredient.note}</span>` : ''
+  return `<li>${qty}${unit}${name}${note}</li>`
+}
+const groups: Array<{ title: string, items: Recipe['ingredients'] }> = []
+for (const ingredient of recipe.ingredients) {
+  if (ingredient.group || groups.length === 0) groups.push({ title: ingredient.group, items: [] })
+  groups[groups.length - 1].items.push(ingredient)
+}
+const ingredientsHtml = groups
+  .map(group => (group.title ? renderTemplate`<p>${group.title}</p>` : '') + `<ul>${group.items.map(ingredientLine).join('')}</ul>`)
+  .join('')
+const stepsHtml = `<ol>${recipe.steps.map(step => renderTemplate`<li>${new SafeHtml(step.heading ? renderTemplate`<strong>${step.heading}.</strong> ` : '')}${step.text}</li>`).join('')}</ol>`
+
+// Verborgen tot het script draait: zonder JavaScript zie je gewoon het recept zoals het is.
+const scalerHtml = servings
+  ? renderTemplate`<div class="recipe__scaler" data-servings="${servings}" hidden>
+      <span class="recipe__scaler-label" id="personen-label">Aantal personen</span>
+      <div class="recipe__scaler-controls" role="group" aria-labelledby="personen-label">
+        <button type="button" data-step="-1" aria-label="Eén persoon minder">−</button>
+        <output aria-live="polite">${servings}</output>
+        <button type="button" data-step="1" aria-label="Eén persoon meer">+</button>
+      </div>
+    </div>`
+  : ''
+
+// Recipe-schema voor rijke zoekresultaten in Google (foto, tijd, personen).
+const minutes = (n: number) => `PT${n}M`
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Recipe',
+  name: title,
+  description: stripHtml(recipe.introHtml),
+  ...(image ? { image: [absoluteUrl(image)] } : {}),
+  author: { '@type': 'Organization', name: "Steva's Kookboek", ...(siteUrl() ? { url: `${siteUrl()}/` } : {}) },
+  ...(recipe.createdAt ? { datePublished: recipe.createdAt.slice(0, 10) } : {}),
+  ...(recipe.updatedAt ? { dateModified: recipe.updatedAt.slice(0, 10) } : {}),
+  inLanguage: 'nl',
+  ...(prepTime ? { prepTime: minutes(prepTime) } : {}),
+  ...(cookTime ? { cookTime: minutes(cookTime) } : {}),
+  ...(prepTime && cookTime ? { totalTime: minutes(prepTime + cookTime) } : {}),
+  ...(servings ? { recipeYield: `${servings} personen` } : {}),
+  ...(recipe.cuisine ? { recipeCuisine: recipe.cuisine.name } : {}),
+  ...(recipe.course ? { recipeCategory: recipe.course } : {}),
+  ...(tags.length ? { keywords: tags.join(', ') } : {}),
+  recipeIngredient: recipe.ingredients.map(ingredient => ingredientText(ingredient)),
+  recipeInstructions: recipe.steps.map(step => ({ '@type': 'HowToStep', ...(step.heading ? { name: step.heading } : {}), text: step.text }))
+}
+const jsonLdHtml = `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>`
+---
+<article class="recipe">
+  <header class="recipe__hero">
+    <div class="recipe__intro">
+      <p class="recipe__kicker">Recept</p>
+      <h1 class="recipe__title">{title}</h1>
+      <div class="recipe__lead">{new SafeHtml(recipe.introHtml)}</div>
+      <dl class="recipe__facts">{new SafeHtml(factsHtml)}</dl>
+      <p class="recipe__meta">{new SafeHtml(cuisineHtml)}</p>
+    </div>
+    <div class="recipe__media">{new SafeHtml(imageHtml)}</div>
+  </header>
+
+  <div class="recipe__body byz-grid byz-grid--12 byz-gap-lg">
+    <aside class="recipe__ingredients byz-col-span-12" aria-labelledby="ingredienten">
+      <h2 id="ingredienten" class="recipe__heading">Ingrediënten</h2>
+      {new SafeHtml(scalerHtml)}
+      {new SafeHtml(ingredientsHtml)}
+    </aside>
+    <section class="recipe__steps byz-col-span-12" aria-labelledby="bereiding">
+      <h2 id="bereiding" class="recipe__heading">Bereiding</h2>
+      {new SafeHtml(stepsHtml)}
+      {new SafeHtml(tipsHtml)}
+      {new SafeHtml(tagsHtml)}
+    </section>
+  </div>
+  {new SafeHtml(jsonLdHtml)}
+</article>
+
+<script>
+document.querySelectorAll('.recipe__scaler').forEach(function (scaler) {
+  var card = scaler.closest('.recipe__ingredients')
+  var base = Number(scaler.dataset.servings)
+  var count = base
+  var output = scaler.querySelector('output')
+  var minus = scaler.querySelector('[data-step="-1"]')
+  var plus = scaler.querySelector('[data-step="1"]')
+  var MIN = 1
+  var MAX = 24
+  var FRACTIONS = [[0, ''], [0.25, '¼'], [1 / 3, '⅓'], [0.5, '½'], [2 / 3, '⅔'], [0.75, '¾'], [1, '']]
+
+  // Zelfde afrondregels als formatQuantity in src/lib/quantity.ts — houd die gelijk.
+  function format(value) {
+    if (value >= 10) return String(Math.round(value))
+    var whole = Math.floor(value)
+    var rest = value - whole
+    var nearest = FRACTIONS.reduce(function (best, f) {
+      return Math.abs(f[0] - rest) < Math.abs(best[0] - rest) ? f : best
+    })
+    if (Math.abs(nearest[0] - rest) > 0.03) return String(Math.round(value * 10) / 10).replace('.', ',')
+    if (nearest[0] === 1) return String(whole + 1)
+    return whole === 0 && nearest[1] ? nearest[1] : String(whole) + nearest[1]
+  }
+
+  function render() {
+    output.textContent = count
+    minus.disabled = count <= MIN
+    plus.disabled = count >= MAX
+    card.querySelectorAll('li').forEach(function (line) {
+      var qty = line.querySelector('.recipe__qty')
+      if (!qty) return
+      var value = Number(qty.dataset.base) * count / base
+      qty.textContent = format(value)
+      // Enkelvoud of meervoud van eenheid en ingrediënt, op basis van de nieuwe hoeveelheid.
+      line.querySelectorAll('[data-one]').forEach(function (word) {
+        word.textContent = value > 1 ? word.dataset.many : word.dataset.one
+      })
+    })
+    card.classList.toggle('recipe__ingredients--scaled', count !== base)
+  }
+
+  scaler.addEventListener('click', function (event) {
+    var button = event.target.closest('button[data-step]')
+    if (!button) return
+    count = Math.min(MAX, Math.max(MIN, count + Number(button.dataset.step)))
+    render()
+  })
+
+  scaler.hidden = false
+  render()
+})
+</script>
+
+<style>
+/* Richtext (ul/ol/p uit Centaur) en conditionele onderdelen hebben geen scope-attribuut,
+   dus die worden genest onder gescopete containers gestyled (zie RecipeCard.wald). */
+.recipe {
+  max-width: var(--steva-pagina-breedte);
+  margin: 0 auto;
+  padding: var(--byz-space-12) var(--steva-pagina-marge) var(--byz-space-24);
+}
+
+/* Indeling "Kookboek" (voorstel C): eerst titel, intro en kerngegevens gecentreerd, dan een
+   brede foto, dan ingrediënten en bereiding — op desktop allemaal binnen kolom 2–11 van
+   het 12-kolomsgrid (zie @media onderaan). Mobiel en tablet: alles onder elkaar. */
+.recipe__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--byz-space-8);
+  margin-bottom: var(--byz-space-12);
+}
+.recipe__media {
+  & .recipe__image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 0.625rem;
+    box-shadow: 8px 8px 16px rgb(0 0 0 / 0.25);
+  }
+  & .recipe__image--placeholder {
+    display: grid;
+    place-items: center;
+    background:
+      linear-gradient(to top, rgb(67 11 0 / 0.6), rgb(67 11 0 / 0) 60%),
+      url("/images/hero-textuur.webp") center / cover,
+      var(--byz-color-surface);
+    background-blend-mode: normal, multiply, normal;
+  }
+  & .recipe__image--placeholder img {
+    width: 55%;
+    opacity: 0.85;
+  }
+}
+.recipe__intro {
+  max-width: 50rem;
+  margin-inline: auto;
+  text-align: center;
+}
+.recipe__kicker {
+  color: var(--byz-color-accent);
+  font-family: var(--steva-font-script);
+  font-size: var(--byz-text-xl);
+  text-shadow: var(--steva-tekst-schaduw);
+}
+.recipe__title {
+  /* Lange Nederlandse samenstellingen ("boerenkoolstamppot") passen anders niet op een telefoon. */
+  overflow-wrap: break-word;
+  hyphens: auto;
+  margin: var(--byz-space-1) 0 var(--byz-space-6);
+  font-size: var(--byz-text-4xl);
+  font-weight: var(--byz-font-semibold);
+  line-height: 1.15;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-shadow: var(--steva-tekst-schaduw);
+}
+.recipe__lead {
+  max-width: 62ch;
+  margin-inline: auto;
+  color: var(--byz-color-text-muted);
+  font-size: var(--byz-text-lg);
+  line-height: var(--byz-leading-relaxed);
+}
+/* Link naar de keuken onder de kerngegevens (alleen als het recept een keuken heeft). */
+.recipe__meta {
+  margin-top: var(--byz-space-5);
+
+  & .recipe__cuisine {
+    color: var(--byz-color-text-secondary);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    text-decoration: none;
+    text-shadow: var(--steva-tekst-schaduw);
+  }
+  & .recipe__cuisine:hover {
+    color: var(--byz-color-text-primary);
+  }
+}
+.recipe__facts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--byz-space-3);
+  margin-top: var(--byz-space-8);
+
+  & .recipe__fact {
+    padding: var(--byz-space-3) var(--byz-space-5);
+    border-radius: 0.625rem;
+    background: rgb(67 11 0 / 0.55);
+    box-shadow: inset 0 0 0 1px var(--byz-color-border);
+  }
+  & dt {
+    color: var(--byz-color-text-secondary);
+    font-size: var(--byz-text-xs);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  & dd {
+    font-size: var(--byz-text-lg);
+    font-weight: var(--byz-font-semibold);
+  }
+}
+
+.recipe__heading {
+  margin-bottom: var(--byz-space-6);
+  font-size: var(--byz-text-2xl);
+  font-weight: var(--byz-font-semibold);
+  line-height: 1.23;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-shadow: var(--steva-tekst-schaduw);
+}
+
+/* Ingrediënten: crèmekleurige kaart, net als de zoekbalk in de hero; blijft staan tijdens het scrollen. */
+.recipe__ingredients {
+  align-self: start;
+  position: sticky;
+  top: calc(6rem + var(--byz-space-6));
+  padding: var(--byz-space-8);
+  border-radius: 1rem;
+  background: var(--steva-creme);
+  box-shadow: inset 0 2px 4px var(--byz-color-accent), 0 2px 8px var(--steva-bordeaux-rand);
+  color: var(--steva-bordeaux-donker);
+
+  & .recipe__heading {
+    color: var(--steva-bordeaux-donker);
+    text-shadow: none;
+  }
+  & ul {
+    list-style: none;
+  }
+  /* Tussenkopjes in de ingrediëntenlijst (bv. "Schnitzels" / "Weense aardappelsalade"). */
+  & p {
+    margin-top: var(--byz-space-6);
+  }
+  & p:first-of-type {
+    margin-top: 0;
+  }
+  & li {
+    padding: var(--byz-space-3) 0;
+    border-bottom: 1px dashed rgb(67 11 0 / 0.2);
+    line-height: var(--byz-leading-normal);
+  }
+  & li:last-child {
+    border-bottom: 0;
+  }
+
+  /* Personen-rekentool */
+  & .recipe__scaler {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--byz-space-4);
+    margin-bottom: var(--byz-space-4);
+    padding: var(--byz-space-3) var(--byz-space-4);
+    border-radius: 0.625rem;
+    background: rgb(255 174 61 / 0.18);
+  }
+  & .recipe__scaler[hidden] {
+    display: none;
+  }
+  & .recipe__scaler-label {
+    font-size: var(--byz-text-sm);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  & .recipe__scaler-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--byz-space-3);
+  }
+  & .recipe__scaler button {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--byz-color-accent);
+    box-shadow: inset 0 -3px 0 var(--steva-oranje-donker);
+    color: var(--steva-creme);
+    font-size: var(--byz-text-xl);
+    font-weight: var(--byz-font-semibold);
+    line-height: 1;
+    cursor: pointer;
+  }
+  & .recipe__scaler button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  & .recipe__scaler output {
+    min-width: 2ch;
+    font-size: var(--byz-text-xl);
+    font-weight: var(--byz-font-semibold);
+    text-align: center;
+  }
+  & .recipe__qty {
+    font-weight: var(--byz-font-semibold);
+    transition: color var(--byz-duration-normal) var(--byz-ease-default);
+  }
+  /* Bordeaux i.p.v. oranje: oranje op crème haalt het WCAG-contrast voor tekst niet. */
+  &.recipe__ingredients--scaled .recipe__qty {
+    color: var(--byz-color-surface);
+  }
+}
+
+/* Bereiding: grote Fraunces-cijfers in oranje, zoals de accenten in het ontwerp. */
+.recipe__steps {
+  & ol {
+    list-style: none;
+    counter-reset: stap;
+  }
+  & ol > li {
+    position: relative;
+    counter-increment: stap;
+    padding: 0 0 var(--byz-space-8) 4.5rem;
+    line-height: var(--byz-leading-relaxed);
+  }
+  & ol > li::before {
+    content: counter(stap);
+    position: absolute;
+    left: 0;
+    top: -0.35rem;
+    width: 3rem;
+    color: var(--byz-color-accent);
+    font-size: var(--byz-text-4xl);
+    font-weight: var(--byz-font-semibold);
+    line-height: 1;
+    text-align: right;
+    text-shadow: var(--steva-tekst-schaduw);
+  }
+  & strong {
+    color: var(--byz-color-text-secondary);
+  }
+  & .recipe__tips {
+    margin-top: var(--byz-space-8);
+    padding: var(--byz-space-8);
+    border-radius: 1rem;
+    background: rgb(67 11 0 / 0.55);
+    box-shadow: inset 0 0 0 1px var(--byz-color-border);
+  }
+  & .recipe__tips ul {
+    padding-left: var(--byz-space-5);
+  }
+  & .recipe__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--byz-space-2);
+    margin-top: var(--byz-space-10);
+    list-style: none;
+  }
+  & .recipe__tags li {
+    padding: var(--byz-space-1) var(--byz-space-4);
+    border-radius: 999px;
+    background: var(--byz-color-accent);
+    box-shadow: inset 0 -3px 0 var(--steva-oranje-donker);
+    color: var(--steva-creme);
+    font-size: var(--byz-text-sm);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Pas vanaf lg een 12-kolomsgrid in de hero: op mobiel zijn 11 tussenruimtes van
+     2.5rem al breder dan het scherm. Tussenruimte gelijk aan de body, zodat de
+     kolomlijnen van foto, ingrediënten en bereiding exact op elkaar aansluiten. */
+  .recipe__hero {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--byz-space-10);
+    margin-bottom: var(--byz-space-16);
+  }
+  .recipe__intro {
+    grid-column: 3 / span 8;
+  }
+  .recipe__media {
+    grid-column: 2 / span 10;
+
+    & .recipe__image {
+      aspect-ratio: 16 / 9;
+    }
+  }
+  .recipe__body {
+    column-gap: var(--byz-space-10);
+  }
+  .recipe__body > .recipe__ingredients {
+    grid-column: 2 / span 4;
+  }
+  .recipe__body > .recipe__steps {
+    grid-column: 6 / span 6;
+  }
+}
+@media (max-width: 1023px) {
+  .recipe__ingredients {
+    position: static;
+  }
+}
+@media (max-width: 640px) {
+  .recipe__steps {
+    & ol > li {
+      padding-left: 3.25rem;
+    }
+    & ol > li::before {
+      width: 2.25rem;
+      font-size: var(--byz-text-3xl);
+    }
+  }
+}
+</style>

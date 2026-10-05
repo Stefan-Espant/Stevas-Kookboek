@@ -1,0 +1,80 @@
+---
+type Props = { enabled: boolean, text: string, analyticsId: string }
+const { enabled, text, analyticsId } = $$props
+---
+<div class="cms-cookie-banner" role="status" aria-live="polite" data-enabled={String(enabled)} data-analytics-id={analyticsId} hidden>
+  <p>{text}</p>
+  <button type="button">Accepteren</button>
+</div>
+
+<script>
+(function () {
+  var banner = document.querySelector('.cms-cookie-banner')
+  if (!banner) return
+
+  var consentKey = 'centaur-cookie-consent'
+  var enabled = banner.dataset.enabled === 'true'
+  var analyticsId = banner.dataset.analyticsId || ''
+
+  function loadAnalytics(id) {
+    if (!id || document.querySelector('script[data-centaur-analytics="' + id + '"]')) return
+    var script = document.createElement('script')
+    script.async = true
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id)
+    script.dataset.centaurAnalytics = id
+    document.head.appendChild(script)
+
+    window.dataLayer = window.dataLayer || []
+    window.gtag = function () { window.dataLayer.push(arguments) }
+    window.gtag('js', new Date())
+    window.gtag('config', id)
+  }
+
+  function hasConsent() {
+    return localStorage.getItem(consentKey) === 'accepted'
+  }
+
+  function maybeLoadAnalytics() {
+    if (analyticsId && (!enabled || hasConsent())) loadAnalytics(analyticsId)
+  }
+
+  banner.querySelector('button').addEventListener('click', function () {
+    localStorage.setItem(consentKey, 'accepted')
+    banner.hidden = true
+    maybeLoadAnalytics()
+  })
+
+  banner.hidden = !(enabled && !hasConsent())
+  maybeLoadAnalytics()
+})()
+</script>
+
+<style>
+.cms-cookie-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--byz-space-4);
+  padding: var(--byz-space-4) var(--byz-space-6);
+  background: var(--steva-bordeaux-donker);
+  color: var(--byz-color-text-primary);
+  z-index: var(--byz-z-overlay);
+}
+.cms-cookie-banner[hidden] {
+  display: none;
+}
+.cms-cookie-banner button {
+  background: var(--byz-color-accent);
+  box-shadow: inset 0 -4px 0 var(--steva-oranje-donker);
+  color: var(--byz-color-text-primary);
+  border: none;
+  border-radius: 0.375rem;
+  padding: var(--byz-space-2) var(--byz-space-4);
+  cursor: pointer;
+}
+</style>

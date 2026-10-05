@@ -1,0 +1,22 @@
+{
+  "name": "steva-s-kookboek",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wald grow",
+    "build": "node -e \"require('fs').rmSync('.vercel/output', { recursive: true, force: true })\" && wald build",
+    "preview": "wald preview",
+    "check": "wald check",
+    "build:preview": "CENTAUR_PREVIEW=1 npm run build"
+  },
+  "dependencies": {
+    "@byzantium-design-system/core": "^1.0.0",
+    "@waldjs/cli": "^0.10.0"
+  },
+  "devDependencies": {
+    "sass": "^1.105.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

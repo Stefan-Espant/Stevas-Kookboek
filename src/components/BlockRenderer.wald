@@ -1,0 +1,79 @@
+---
+import type { CentaurBlockInstance, CentaurBlockType } from '../lib/cms'
+type Props = {
+  blocks: CentaurBlockInstance[]
+  blockTypes: CentaurBlockType[]
+  overrides?: Record<string, { render: (props: CentaurBlockInstance) => Promise<string> }>
+}
+const { blocks, blockTypes, overrides = {} } = $$props
+
+const MAX_DEPTH = 10
+
+function formatDate(value: unknown): string {
+  const date = new Date(String(value))
+  return isNaN(date.getTime()) ? String(value) : date.toLocaleDateString('nl-NL')
+}
+
+// Was BlockField.vue. Richtext komt van je eigen CMS-redacteuren, niet van bezoekers —
+// hier ongesaneerd renderen is veilig zolang je alleen vertrouwde gebruikers
+// schrijftoegang geeft. Media-velden bevatten alleen een URL, geen alt-tekst (nog geen
+// CMS-veld daarvoor).
+function renderField(type: string, value: unknown): string {
+  if (type === 'richtext') return renderTemplate`<div>${new SafeHtml(String(value ?? ''))}</div>`
+  if (type === 'media') return renderTemplate`<img src="${String(value ?? '')}" alt="">`
+  if (type === 'date' || type === 'datetime') return renderTemplate`${formatDate(value)}`
+  if (type === 'boolean') return '' // layout-flag, standaard niet zichtbaar
+  return renderTemplate`${value}`
+}
+
+// Repeater-rijen hebben momenteel geen betrouwbare veld-type-metadata (het bloktype-
+// formulier in het CMS heeft nog geen UI om sub-velden van een repeater te configureren)
+// — waardes worden daarom best-effort als platte tekst getoond. Registreer een override
+// voor dit bloktype als je een eigen weergave wilt.
+function renderRepeater(items: Record<string, unknown>[]): string {
+  const rows = items.map(item => {
+    const values = Object.values(item ?? {})
+      .map(value => renderTemplate`<span class="cms-repeater-value">${value}</span>`)
+      .join('')
+    return `<div class="cms-repeater-item">${values}</div>`
+  })
+  return `<div class="cms-repeater">${rows.join('')}</div>`
+}
+
+async function renderBlocks(list: CentaurBlockInstance[], depth: number): Promise<string> {
+  if (depth >= MAX_DEPTH) {
+    console.warn(`BlockRenderer: maximale nestdiepte (${MAX_DEPTH}) bereikt, verdere blokken worden niet gerenderd.`)
+    return ''
+  }
+
+  const rendered = await Promise.all(list.map(async (block) => {
+    const override = overrides[block._type]
+    if (override) return override.render(block)
+
+    const blockType = blockTypes.find(bt => bt.slug === block._type)
+    if (!blockType) {
+      console.warn(`Onbekend bloktype "${block._type}", blok overgeslagen.`)
+      return ''
+    }
+
+    const fields = await Promise.all(blockType.fields
+      .filter(field => field.slug in block)
+      .map(async (field) => {
+        const value = block[field.slug]
+        const inner = field.type === 'blocks'
+          ? await renderBlocks((value as CentaurBlockInstance[]) ?? [], depth + 1)
+          : field.type === 'repeater'
+            ? renderRepeater((value as Record<string, unknown>[]) ?? [])
+            : renderField(field.type, value)
+        return renderTemplate`<div class="cms-field cms-field--${field.slug}">${new SafeHtml(inner)}</div>`
+      }))
+
+    return renderTemplate`<div class="cms-block cms-block--${block._type}">${new SafeHtml(fields.join(''))}</div>`
+  }))
+
+  return rendered.join('')
+}
+
+const html = await renderBlocks(blocks, 0)
+---
+{new SafeHtml(html)}

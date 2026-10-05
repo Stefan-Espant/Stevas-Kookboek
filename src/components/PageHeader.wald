@@ -1,0 +1,45 @@
+---
+type Props = { kicker: string, title: string, lead?: string }
+const { kicker, title, lead = '' } = $$props
+const leadHtml = lead ? renderTemplate`<p class="page-header__lead">${lead}</p>` : ''
+---
+<header class="page-header">
+  <p class="page-header__kicker">{kicker}</p>
+  <h1 class="page-header__title">{title}</h1>
+  {new SafeHtml(leadHtml)}
+</header>
+
+<style>
+/* Zelfde kop als de receptpagina (indeling "Kookboek"): gecentreerd, script-kicker, titel in kapitalen. */
+.page-header {
+  max-width: 50rem;
+  margin: 0 auto var(--byz-space-12);
+  text-align: center;
+
+  & .page-header__lead {
+    max-width: 62ch;
+    margin: 0 auto;
+    color: var(--byz-color-text-muted);
+    font-size: var(--byz-text-lg);
+    line-height: var(--byz-leading-relaxed);
+  }
+}
+.page-header__kicker {
+  color: var(--byz-color-accent);
+  font-family: var(--steva-font-script);
+  font-size: var(--byz-text-xl);
+  text-shadow: var(--steva-tekst-schaduw);
+}
+.page-header__title {
+  /* Lange Nederlandse samenstellingen ("boerenkoolstamppot") passen anders niet op een telefoon. */
+  overflow-wrap: break-word;
+  hyphens: auto;
+  margin: var(--byz-space-1) 0 var(--byz-space-6);
+  font-size: var(--byz-text-4xl);
+  font-weight: var(--byz-font-semibold);
+  line-height: 1.15;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-shadow: var(--steva-tekst-schaduw);
+}
+</style>

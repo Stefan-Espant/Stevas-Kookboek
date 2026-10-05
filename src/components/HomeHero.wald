@@ -1,0 +1,56 @@
+---
+import SearchForm from './SearchForm.wald'
+type Props = { tagline: string }
+// Zolang er in Centaur geen tagline staat, de tekst uit het Figma-ontwerp.
+const tagline = $$props.tagline || 'Van makkelijke maaltijden tot uitgebreide diners'
+---
+<section class="home-hero">
+  <h1 class="home-hero__title">Ontdek de lekkerste recepten</h1>
+  <p class="home-hero__tagline">{tagline}</p>
+  <div class="home-hero__search">
+    <SearchForm id="zoeken" />
+  </div>
+</section>
+
+<style>
+.home-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  /* Figma: hero loopt tot 640px vanaf de bovenkant, de header (6rem) meegerekend. */
+  min-height: 34rem;
+  padding: 8.875rem var(--steva-pagina-marge) 0;
+  text-align: center;
+}
+.home-hero__title {
+  margin: 0;
+  font-size: var(--byz-text-2xl);
+  letter-spacing: 0;
+  font-weight: var(--byz-font-semibold);
+  line-height: 1.23;
+  text-transform: uppercase;
+  text-shadow: var(--steva-tekst-schaduw);
+}
+.home-hero__tagline {
+  margin: 0;
+  color: var(--byz-color-accent);
+  font-family: var(--steva-font-script);
+  font-size: var(--byz-text-xl);
+  line-height: 1.25;
+  letter-spacing: -0.04em;
+  text-shadow: var(--steva-tekst-schaduw);
+}
+.home-hero__search {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: var(--byz-space-8);
+}
+@media (max-width: 640px) {
+  .home-hero {
+    min-height: 0;
+    padding: var(--byz-space-20) var(--steva-pagina-marge) var(--byz-space-20);
+  }
+}
+</style>

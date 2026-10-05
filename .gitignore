@@ -1,0 +1,35 @@
+.superpowers/
+.worktrees/
+docs/superpowers/
+.claude
+
+# WaldJS / Node
+node_modules
+.nuxt
+.output
+.vercel
+dist
+.DS_Store
+
+# .NET build output
+bin/
+obj/
+*.user
+.vs/
+
+# Geheime configuratiebestanden (bevatten wachtwoorden)
+src/Centaur.Api/appsettings.Development.json
+frontend/.env
+.env
+.env.production
+.env.local
+
+_nuxt-legacy
+# Gegenereerd door wald.config.ts (Byzantium-tokens)
+public/vendor
+
+# Voorbeeldrecepten (foto's + teksten om in Centaur te zetten, niet voor git)
+docs/voorbeeldrecepten
+
+# Brondata voor recepten (staat in Centaur; upload via docs/recepten-data/upload.mjs)
+docs/recepten-data

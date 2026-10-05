@@ -1,0 +1,15 @@
+---
+type Props = { size?: number, strokeWidth?: number }
+const { size = 24, strokeWidth = 2 } = $$props
+---
+<svg class="search-icon" width={size} height={Math.round(size * 34 / 32)} viewBox="0 0 32 34" fill="none" aria-hidden="true">
+  <path d="M4.71046 17.9616C4.24141 16.7585 4 15.4689 4 14.1667C4 12.8644 4.24141 11.5749 4.71046 10.3717C5.1795 9.16858 5.86699 8.07537 6.73367 7.15452C7.60035 6.23368 8.62925 5.50322 9.76162 5.00486C10.894 4.5065 12.1077 4.25 13.3333 4.25C14.559 4.25 15.7727 4.5065 16.905 5.00486C18.0374 5.50322 19.0663 6.23368 19.933 7.15452C20.7997 8.07537 21.4872 9.16858 21.9562 10.3717C22.4253 11.5749 22.6667 12.8644 22.6667 14.1667C22.6667 15.4689 22.4253 16.7585 21.9562 17.9616C21.4872 19.1648 20.7997 20.258 19.933 21.1788C19.0663 22.0997 18.0374 22.8301 16.905 23.3285C15.7727 23.8268 14.559 24.0833 13.3333 24.0833C12.1077 24.0833 10.894 23.8268 9.76162 23.3285C8.62925 22.8301 7.60035 22.0997 6.73367 21.1788C5.86699 20.258 5.1795 19.1648 4.71046 17.9616Z" stroke="currentColor" stroke-width={strokeWidth} stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M28 29.75L20 21.25" stroke="currentColor" stroke-width={strokeWidth} stroke-linecap="round" stroke-linejoin="round" />
+</svg>
+
+<style>
+.search-icon {
+  display: block;
+  flex-shrink: 0;
+}
+</style>
