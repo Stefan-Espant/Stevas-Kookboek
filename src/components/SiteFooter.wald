@@ -1,0 +1,83 @@
+---
+type Props = {
+  siteName: string
+  instagram: string
+  facebook: string
+  linkedIn: string
+  twitter: string
+}
+const { siteName, instagram, facebook, linkedIn, twitter } = $$props
+const socialLinks = [
+  { label: 'Instagram', href: instagram },
+  { label: 'Facebook', href: facebook },
+  { label: 'LinkedIn', href: linkedIn },
+  { label: 'Twitter', href: twitter }
+]
+  .filter(social => social.href)
+  .map(social => renderTemplate`<a href="${social.href}" target="_blank" rel="noopener">${social.label}</a>`)
+  .join('')
+const year = new Date().getFullYear()
+---
+<footer class="site-footer">
+  <img src="/logo-steva.svg" alt="" width="194" height="65" class="site-footer__logo" />
+  <nav class="site-footer__nav" aria-label="Footernavigatie">
+    <a href="/">Home</a>
+    <a href="/recepten">Recepten</a>
+    <a href="/keukens">Keukens</a>
+    <a href="/inspiratie">Inspiratie</a>
+    <a href="/over">Over Steva</a>
+    <a href="/contact">Contact</a>
+  </nav>
+  <div class="site-footer__social">{new SafeHtml(socialLinks)}</div>
+  <p class="site-footer__copyright">&copy; {year} {siteName}</p>
+</footer>
+
+<style>
+/* Niet in het Figma-ontwerp; stijl afgeleid van de header (zelfde palet en typografie). */
+.site-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--byz-space-5);
+  padding: var(--byz-space-12) var(--steva-pagina-marge) var(--byz-space-8);
+  background: var(--steva-bordeaux-donker);
+  color: var(--byz-color-text-primary);
+  text-align: center;
+}
+.site-footer__logo {
+  width: 9rem;
+  height: auto;
+}
+.site-footer__nav,
+.site-footer__social {
+  display: flex;
+  gap: var(--byz-space-6);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.site-footer__nav a {
+  color: var(--byz-color-text-secondary);
+  font-weight: var(--byz-font-semibold);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.site-footer__nav a:hover {
+  color: var(--byz-color-text-primary);
+}
+/* Social links zijn optioneel en dus in de frontmatter opgebouwd (zonder scope-attribuut),
+   vandaar genest onder de gescopete container. */
+.site-footer__social {
+  & a {
+    color: var(--byz-color-text-primary);
+    text-decoration: none;
+  }
+  & a:hover {
+    color: var(--byz-color-text-secondary);
+  }
+}
+.site-footer__copyright {
+  margin: 0;
+  font-size: var(--byz-text-xs);
+  opacity: 0.7;
+}
+</style>

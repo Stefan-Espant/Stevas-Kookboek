@@ -1,19 +1,19 @@
 {
-  "name": "centaur-nuxt-boilerplate",
+  "name": "steva-s-kookboek",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nuxt dev",
-    "build": "nuxt build",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "dev": "wald grow",
+    "build": "node -e \"require('fs').rmSync('.vercel/output', { recursive: true, force: true })\" && wald build",
+    "preview": "wald preview",
+    "check": "wald check",
+    "build:preview": "CENTAUR_PREVIEW=1 npm run build"
   },
   "dependencies": {
-    "nuxt": "^3.14.0",
-    "three": "^0.185.1",
-    "vue": "^3.5.0"
+    "@byzantium-design-system/core": "^1.0.0",
+    "@waldjs/cli": "^0.10.0"
   },
   "devDependencies": {
-    "@types/three": "^0.185.4"
+    "sass": "^1.105.1"
   }
 }

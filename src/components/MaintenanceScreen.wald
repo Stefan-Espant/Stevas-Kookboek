@@ -1,0 +1,21 @@
+---
+type Props = { message: string, siteName: string }
+const { message, siteName } = $$props
+---
+<main class="cms-maintenance">
+  <h1>{siteName}</h1>
+  <p>{message}</p>
+</main>
+
+<style>
+.cms-maintenance {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--byz-space-2);
+  padding: var(--byz-space-8);
+}
+</style>

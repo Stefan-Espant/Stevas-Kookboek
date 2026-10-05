@@ -1,0 +1,71 @@
+---
+import { cmsConfig } from '../lib/cms'
+type Props = { pageSlug?: string }
+const { pageSlug = 'contact' } = $$props
+---
+<div class="contact-form" data-api-base={cmsConfig.apiBase} data-tenant-slug={cmsConfig.tenantSlug} data-page-slug={pageSlug}>
+  <p class="contact-form__success" hidden>Bedankt voor je bericht!</p>
+  <form>
+    <label>
+      Naam
+      <input name="naam" type="text" required />
+    </label>
+    <label>
+      E-mailadres
+      <input name="email" type="email" required />
+    </label>
+    <label>
+      Bericht
+      <textarea name="bericht"></textarea>
+    </label>
+    <p class="contact-form__error" hidden>Versturen mislukt. Probeer het later opnieuw.</p>
+    <button type="submit">Versturen</button>
+  </form>
+</div>
+
+<script>
+document.querySelectorAll('.contact-form').forEach(function (root) {
+  var form = root.querySelector('form')
+  var button = form.querySelector('button')
+  var error = root.querySelector('.contact-form__error')
+  var success = root.querySelector('.contact-form__success')
+  var sending = false
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault()
+    if (sending) return
+    var data = new FormData(form)
+    var fields = {
+      naam: String(data.get('naam') || '').trim(),
+      email: String(data.get('email') || '').trim(),
+      bericht: String(data.get('bericht') || '').trim()
+    }
+    if (!fields.naam || !fields.email) return
+
+    sending = true
+    button.disabled = true
+    button.textContent = 'Versturen…'
+    error.hidden = true
+
+    fetch(root.dataset.apiBase.replace(/\/$/, '') + '/api/public/forms/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Tenant-Slug': root.dataset.tenantSlug },
+      body: JSON.stringify({ pageSlug: root.dataset.pageSlug, fields: fields }),
+      signal: AbortSignal.timeout(8000)
+    })
+      .then(function (response) {
+        if (!response.ok) throw new Error('Status ' + response.status)
+        form.remove()
+        success.hidden = false
+      })
+      .catch(function () {
+        error.hidden = false
+      })
+      .finally(function () {
+        sending = false
+        button.disabled = false
+        button.textContent = 'Versturen'
+      })
+  })
+})
+</script>

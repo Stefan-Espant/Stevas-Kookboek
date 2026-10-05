@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.wald'
+import BlockRenderer from '../components/BlockRenderer.wald'
+import { getBlockTypes, getPage, getSitemapSlugs } from '../lib/cms'
+import { getAllRecipes } from '../lib/recipes'
+import { breadcrumbSchema } from '../lib/site'
+type Props = { slug: string }
+// Gewone CMS-pagina's (bv. "Over Steva"). Recepten staan in de collectie "recepten" op
+// /recepten/<slug>; oude receptpagina's met dezelfde slug worden hier niet meer gebouwd maar
+// krijgen een redirect (zie wald.config.ts).
+export async function getStaticPaths() {
+  const [slugs, recipes] = await Promise.all([getSitemapSlugs(), getAllRecipes()])
+  const recipeSlugs = new Set(recipes.map(recipe => recipe.slug))
+  return slugs.filter(slug => slug !== 'home' && !recipeSlugs.has(slug)).map(slug => ({ params: { slug } }))
+}
+const [page, blockTypes] = await Promise.all([getPage($$props.slug), getBlockTypes()])
+// Alleen bereikbaar in `wald grow` (de build rendert alleen slugs uit de sitemap).
+if (!page) throw new Error(`Pagina "${$$props.slug}" bestaat niet in Centaur`)
+
+const body = await BlockRenderer.render({ blocks: page.body, blockTypes })
+const path = `/${page.slug}`
+const schema = [breadcrumbSchema([['Home', '/'], [page.title, path]])]
+---
+<Layout title={page.metaTitle || page.title} description={page.metaDescription} path={path} ogTitle={page.ogTitle || page.metaTitle} ogDescription={page.ogDescription} ogImage={page.ogImage} canonicalUrl={page.canonicalUrl} schema={schema}>
+  <main class="cms-page">
+    <h1 class="cms-page__title">{page.title}</h1>
+    {new SafeHtml(body)}
+  </main>
+</Layout>
+
+<style>
+.cms-page {
+  max-width: var(--steva-pagina-breedte);
+  margin: 0 auto;
+  padding: var(--byz-space-16) var(--steva-pagina-marge) var(--byz-space-24);
+  line-height: 1.6;
+}
+.cms-page__title {
+  margin: 0 0 var(--byz-space-8);
+  font-size: var(--byz-text-3xl);
+  font-weight: var(--byz-font-semibold);
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-shadow: var(--steva-tekst-schaduw);
+}
+</style>

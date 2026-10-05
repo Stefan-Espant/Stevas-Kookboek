@@ -1,0 +1,196 @@
+---
+import SiteHeader from '../components/SiteHeader.wald'
+import SiteFooter from '../components/SiteFooter.wald'
+import CookieBanner from '../components/CookieBanner.wald'
+import MaintenanceScreen from '../components/MaintenanceScreen.wald'
+import { getSiteSettings } from '../lib/cms'
+import { absoluteUrl, siteUrl } from '../lib/site'
+type Props = {
+  title?: string | null
+  /** true: titel zoals hij is, zonder " | Steva's Kookboek" (bv. de homepage). */
+  fullTitle?: boolean
+  description?: string | null
+  /** Pad van de pagina, bv. "/recepten" — voor canonical en og:url. */
+  path?: string
+  /** "article" voor recepten, anders "website". */
+  type?: 'website' | 'article'
+  ogTitle?: string | null
+  ogDescription?: string | null
+  ogImage?: string | null
+  ogImageAlt?: string | null
+  canonicalUrl?: string | null
+  /** Niet indexeren (bv. de 404-pagina). */
+  noindex?: boolean
+  /** Extra JSON-LD-objecten voor deze pagina (breadcrumbs, lijsten, …). */
+  schema?: Record<string, unknown>[]
+  pond?: unknown
+}
+const site = await getSiteSettings()
+const { pond } = $$props
+const siteName = site?.siteName || "Steva's Kookboek"
+
+// Titel: "<pagina> | <site>" — of het titel-suffix uit Centaur als dat is ingevuld. Zonder
+// merknaam in de titel herkent niemand in Google of in een browsertab van wie de pagina is.
+const pageTitle = $$props.title || siteName
+const suffix = site?.titleSuffix || `| ${siteName}`
+const title = $$props.fullTitle || pageTitle === siteName ? pageTitle : `${pageTitle} ${suffix}`
+
+// Canonical: uit Centaur als die is ingevuld, anders de eigen URL van de pagina. Absoluut zodra
+// SITE_URL (of op Vercel het productiedomein) bekend is.
+const canonical = $$props.canonicalUrl || ($$props.path ? absoluteUrl($$props.path) : '')
+const ogImage = $$props.ogImage || site?.defaultOgImageUrl || '/images/og-default.jpg'
+const meta: Array<[attr: 'name' | 'property', key: string, content: string | null | undefined]> = [
+  ['name', 'description', $$props.description],
+  ['name', 'robots', $$props.noindex ? 'noindex, follow' : ''],
+  ['property', 'og:type', $$props.type ?? 'website'],
+  ['property', 'og:site_name', siteName],
+  ['property', 'og:locale', 'nl_NL'],
+  ['property', 'og:url', canonical],
+  ['property', 'og:title', $$props.ogTitle || pageTitle],
+  ['property', 'og:description', $$props.ogDescription || $$props.description],
+  ['property', 'og:image', absoluteUrl(ogImage)],
+  ['property', 'og:image:alt', $$props.ogImageAlt || pageTitle],
+  ['name', 'twitter:card', 'summary_large_image']
+]
+const headTags = [
+  ...meta
+    .filter(([, , content]) => content)
+    .map(([attr, key, content]) => renderTemplate`<meta ${new SafeHtml(attr)}="${key}" content="${content}">`),
+  site?.faviconUrl ? renderTemplate`<link rel="icon" href="${site.faviconUrl}">` : '<link rel="icon" href="/images/favicon.png" type="image/png">',
+  canonical ? renderTemplate`<link rel="canonical" href="${canonical}">` : ''
+].join('\n    ')
+
+// JSON-LD blijft in <head> (data-wald-no-hoist); "<" escapen zodat CMS-tekst nooit een
+// </script> kan vormen. Organization op elke pagina, WebSite alleen op de homepage, plus wat
+// de pagina zelf meegeeft. Google accepteert geen SVG als logo, vandaar de PNG.
+const sameAs = site ? [site.instagram, site.linkedIn, site.facebook, site.twitter].filter(Boolean) : []
+const origin = siteUrl()
+const schema: Record<string, unknown>[] = [
+  {
+    '@type': site?.schemaType || 'Organization',
+    name: siteName,
+    ...(origin ? { url: `${origin}/` } : {}),
+    logo: absoluteUrl(site?.logoUrl || '/images/logo-512.png'),
+    ...(sameAs.length ? { sameAs } : {})
+  },
+  ...($$props.path === '/' ? [{ '@type': 'WebSite', name: siteName, inLanguage: 'nl', ...(origin ? { url: `${origin}/` } : {}) }] : []),
+  ...($$props.schema ?? [])
+]
+const jsonLd = `<script type="application/ld+json" data-wald-no-hoist>${JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': schema
+}).replace(/</g, '\\u003c')}</script>`
+
+// Statisch gebouwd, dus onderhoudsmodus kan geen 503 meer teruggeven: de pagina toont
+// dan alleen het onderhoudsscherm (en gaat weer open bij de volgende build).
+const maintenance = site?.maintenanceMode
+  ? await MaintenanceScreen.render({ message: site.maintenanceMessage, siteName: site.siteName })
+  : null
+const header = maintenance ?? await SiteHeader.render({ siteName: site?.siteName ?? '' })
+const footer = maintenance ? '' : await SiteFooter.render({
+  siteName: site?.siteName ?? '',
+  instagram: site?.instagram ?? '',
+  facebook: site?.facebook ?? '',
+  linkedIn: site?.linkedIn ?? '',
+  twitter: site?.twitter ?? ''
+})
+---
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {new SafeHtml(headTags)}
+    {new SafeHtml(jsonLd)}
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
+    <link rel="stylesheet" href="/vendor/byzantium.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Marck+Script&display=swap" />
+  </head>
+  <body>
+    <div class="page-backdrop" aria-hidden="true"></div>
+    {new SafeHtml(header)}
+    {maintenance ? '' : pond}
+    {new SafeHtml(footer)}
+    <CookieBanner enabled={!maintenance && (site?.cookieBannerEnabled ?? false)} text={site?.cookieBannerText ?? ''} analyticsId={maintenance ? '' : site?.analyticsId ?? ''} />
+  </body>
+</html>
+
+<style>
+/* Byzantium levert tokens, reset en utilities (public/vendor/byzantium.css, zie
+   wald.config.ts). Hier het Figma-palet (Stevas kookboek v2) als --steva-*, met de
+   semantische Byzantium-tokens daarop gemapt — componenten gebruiken waar mogelijk de
+   --byz-* tokens. Op body i.p.v. :root omdat scoped CSS van :root anders
+   :root[data-wald-…] maakt; body wint zo ook van de :root-defaults van Byzantium. */
+body {
+  /* Figma-palet */
+  --steva-bordeaux: #571103;
+  --steva-bordeaux-licht: #8c230e;
+  --steva-bordeaux-rand: #6a1808;
+  --steva-bordeaux-donker: #430b00;
+  --steva-creme: #fcf6ea;
+  --steva-goud: #ffc471;
+  --steva-oranje: #ffae3d;
+  --steva-oranje-donker: #d47c02;
+  --steva-font-script: "Marck Script", "Brush Script MT", cursive;
+  --steva-tekst-schaduw: 0 2px 4px var(--steva-bordeaux-donker);
+  --steva-pagina-marge: clamp(var(--byz-space-4), 4.6vw, 4.4rem);
+  /* Contentbreedte 86rem (Figma: 1372px) plus de marges — Byzantium zet box-sizing op
+     border-box, dus de padding valt binnen de max-width. */
+  --steva-pagina-breedte: calc(86rem + 2 * var(--steva-pagina-marge));
+
+  /* Byzantium-tokens → Figma */
+  --byz-brand-900: var(--steva-bordeaux-donker);
+  --byz-brand-800: var(--steva-bordeaux);
+  --byz-brand-700: var(--steva-bordeaux-rand);
+  --byz-brand-600: var(--steva-bordeaux-licht);
+  --byz-color-background: var(--steva-bordeaux);
+  --byz-color-surface: var(--steva-bordeaux-licht);
+  --byz-color-surface-raised: var(--steva-bordeaux-rand);
+  --byz-color-text-primary: var(--steva-creme);
+  --byz-color-text-secondary: var(--steva-goud);
+  --byz-color-text-muted: rgb(252 246 234 / 0.7);
+  --byz-color-border: var(--steva-bordeaux-rand);
+  --byz-color-accent: var(--steva-oranje);
+  --byz-color-focus: var(--steva-goud);
+  --byz-font-serif: "Fraunces", Georgia, serif;
+  --byz-font-sans: "Fraunces", Georgia, serif;
+
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+}
+
+/* Rode gloed + marmertextuur bovenaan elke pagina (Figma: "Rectangle 2", "image 1" en
+   "Rectangle 3"). Figma legt de textuur met linear-burn op 25% over de gloed; CSS kent
+   geen linear-burn, multiply komt het dichtst in de buurt. De onderste 240px vloeien
+   over in de achtergrondkleur. */
+.page-backdrop {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 61.5rem;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(50% 50% at 50% 50%, var(--byz-color-surface), var(--byz-color-background)) center top / 100% 40rem no-repeat,
+    var(--byz-color-background);
+}
+.page-backdrop::before,
+.page-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.page-backdrop::before {
+  background: url("/images/hero-textuur.webp") center top / cover no-repeat;
+  opacity: 0.25;
+  mix-blend-mode: multiply;
+}
+.page-backdrop::after {
+  top: auto;
+  height: 15rem;
+  background: linear-gradient(to bottom, rgb(87 17 3 / 0.2), rgb(87 17 3 / 0.8));
+}
+</style>
