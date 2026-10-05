@@ -1,0 +1,56 @@
+---
+import Layout from '../../layouts/Layout.wald'
+import PageHeader from '../../components/PageHeader.wald'
+import RecipeGrid from '../../components/RecipeGrid.wald'
+import { getCuisines, recipePath } from '../../lib/recipes'
+import { breadcrumbSchema, clipDescription, collectionSchema } from '../../lib/site'
+type Props = { keuken: string }
+export async function getStaticPaths() {
+  const cuisines = await getCuisines()
+  return cuisines.map(cuisine => ({ params: { keuken: cuisine.slug } }))
+}
+const cuisine = (await getCuisines()).find(c => c.slug === $$props.keuken)
+// Alleen bereikbaar in `wald grow`; de build rendert alleen keukens met recepten.
+if (!cuisine) throw new Error(`Keuken "${$$props.keuken}" heeft geen recepten`)
+const count = cuisine.recipes.length
+// Intro uit de collectie "keukens" (richtext → platte tekst voor de kop), met het aantal recepten erachter.
+const introText = cuisine.introHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+const countText = `${count} ${count === 1 ? 'recept' : 'recepten'} uit de ${cuisine.adjective} keuken.`
+const lead = introText ? `${introText} ${countText}` : countText
+const path = `/keukens/${cuisine.slug}`
+// Rijkere omschrijving dan alleen het aantal: de recepttitels zijn precies waar mensen op zoeken.
+const description = clipDescription(`${cuisine.adjective} recepten van Steva's Kookboek: ${cuisine.recipes.map(r => r.title).join(', ')}. Met ingrediënten, bereiding en tips.`)
+const schema = [
+  breadcrumbSchema([['Home', '/'], ['Keukens', '/keukens'], [cuisine.name, path]]),
+  collectionSchema(`De ${cuisine.adjective} keuken`, description, path, cuisine.recipes.map(r => [r.title, recipePath(r.slug)]))
+]
+const grid = await RecipeGrid.render({ recipes: cuisine.recipes, headingLevel: 2 })
+---
+<Layout title={cuisine.adjective + ' recepten'} description={description} path={path} schema={schema}>
+  <main class="cuisine">
+    <PageHeader kicker="Keukens" title={cuisine.name} lead={lead} />
+    {new SafeHtml(grid)}
+    <p class="cuisine__back"><a href="/keukens">← Alle keukens</a></p>
+  </main>
+</Layout>
+
+<style>
+.cuisine {
+  max-width: var(--steva-pagina-breedte);
+  margin: 0 auto;
+  padding: var(--byz-space-12) var(--steva-pagina-marge) var(--byz-space-24);
+}
+.cuisine__back {
+  margin-top: var(--byz-space-12);
+  text-align: center;
+}
+.cuisine__back a {
+  color: var(--byz-color-text-secondary);
+  font-weight: var(--byz-font-semibold);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.cuisine__back a:hover {
+  color: var(--byz-color-text-primary);
+}
+</style>

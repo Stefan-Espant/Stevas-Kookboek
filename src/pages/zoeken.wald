@@ -1,0 +1,106 @@
+---
+import Layout from '../layouts/Layout.wald'
+import PageHeader from '../components/PageHeader.wald'
+import SearchForm from '../components/SearchForm.wald'
+import RecipeGrid from '../components/RecipeGrid.wald'
+import { getAllRecipes } from '../lib/recipes'
+const recipes = await getAllRecipes()
+// Statische site, dus zoeken gebeurt in de browser: alle recepten staan op de pagina (met
+// data-search) en het script hieronder verbergt wat niet past. Zonder JavaScript zie je ze allemaal.
+const grid = await RecipeGrid.render({ recipes, headingLevel: 2 })
+---
+<Layout title="Zoeken" description="Zoek in alle recepten van Steva's Kookboek op gerecht, ingrediënt of keuken." path="/zoeken" noindex={true}>
+  <main class="search">
+    <PageHeader kicker="Zoeken" title="Wat wil je koken?" />
+    <div class="search__form">
+      <SearchForm id="zoeken-pagina" />
+    </div>
+    <p class="search__status" aria-live="polite"></p>
+    {new SafeHtml(grid)}
+    <p class="search__empty" hidden>
+      Probeer een ander woord, of bekijk <a href="/recepten">alle recepten</a> en <a href="/keukens">de keukens</a>.
+    </p>
+  </main>
+</Layout>
+
+<script>
+(function () {
+  var main = document.querySelector('.search')
+  if (!main) return
+  var input = main.querySelector('input[name="q"]')
+  var status = main.querySelector('.search__status')
+  var empty = main.querySelector('.search__empty')
+  var cells = main.querySelectorAll('.recipe-grid [data-search]')
+
+  // Kleine letters en zonder accenten, zodat "creme" ook "crème" vindt.
+  function normalize(text) {
+    return text.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+  }
+
+  function search(query) {
+    var words = normalize(query).split(/\s+/).filter(Boolean)
+    var found = 0
+    cells.forEach(function (cell) {
+      var haystack = normalize(cell.dataset.search)
+      var match = words.every(function (word) { return haystack.indexOf(word) !== -1 })
+      cell.hidden = !match
+      if (match) found++
+    })
+    if (!words.length) {
+      status.textContent = ''
+    } else if (found) {
+      status.textContent = found + (found === 1 ? ' recept' : ' recepten') + ' voor “' + query.trim() + '”'
+    } else {
+      status.textContent = 'Geen recepten gevonden voor “' + query.trim() + '”.'
+    }
+    empty.hidden = found > 0
+  }
+
+  // Live meezoeken tijdens het typen; de URL blijft deelbaar (/zoeken?q=…).
+  input.addEventListener('input', function () {
+    var url = new URL(location.href)
+    if (input.value.trim()) url.searchParams.set('q', input.value.trim())
+    else url.searchParams.delete('q')
+    history.replaceState(null, '', url)
+    search(input.value)
+  })
+
+  input.value = new URLSearchParams(location.search).get('q') || ''
+  search(input.value)
+  if (!input.value) input.focus()
+})()
+</script>
+
+<style>
+.search {
+  max-width: var(--steva-pagina-breedte);
+  margin: 0 auto;
+  padding: var(--byz-space-12) var(--steva-pagina-marge) var(--byz-space-24);
+
+  & [data-search][hidden] {
+    display: none;
+  }
+}
+.search__form {
+  display: flex;
+  justify-content: center;
+  margin-top: calc(-1 * var(--byz-space-4));
+}
+.search__status {
+  min-height: 1.5em;
+  margin: var(--byz-space-6) 0 var(--byz-space-8);
+  color: var(--byz-color-text-secondary);
+  font-weight: var(--byz-font-semibold);
+  text-align: center;
+}
+.search__empty {
+  color: var(--byz-color-text-muted);
+  text-align: center;
+}
+.search__empty[hidden] {
+  display: none;
+}
+.search__empty a {
+  color: var(--byz-color-text-secondary);
+}
+</style>

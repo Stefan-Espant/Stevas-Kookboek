@@ -1,0 +1,54 @@
+---
+import SearchIcon from './SearchIcon.wald'
+/** id: uniek per pagina, voor de koppeling tussen label en invoerveld. */
+type Props = { id?: string }
+const { id = 'zoeken' } = $$props
+---
+<form class="search-form" action="/zoeken" method="get" role="search">
+  <label for={id} class="byz-sr-only">Zoek een recept</label>
+  <button type="submit" class="search-form__button" aria-label="Zoeken">
+    <SearchIcon size={32} strokeWidth={4} />
+  </button>
+  <input id={id} name="q" type="search" class="search-form__input" placeholder="Zoek op gerecht, ingrediënt of keuken" autocomplete="off" />
+</form>
+
+<style>
+/* Figma: zoekbalk 665 × 48, crème met oranje binnenrand. */
+.search-form {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: min(100%, 41.5rem);
+  padding: var(--byz-space-2) var(--byz-space-4) var(--byz-space-2) var(--byz-space-6);
+  border-radius: 2rem;
+  background: var(--steva-creme);
+  box-shadow: inset 0 2px 4px var(--byz-color-accent), 0 2px 8px var(--steva-bordeaux-rand);
+}
+.search-form:focus-within {
+  outline: 2px solid var(--byz-color-focus);
+  outline-offset: 2px;
+}
+.search-form__button {
+  display: flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--steva-bordeaux-donker);
+  cursor: pointer;
+}
+.search-form__input {
+  flex: 1;
+  min-width: 0;
+  height: 2rem;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--steva-bordeaux-donker);
+  font: var(--byz-font-semibold) var(--byz-text-lg) var(--byz-font-serif);
+}
+/* Contrast placeholder op crème: bordeaux op 65% blijft boven 4.5:1 (WCAG AA). */
+.search-form__input::placeholder {
+  color: rgb(67 11 0 / 0.65);
+  font-weight: var(--byz-font-normal);
+}
+</style>

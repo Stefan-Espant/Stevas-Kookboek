@@ -1,0 +1,54 @@
+---
+import Layout from '../../layouts/Layout.wald'
+import RecipeView from '../../components/RecipeView.wald'
+import RecipeGrid from '../../components/RecipeGrid.wald'
+import { getAllRecipes, getRecipe, getRelatedRecipes, recipePath } from '../../lib/recipes'
+import { breadcrumbSchema } from '../../lib/site'
+type Props = { recept: string }
+export async function getStaticPaths() {
+  const recipes = await getAllRecipes()
+  return recipes.map(recipe => ({ params: { recept: recipe.slug } }))
+}
+const recipe = await getRecipe($$props.recept)
+// Alleen bereikbaar in `wald grow`; de build rendert alleen recepten uit de collectie.
+if (!recipe) throw new Error(`Recept "${$$props.recept}" staat niet (gepubliceerd) in Centaur`)
+
+const path = recipePath(recipe.slug)
+const schema = [breadcrumbSchema([
+  ['Home', '/'],
+  ['Recepten', '/recepten'],
+  ...(recipe.cuisine ? [[recipe.cuisine.name, `/keukens/${recipe.cuisine.slug}`] as [string, string]] : []),
+  [recipe.title, path]
+])]
+const view = await RecipeView.render({ recipe })
+const related = await getRelatedRecipes(recipe)
+const relatedHtml = related.length
+  ? `<section class="more-recipes" aria-labelledby="meer-recepten"><h2 id="meer-recepten" class="more-recipes__title">Meer recepten</h2>${await RecipeGrid.render({ recipes: related })}</section>`
+  : ''
+---
+<Layout title={recipe.metaTitle || recipe.title} description={recipe.metaDescription} path={path} type="article" ogImage={recipe.image} ogImageAlt={recipe.imageAlt} schema={schema}>
+  <main class="recipe-page">
+    {new SafeHtml(view)}
+    {new SafeHtml(relatedHtml)}
+  </main>
+</Layout>
+
+<style>
+/* "Meer recepten" is conditioneel en dus in de frontmatter opgebouwd — genest onder de gescopete main. */
+.recipe-page {
+  & .more-recipes {
+    max-width: var(--steva-pagina-breedte);
+    margin: 0 auto;
+    padding: 0 var(--steva-pagina-marge) var(--byz-space-24);
+  }
+  & .more-recipes__title {
+    margin-bottom: var(--byz-space-12);
+    font-size: var(--byz-text-2xl);
+    font-weight: var(--byz-font-semibold);
+    line-height: 1.23;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    text-shadow: var(--steva-tekst-schaduw);
+  }
+}
+</style>

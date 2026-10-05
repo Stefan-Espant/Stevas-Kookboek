@@ -1,0 +1,143 @@
+---
+import Layout from '../layouts/Layout.wald'
+import HomeHero from '../components/HomeHero.wald'
+import RecipeCard from '../components/RecipeCard.wald'
+import TileCard from '../components/TileCard.wald'
+import { getPage, getSiteSettings } from '../lib/cms'
+import { collectionTile, cuisineTile, getCollections, getCuisines, getLatestRecipes } from '../lib/recipes'
+import { clipDescription } from '../lib/site'
+const [site, page, recipes, cuisines, collections] = await Promise.all([
+  getSiteSettings(),
+  getPage('home'),
+  getLatestRecipes(5),
+  getCuisines(),
+  getCollections()
+])
+// Mozaïek op het Byzantium 12-kolomsgrid (voorstel C): het nieuwste recept is groot
+// (6 kolommen × 2 rijen), de volgende vier klein (3 kolommen). Precies vijf vult het grid.
+// Tablet: groot recept over de volle breedte, de rest 2 per rij. Mobiel: alles onder elkaar.
+const cards = await Promise.all(recipes.map(async (recipe, index) => index === 0
+  ? `<div class="home__recipe home__recipe--uitgelicht byz-col-span-12 byz-col-span-lg-6">${await RecipeCard.render({ recipe })}</div>`
+  : `<div class="home__recipe byz-col-span-12 byz-col-span-sm-6 byz-col-span-lg-3">${await RecipeCard.render({ recipe })}</div>`
+))
+// De homepage heet in Centaur "Homepage" — als zoektitel nietszeggend, dus alleen de
+// SEO-velden uit Centaur gebruiken en anders een titel met merknaam en belofte.
+const siteName = site?.siteName || "Steva's Kookboek"
+const homeTitle = page?.metaTitle || `${siteName} — Ontdek de lekkerste recepten`
+const homeDescription = clipDescription(page?.metaDescription || site?.tagline || `Ontdek de lekkerste recepten van ${siteName}: van makkelijke maaltijden tot uitgebreide diners, uit keukens van over de hele wereld.`)
+const recipeList = recipes.length
+  ? `<div class="home__recipes-grid byz-grid byz-grid--12 byz-gap-lg">${cards.join('')}</div>`
+  : '<p class="home__empty">Binnenkort verschijnen hier de eerste recepten!</p>'
+
+// Secties onder het mozaïek: elk met een kop en rechts een link naar het volledige overzicht.
+// Een sectie zonder inhoud (nog geen keukens/thema's) wordt overgeslagen.
+const sectionHtml = (id: string, title: string, link: [href: string, label: string] | null, content: string, band = false) => renderTemplate`
+  <section class="home__section${band ? ' home__section--band' : ''}" aria-labelledby="${id}">
+    <div class="home__section-inner">
+      <div class="home__section-head">
+        <h2 class="home__section-title" id="${id}">${title}</h2>
+        ${new SafeHtml(link ? renderTemplate`<a class="home__section-link" href="${link[0]}">${link[1]} <span aria-hidden="true">→</span></a>` : '')}
+      </div>
+      ${new SafeHtml(content)}
+    </div>
+  </section>`
+const tileGrid = async (tiles: Array<Parameters<typeof TileCard.render>[0]>) =>
+  `<div class="home__tiles byz-grid byz-grid--12 byz-gap-lg">${(await Promise.all(tiles.map(async (tile) =>
+    `<div class="byz-col-span-12 byz-col-span-sm-6 byz-col-span-lg-4">${await TileCard.render(tile)}</div>`))).join('')}</div>`
+
+const usedImages = new Set<string>()
+const sections = [
+  sectionHtml('nieuwste-recepten', 'De nieuwste recepten', recipes.length ? ['/recepten', 'Alle recepten'] : null, recipeList),
+  cuisines.length ? sectionHtml('keukens', 'Kook de wereld rond', ['/keukens', 'Alle keukens'], await tileGrid(cuisines.slice(0, 3).map(cuisine => cuisineTile(cuisine, new Set())))) : '',
+  collections.length ? sectionHtml('inspiratie', 'Inspiratie', ['/inspiratie', 'Alle thema\'s'], await tileGrid(collections.slice(0, 3).map(collection => collectionTile(collection, usedImages))), true) : ''
+].join('')
+---
+<Layout title={homeTitle} fullTitle={true} description={homeDescription} path="/">
+  <main class="home">
+    <HomeHero tagline={site?.tagline ?? ''} />
+    {new SafeHtml(sections)}
+  </main>
+</Layout>
+
+<style>
+/* Alle secties worden in de frontmatter opgebouwd (geen loops/if in Wald-templates) en zijn
+   dus genest onder de gescopete main gestyled (zie RecipeCard.wald). */
+.home {
+  padding-bottom: var(--byz-space-24);
+
+  & .home__section-inner {
+    max-width: var(--steva-pagina-breedte);
+    margin: 0 auto;
+    padding: 0 var(--steva-pagina-marge);
+  }
+  & .home__section + .home__section {
+    margin-top: var(--byz-space-24);
+  }
+  /* Donkere band over de volle breedte, voor ritme tussen de secties. */
+  & .home__section--band {
+    padding: var(--byz-space-20) 0;
+    background: rgb(67 11 0 / 0.55);
+    box-shadow: inset 0 1px 0 var(--byz-color-border), inset 0 -1px 0 var(--byz-color-border);
+  }
+  & .home__section-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--byz-space-2) var(--byz-space-6);
+    margin-bottom: var(--byz-space-12);
+  }
+  & .home__section-title {
+    font-size: var(--byz-text-2xl);
+    font-weight: var(--byz-font-semibold);
+    line-height: 1.23;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    text-shadow: var(--steva-tekst-schaduw);
+  }
+  & .home__section-link {
+    color: var(--byz-color-text-secondary);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    text-decoration: none;
+    text-shadow: var(--steva-tekst-schaduw);
+  }
+  & .home__section-link:hover {
+    color: var(--byz-color-text-primary);
+  }
+  & .home__empty {
+    color: var(--byz-color-text-secondary);
+    font-family: var(--steva-font-script);
+    font-size: var(--byz-text-xl);
+  }
+
+  /* Mozaïek "De nieuwste recepten" (voorstel C). Tablet: uitgelicht recept liggend over de volle breedte. */
+  @media (min-width: 640px) and (max-width: 1023px) {
+    & .home__recipe--uitgelicht .recipe-card {
+      aspect-ratio: 16 / 9;
+    }
+  }
+  /* Desktop: vaste rijhoogte, zodat de grote kaart precies twee kleine rijen hoog is.
+     Figma heeft 40px tussen de kaarten; de gap-schaal van Byzantium stopt bij xl (2rem). */
+  @media (min-width: 1024px) {
+    & .home__recipes-grid {
+      grid-auto-rows: 17rem;
+    }
+    & .home__recipes-grid,
+    & .home__tiles {
+      gap: var(--byz-space-10);
+    }
+    & .home__recipe--uitgelicht {
+      grid-row: span 2;
+    }
+    & .home__recipe .recipe-card {
+      aspect-ratio: auto;
+      height: 100%;
+    }
+    & .home__recipe:not(.home__recipe--uitgelicht) .recipe-card__title {
+      padding: 0 var(--byz-space-5) var(--byz-space-5);
+      font-size: var(--byz-text-lg);
+    }
+  }
+}
+</style>

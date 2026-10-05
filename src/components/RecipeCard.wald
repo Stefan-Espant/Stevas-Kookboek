@@ -1,0 +1,83 @@
+---
+import { recipePath, type RecipeSummary } from '../lib/recipes'
+/** headingLevel: 2 op pagina's waar de kaarten direct onder de H1 staan (geen kop overslaan). */
+type Props = { recipe: RecipeSummary, headingLevel?: 2 | 3 }
+const { recipe, headingLevel = 3 } = $$props
+const heading = new SafeHtml(headingLevel === 2 ? 'h2' : 'h3')
+const titleHtml = renderTemplate`<${heading} class="recipe-card__title">${recipe.title}</${heading}>`
+// Zonder foto in Centaur: marmertextuur uit het ontwerp met het logo.
+const image = recipe.image
+  ? renderTemplate`<img src="${recipe.image}" alt="" loading="lazy" class="recipe-card__image">`
+  : '<div class="recipe-card__image recipe-card__image--placeholder"><img src="/logo-steva.svg" alt=""></div>'
+---
+<a href={recipePath(recipe.slug)} class="recipe-card" wald:prefetch="visible">
+  {new SafeHtml(image)}
+  {new SafeHtml(titleHtml)}
+</a>
+
+<style>
+/* De afbeelding en de titel (h2 of h3) worden als string in de frontmatter opgebouwd — die
+   krijgen geen scope-attribuut. Daarom genest onder de gescopete kaart: de scoper
+   voorziet alleen de buitenste selector van het attribuut. */
+.recipe-card {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  aspect-ratio: 431 / 574;
+  overflow: hidden;
+  border-radius: 0.625rem;
+  background: var(--byz-color-surface);
+  box-shadow: 8px 8px 16px rgb(0 0 0 / 0.25);
+  text-decoration: none;
+  transition: transform var(--byz-duration-normal) var(--byz-ease-default);
+
+  & .recipe-card__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--byz-duration-slow) var(--byz-ease-out);
+  }
+  & .recipe-card__image--placeholder {
+    display: grid;
+    place-items: center;
+    padding-bottom: 30%;
+    background: url("/images/hero-textuur.webp") center / cover, var(--byz-color-surface);
+    background-blend-mode: multiply, normal;
+  }
+  & .recipe-card__image--placeholder img {
+    width: 55%;
+    opacity: 0.85;
+  }
+  & .recipe-card__title {
+    /* Lange Nederlandse samenstellingen ("boerenkoolstamppot") passen anders niet op een telefoon. */
+    overflow-wrap: break-word;
+    hyphens: auto;
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    padding: 0 var(--byz-space-8) 2.0625rem;
+    color: var(--byz-color-text-primary);
+    font-size: var(--byz-text-2xl);
+    letter-spacing: 0;
+    font-weight: var(--byz-font-semibold);
+    line-height: 1.23;
+    text-transform: uppercase;
+    text-shadow: var(--steva-tekst-schaduw);
+  }
+}
+/* Figma: "Schaduw" — donkere verloop onderin zodat de titel leesbaar blijft. */
+.recipe-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgb(67 11 0 / 0.8), rgb(67 11 0 / 0) 40%);
+}
+.recipe-card:hover {
+  transform: translateY(-4px);
+
+  & .recipe-card__image {
+    transform: scale(1.03);
+  }
+}</style>
