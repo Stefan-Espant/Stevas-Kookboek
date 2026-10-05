@@ -3,7 +3,7 @@ import SiteHeader from '../components/SiteHeader.wald'
 import SiteFooter from '../components/SiteFooter.wald'
 import CookieBanner from '../components/CookieBanner.wald'
 import MaintenanceScreen from '../components/MaintenanceScreen.wald'
-import { getSiteSettings } from '../lib/cms'
+import { getSiteSettings, getSitemapSlugs } from '../lib/cms'
 import { absoluteUrl, siteUrl } from '../lib/site'
 type Props = {
   title?: string | null
@@ -86,9 +86,16 @@ const jsonLd = `<script type="application/ld+json" data-wald-no-hoist>${JSON.str
 const maintenance = site?.maintenanceMode
   ? await MaintenanceScreen.render({ message: site.maintenanceMessage, siteName: site.siteName })
   : null
-const header = maintenance ?? await SiteHeader.render({ siteName: site?.siteName ?? '' })
+// "Over Steva" en "Contact" zijn gewone Centaur-pagina's: alleen linken als ze bestaan, anders
+// staat er op elke pagina een link naar de 404 (slecht voor bezoekers en voor Google).
+const cmsPages = new Set(await getSitemapSlugs())
+const aboutHref = cmsPages.has('over') ? '/over' : ''
+const contactHref = cmsPages.has('contact') ? '/contact' : ''
+const header = maintenance ?? await SiteHeader.render({ siteName: site?.siteName ?? '', aboutHref })
 const footer = maintenance ? '' : await SiteFooter.render({
   siteName: site?.siteName ?? '',
+  aboutHref,
+  contactHref,
   instagram: site?.instagram ?? '',
   facebook: site?.facebook ?? '',
   linkedIn: site?.linkedIn ?? '',

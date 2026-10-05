@@ -1,23 +1,31 @@
 ---
-import Layout from '../layouts/Layout.wald'
-import PageHeader from '../components/PageHeader.wald'
-import RecipeGrid from '../components/RecipeGrid.wald'
-import { getCollections } from '../lib/recipes'
-import { breadcrumbSchema, clipDescription } from '../lib/site'
+import Layout from '../../layouts/Layout.wald'
+import PageHeader from '../../components/PageHeader.wald'
+import RecipeGrid from '../../components/RecipeGrid.wald'
+import { collectionPath, getCollections } from '../../lib/recipes'
+import { breadcrumbSchema, clipDescription, collectionSchema } from '../../lib/site'
 const collections = await getCollections()
 const lead = 'Geen idee wat je vanavond kookt? Blader door de thema\'s en laat je verrassen.'
 const description = clipDescription(`Inspiratie voor vandaag: ${collections.map(c => c.title.toLowerCase()).join(', ')}. ${lead}`)
-const schema = [breadcrumbSchema([['Home', '/'], ['Inspiratie', '/inspiratie']])]
+const schema = [
+  breadcrumbSchema([['Home', '/'], ['Inspiratie', '/inspiratie']]),
+  collectionSchema('Inspiratie', description, '/inspiratie', collections.map(c => [c.seoTitle, collectionPath(c.slug)]))
+]
+// Per thema een voorproefje; het hele thema staat op een eigen pagina (/inspiratie/<slug>).
+const PREVIEW = 6
 
 // Thema's worden automatisch gevuld op basis van bereidingstijd en tags (zie getCollections).
 const navHtml = collections.length > 1
-  ? renderTemplate`<nav class="inspiration__nav" aria-label="Thema's">${new SafeHtml(collections.map(c => renderTemplate`<a href="#${c.slug}">${c.title}</a>`).join(''))}</nav>`
+  ? renderTemplate`<nav class="inspiration__nav" aria-label="Thema's">${new SafeHtml(collections.map(c => renderTemplate`<a href="${collectionPath(c.slug)}">${c.title}</a>`).join(''))}</nav>`
   : ''
 const sections = await Promise.all(collections.map(async (collection) => renderTemplate`
   <section class="inspiration__section" id="${collection.slug}" aria-labelledby="${collection.slug}-titel">
-    <h2 class="inspiration__title" id="${collection.slug}-titel">${collection.title}</h2>
+    <h2 class="inspiration__title" id="${collection.slug}-titel"><a href="${collectionPath(collection.slug)}">${collection.title}</a></h2>
     <p class="inspiration__description">${collection.description}</p>
-    ${new SafeHtml(await RecipeGrid.render({ recipes: collection.recipes }))}
+    ${new SafeHtml(await RecipeGrid.render({ recipes: collection.recipes.slice(0, PREVIEW) }))}
+    ${new SafeHtml(collection.recipes.length > PREVIEW
+      ? renderTemplate`<p class="inspiration__more"><a href="${collectionPath(collection.slug)}">Alle ${collection.recipes.length} recepten in “${collection.title}” →</a></p>`
+      : '')}
   </section>`))
 const sectionsHtml = sections.length
   ? sections.join('')
@@ -74,6 +82,26 @@ const sectionsHtml = sections.length
     letter-spacing: 0;
     text-transform: uppercase;
     text-shadow: var(--steva-tekst-schaduw);
+  }
+  & .inspiration__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+  & .inspiration__title a:hover {
+    color: var(--byz-color-text-secondary);
+  }
+  & .inspiration__more {
+    margin-top: var(--byz-space-8);
+    text-align: center;
+  }
+  & .inspiration__more a {
+    color: var(--byz-color-text-secondary);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  & .inspiration__more a:hover {
+    color: var(--byz-color-text-primary);
   }
   & .inspiration__description {
     max-width: 62ch;

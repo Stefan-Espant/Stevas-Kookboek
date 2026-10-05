@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.wald'
 import RecipeView from '../../components/RecipeView.wald'
 import RecipeGrid from '../../components/RecipeGrid.wald'
+import Breadcrumbs from '../../components/Breadcrumbs.wald'
 import { getAllRecipes, getRecipe, getRelatedRecipes, recipePath } from '../../lib/recipes'
 import { breadcrumbSchema } from '../../lib/site'
 type Props = { recept: string }
@@ -14,12 +15,14 @@ const recipe = await getRecipe($$props.recept)
 if (!recipe) throw new Error(`Recept "${$$props.recept}" staat niet (gepubliceerd) in Centaur`)
 
 const path = recipePath(recipe.slug)
-const schema = [breadcrumbSchema([
+const crumbs: Array<[string, string]> = [
   ['Home', '/'],
   ['Recepten', '/recepten'],
   ...(recipe.cuisine ? [[recipe.cuisine.name, `/keukens/${recipe.cuisine.slug}`] as [string, string]] : []),
   [recipe.title, path]
-])]
+]
+const schema = [breadcrumbSchema(crumbs)]
+const breadcrumbs = await Breadcrumbs.render({ items: crumbs })
 const view = await RecipeView.render({ recipe })
 const related = await getRelatedRecipes(recipe)
 const relatedHtml = related.length
@@ -28,12 +31,18 @@ const relatedHtml = related.length
 ---
 <Layout title={recipe.metaTitle || recipe.title} description={recipe.metaDescription} path={path} type="article" ogImage={recipe.image} ogImageAlt={recipe.imageAlt} schema={schema}>
   <main class="recipe-page">
+    <div class="recipe-page__crumbs">{new SafeHtml(breadcrumbs)}</div>
     {new SafeHtml(view)}
     {new SafeHtml(relatedHtml)}
   </main>
 </Layout>
 
 <style>
+.recipe-page__crumbs {
+  max-width: var(--steva-pagina-breedte);
+  margin: 0 auto;
+  padding: var(--byz-space-8) var(--steva-pagina-marge) 0;
+}
 /* "Meer recepten" is conditioneel en dus in de frontmatter opgebouwd — genest onder de gescopete main. */
 .recipe-page {
   & .more-recipes {

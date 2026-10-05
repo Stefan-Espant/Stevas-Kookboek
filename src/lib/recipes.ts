@@ -192,6 +192,8 @@ export async function getCuisines(): Promise<CuisineWithRecipes[]> {
 export interface Collection {
   slug: string
   title: string
+  /** Titel voor <title> en Google: waar mensen op zoeken, bv. "Airfryer recepten". */
+  seoTitle: string
   description: string
   recipes: Recipe[]
 }
@@ -200,55 +202,123 @@ const hasTag = (recipe: Recipe, ...tags: string[]) =>
   recipe.tags.some(tag => tags.includes(tag.toLowerCase()))
 
 // Inspiratie-thema's: regels op basis van tijd, gang en tags, zodat nieuwe recepten vanzelf in
-// het juiste thema verschijnen. Thema's zonder recepten worden niet getoond.
+// het juiste thema verschijnen. Elk thema heeft een eigen pagina op /inspiratie/<slug>; thema's
+// zonder recepten worden niet getoond. De volgorde is ook die op de homepage (eerste drie).
 export async function getCollections(): Promise<Collection[]> {
   const recipes = await getAllRecipes()
+  const course = (name: string) => recipes.filter(recipe => recipe.course === name)
+  const tagged = (...tags: string[]) => recipes.filter(recipe => hasTag(recipe, ...tags))
   const collections: Collection[] = [
     {
       slug: 'snel-op-tafel',
       title: 'Snel op tafel',
-      description: 'Doordeweeks weinig tijd? Deze recepten staan binnen een half uur op tafel.',
+      seoTitle: 'Snelle recepten: binnen 30 minuten op tafel',
+      description: 'Doordeweeks weinig tijd? Deze hoofdgerechten staan binnen een half uur op tafel.',
       recipes: recipes.filter(recipe => recipe.course === 'Hoofdgerecht' && recipe.totalTime > 0 && recipe.totalTime <= 30)
-    },
-    {
-      slug: 'gezellig-samen-eten',
-      title: 'Gezellig samen eten',
-      description: 'Gerechten om midden op tafel te zetten, met vrienden of familie eromheen.',
-      recipes: recipes.filter(recipe => hasTag(recipe, 'gezellig', 'feest', 'fondue', 'delen', 'barbecue'))
-    },
-    {
-      slug: 'klassiekers',
-      title: 'Klassiekers',
-      description: 'Gerechten die al generaties meegaan, zoals ze in hun land van herkomst bedoeld zijn.',
-      recipes: recipes.filter(recipe => hasTag(recipe, 'klassiek'))
-    },
-    {
-      slug: 'comfortfood',
-      title: 'Comfortfood',
-      description: 'Stoofpotten, stamppotten en ovenschotels voor koude dagen.',
-      recipes: recipes.filter(recipe => hasTag(recipe, 'comfortfood', 'stoofvlees', 'stamppot', 'winter', 'ovenschotel'))
-    },
-    {
-      slug: 'soep',
-      title: 'Soep van de dag',
-      description: 'Van een snelle bouillon tot een vullende maaltijdsoep.',
-      recipes: recipes.filter(recipe => recipe.course === 'Soep')
     },
     {
       slug: 'vegetarisch',
       title: 'Vegetarisch (mogelijk)',
+      seoTitle: 'Vegetarische recepten',
       description: 'Zonder vlees of vis, of met een simpele aanpassing vegetarisch te maken.',
-      recipes: recipes.filter(recipe => hasTag(recipe, 'vegetarisch', 'vegetarisch mogelijk', 'vegan'))
+      recipes: tagged('vegetarisch', 'vegetarisch mogelijk', 'vegan')
+    },
+    {
+      slug: 'airfryer',
+      title: 'Uit de airfryer',
+      seoTitle: 'Airfryer recepten',
+      description: 'Krokant zonder frituurpan: van frieten en bitterballen tot kip en zalm uit de airfryer.',
+      recipes: tagged('airfryer')
+    },
+    {
+      slug: 'vegan',
+      title: 'Vegan',
+      seoTitle: 'Vegan recepten',
+      description: 'Helemaal plantaardig: zonder vlees, vis, zuivel of ei, en vol smaak uit keukens over de hele wereld.',
+      recipes: tagged('vegan')
+    },
+    {
+      slug: 'goedkoop',
+      title: 'Goedkoop en lekker',
+      seoTitle: 'Goedkope recepten',
+      description: 'Lekker eten hoeft niet duur te zijn: gerechten met bonen, linzen, eieren, aardappels en restjes.',
+      recipes: tagged('budget')
+    },
+    {
+      slug: 'uit-de-oven',
+      title: 'Uit de oven',
+      seoTitle: 'Ovenschotels en ovengerechten',
+      description: 'Even voorbereiden en de oven doet de rest: ovenschotels, gratins en traybakes.',
+      recipes: tagged('ovenschotel', 'oven')
+    },
+    {
+      slug: 'ontbijt-en-brunch',
+      title: 'Ontbijt en brunch',
+      seoTitle: 'Ontbijt- en brunchrecepten',
+      description: 'Van wentelteefjes en shakshuka tot Bircher müesli: voor een lang en lui weekendontbijt.',
+      recipes: course('Brunch')
+    },
+    {
+      slug: 'borrelhapjes',
+      title: 'Borrelhapjes',
+      seoTitle: 'Borrelhapjes en snacks',
+      description: 'Hapjes om te delen bij een drankje: bitterballen, tapas, dips en krokante snacks.',
+      recipes: course('Snack')
+    },
+    {
+      slug: 'voorgerechten',
+      title: 'Voorgerechten',
+      seoTitle: 'Voorgerechten',
+      description: 'Een goed begin: salades, carpaccio, kroketten en mezze voor een etentje.',
+      recipes: course('Voorgerecht')
+    },
+    {
+      slug: 'bijgerechten',
+      title: 'Bijgerechten',
+      seoTitle: 'Bijgerechten',
+      description: 'Groenten, aardappels en brood om naast je hoofdgerecht te zetten.',
+      recipes: course('Bijgerecht')
+    },
+    {
+      slug: 'soep',
+      title: 'Soep van de dag',
+      seoTitle: 'Soeprecepten',
+      description: 'Van een snelle bouillon tot een vullende maaltijdsoep.',
+      recipes: course('Soep')
     },
     {
       slug: 'iets-zoets',
       title: 'Iets zoets',
+      seoTitle: 'Desserts en zoete recepten',
       description: 'Desserts, gebak en zoete lekkernijen.',
-      recipes: recipes.filter(recipe => recipe.course === 'Dessert')
+      recipes: course('Dessert')
+    },
+    {
+      slug: 'comfortfood',
+      title: 'Comfortfood',
+      seoTitle: 'Comfortfood: stoofpotten en stamppotten',
+      description: 'Stoofpotten, stamppotten en ovenschotels voor koude dagen.',
+      recipes: tagged('comfortfood', 'stoofvlees', 'stamppot', 'winter', 'ovenschotel')
+    },
+    {
+      slug: 'klassiekers',
+      title: 'Klassiekers',
+      seoTitle: 'Klassieke recepten uit de wereldkeuken',
+      description: 'Gerechten die al generaties meegaan, zoals ze in hun land van herkomst bedoeld zijn.',
+      recipes: tagged('klassiek')
+    },
+    {
+      slug: 'gezellig-samen-eten',
+      title: 'Gezellig samen eten',
+      seoTitle: 'Recepten om samen te eten',
+      description: 'Gerechten om midden op tafel te zetten, met vrienden of familie eromheen.',
+      recipes: tagged('gezellig', 'feest', 'fondue', 'delen', 'barbecue')
     }
   ]
   return collections.filter(collection => collection.recipes.length > 0)
 }
+
+export const collectionPath = (slug: string) => `/inspiratie/${slug}`
 
 // Props voor TileCard (keukens- en inspiratietegels).
 const countLabel = (count: number) => `${count} ${count === 1 ? 'recept' : 'recepten'}`
@@ -271,5 +341,5 @@ export function cuisineTile(cuisine: CuisineWithRecipes, used?: Set<string>) {
 }
 
 export function collectionTile(collection: Collection, used?: Set<string>) {
-  return { href: `/inspiratie#${collection.slug}`, title: collection.title, subtitle: countLabel(collection.recipes.length), image: firstImage(collection.recipes, used) }
+  return { href: collectionPath(collection.slug), title: collection.title, subtitle: countLabel(collection.recipes.length), image: firstImage(collection.recipes, used) }
 }
