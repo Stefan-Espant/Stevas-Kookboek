@@ -1,8 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.wald'
 import PageHeader from '../../components/PageHeader.wald'
-import TileCard from '../../components/TileCard.wald'
-import { cuisineTile, getCuisines } from '../../lib/recipes'
+import { getCuisines, recipePath } from '../../lib/recipes'
 import { breadcrumbSchema, clipDescription, collectionSchema } from '../../lib/site'
 const cuisines = await getCuisines()
 const lead = 'Reis mee langs de keukens van Europa en daarbuiten. Kies een keuken en ontdek de recepten die erbij horen.'
@@ -11,38 +10,316 @@ const schema = [
   breadcrumbSchema([['Home', '/'], ['Keukens', '/keukens']]),
   collectionSchema('Keukens', description, '/keukens', cuisines.map(c => [`De ${c.adjective} keuken`, `/keukens/${c.slug}`]))
 ]
-const usedImages = new Set<string>()
-// Byzantium 12-kolomsgrid: 12 kolommen op mobiel, 6 vanaf sm, 4 vanaf lg.
-const cells = await Promise.all(cuisines.map(async (cuisine) =>
-  `<div class="byz-col-span-12 byz-col-span-sm-6 byz-col-span-lg-4">${await TileCard.render(cuisineTile(cuisine, usedImages))}</div>`
-))
-const gridHtml = cuisines.length
-  ? `<div class="cuisines__grid byz-grid byz-grid--12 byz-gap-lg">${cells.join('')}</div>`
+const countLabel = (count: number) => `${count} ${count === 1 ? 'recept' : 'recepten'}`
+const stripHtml = (html: string) => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+
+// Snelmenu bovenaan: spring naar een keuken.
+const jumpHtml = cuisines.length > 1
+  ? renderTemplate`<nav class="cuisines__jump" aria-label="Spring naar een keuken"><ul>${new SafeHtml(cuisines.map(c => renderTemplate`<li><a href="#${c.slug}">${c.name} <span>${c.recipes.length}</span></a></li>`).join(''))}</ul></nav>`
+  : ''
+
+// Keukens zonder foto krijgen een reisstempel ("Kook de wereld rond"): SVG met tekst langs de rand
+// en een ruisfilter dat de inkt er gestempeld laat uitzien. Decoratief, dus aria-hidden.
+const stampHtml = (slug: string, name: string, count: number) => {
+  const nameSize = Math.min(36, Math.round(150 / (name.length * 0.48)))
+  return renderTemplate`<svg class="stamp" viewBox="0 0 240 240" aria-hidden="true" focusable="false">
+    <defs>
+      <path id="stamp-rand-${slug}" d="M 120 120 m -90 0 a 90 90 0 1 1 180 0 a 90 90 0 1 1 -180 0" />
+      <filter id="stamp-inkt-${slug}">
+        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="${slug.length}" />
+        <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -2.6 0 0 0 1.9" />
+        <feComposite in="SourceGraphic" operator="in" />
+      </filter>
+    </defs>
+    <g filter="url(#stamp-inkt-${slug})">
+      <circle cx="120" cy="120" r="114" fill="none" stroke="currentColor" stroke-width="5" />
+      <circle cx="120" cy="120" r="103" fill="none" stroke="currentColor" stroke-width="1.5" />
+      <circle cx="120" cy="120" r="70" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 5" />
+      <text class="stamp__rand" fill="currentColor"><textPath href="#stamp-rand-${slug}" textLength="560" lengthAdjust="spacing">STEVA'S KOOKBOEK ✦ KOOK DE WERELD ROND ✦</textPath></text>
+      <text class="stamp__naam" x="120" y="124" text-anchor="middle" fill="currentColor" font-size="${nameSize}">${name}</text>
+      <text class="stamp__aantal" x="120" y="152" text-anchor="middle" fill="currentColor">${count} RECEPTEN</text>
+    </g>
+  </svg>`
+}
+
+// Per keuken een "hoofdstuk": nummer, naam, intro uit de collectie, drie kenmerkende gerechten
+// (klassieke hoofdgerechten eerst) en een beeld. Om en om links/rechts, zoals de pagina's van een kookboek.
+const chapters = cuisines.map((cuisine, index) => {
+  const href = `/keukens/${cuisine.slug}`
+  const intro = clipDescription(stripHtml(cuisine.introHtml), 280)
+  const classic = (r: typeof cuisine.recipes[number]) => r.tags.some(tag => tag.toLowerCase() === 'klassiek')
+  const signature = [
+    ...cuisine.recipes.filter(r => classic(r) && r.course === 'Hoofdgerecht'),
+    ...cuisine.recipes.filter(classic),
+    ...cuisine.recipes
+  ].filter((recipe, i, list) => list.indexOf(recipe) === i).slice(0, 3)
+  const image = cuisine.image || cuisine.recipes.find(r => r.image)?.image || ''
+  const visual = image
+    ? renderTemplate`<img src="${image}" alt="" loading="lazy" width="1200" height="900" class="chapter__image">`
+    : renderTemplate`<span class="chapter__image chapter__image--placeholder" aria-hidden="true"><span class="stamp-wrap" data-reveal="stamp">${new SafeHtml(stampHtml(cuisine.slug, cuisine.name, cuisine.recipes.length))}</span></span>`
+  // Beeld en tekst schuiven vanaf hun eigen kant binnen (om en om gespiegeld vanaf lg).
+  const textSide = index % 2 ? 'left' : 'right'
+  const mediaReveal = image ? 'data-reveal="wipe" data-parallax' : ''
+  const number = String(index + 1).padStart(2, '0')
+  return renderTemplate`<section class="chapter" id="${cuisine.slug}" aria-labelledby="${cuisine.slug}-titel">
+    <a href="${href}" class="chapter__media" tabindex="-1" aria-hidden="true" ${new SafeHtml(mediaReveal)}>${new SafeHtml(visual)}</a>
+    <div class="chapter__body" data-reveal="${textSide}">
+      <p class="chapter__number" aria-hidden="true">${number}</p>
+      <h2 class="chapter__title" id="${cuisine.slug}-titel"><a href="${href}">${cuisine.name}</a></h2>
+      <p class="chapter__count">${countLabel(cuisine.recipes.length)}</p>
+      ${new SafeHtml(intro ? renderTemplate`<p class="chapter__intro">${intro}</p>` : '')}
+      <p class="chapter__label">Om mee te beginnen</p>
+      <ul class="chapter__dishes">${new SafeHtml(signature.map(r => renderTemplate`<li><a href="${recipePath(r.slug)}">${r.title}</a></li>`).join(''))}</ul>
+      <a href="${href}" class="chapter__button">Ontdek de ${cuisine.adjective} keuken</a>
+    </div>
+  </section>`
+})
+const chaptersHtml = cuisines.length
+  ? chapters.join('')
   : '<p class="cuisines__empty">Binnenkort verschijnen hier de eerste keukens!</p>'
 ---
 <Layout title="Recepten per keuken" description={description} path="/keukens" schema={schema}>
   <main class="cuisines">
     <PageHeader kicker="Keukens" title="Kook de wereld rond" lead={lead} />
-    {new SafeHtml(gridHtml)}
+    {new SafeHtml(jumpHtml)}
+    {new SafeHtml(chaptersHtml)}
   </main>
 </Layout>
 
 <style>
-/* Grid en lege staat zijn conditioneel, dus in de frontmatter opgebouwd — genest onder de gescopete main. */
+/* Snelmenu, hoofdstukken en lege staat zijn in de frontmatter opgebouwd — genest onder de gescopete main. */
 .cuisines {
   max-width: var(--steva-pagina-breedte);
   margin: 0 auto;
   padding: var(--byz-space-12) var(--steva-pagina-marge) var(--byz-space-24);
 
+  /* Snelmenu */
+  & .cuisines__jump ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--byz-space-2);
+    margin: 0 0 var(--byz-space-20);
+    padding: 0;
+    list-style: none;
+  }
+  & .cuisines__jump a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--byz-space-2);
+    padding: var(--byz-space-2) var(--byz-space-2) var(--byz-space-2) var(--byz-space-5);
+    border-radius: 999px;
+    background: rgb(67 11 0 / 0.55);
+    box-shadow: inset 0 0 0 1px var(--byz-color-border);
+    color: var(--byz-color-text-secondary);
+    font-size: var(--byz-text-sm);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  & .cuisines__jump a span {
+    min-width: 1.75rem;
+    padding: 0.125rem var(--byz-space-2);
+    border-radius: 999px;
+    background: var(--steva-bordeaux-licht);
+    color: var(--byz-color-text-primary);
+    text-align: center;
+  }
+  & .cuisines__jump a:hover {
+    background: var(--byz-color-accent);
+    color: var(--steva-bordeaux-donker);
+  }
+
+  /* Hoofdstukken */
+  & .chapter {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--byz-space-8);
+    align-items: center;
+    scroll-margin-top: calc(6rem + var(--byz-space-6));
+  }
+  & .chapter + .chapter {
+    margin-top: var(--byz-space-20);
+  }
+  & .chapter__media {
+    display: block;
+    overflow: hidden;
+    text-decoration: none;
+    border-radius: 0.875rem;
+    box-shadow: 8px 8px 24px rgb(0 0 0 / 0.3);
+  }
+  & .chapter__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    transition: transform var(--byz-duration-slow) var(--byz-ease-out);
+  }
+  & .chapter:hover .chapter__image {
+    transform: scale(1.03);
+  }
+  /* Zonder foto: een reisstempel op de marmertextuur. */
+  & .chapter__image--placeholder {
+    display: grid;
+    place-items: center;
+    padding: var(--byz-space-6);
+    background:
+      radial-gradient(70% 70% at 50% 50%, rgb(140 35 14 / 0.4), rgb(67 11 0 / 0.7)),
+      url("/images/hero-textuur.webp") center / cover,
+      var(--byz-color-surface);
+    background-blend-mode: normal, multiply, normal;
+    color: var(--steva-goud);
+  }
+  & .stamp-wrap {
+    display: block;
+    width: min(70%, 20rem);
+  }
+  & .stamp {
+    display: block;
+    width: 100%;
+    height: auto;
+    opacity: 0.85;
+    transform: rotate(-9deg);
+    mix-blend-mode: screen;
+  }
+  & .chapter:nth-of-type(even) .stamp {
+    transform: rotate(7deg);
+  }
+  & .stamp__rand {
+    font-size: 15px;
+    font-weight: 600;
+  }
+  & .stamp__naam {
+    font-family: var(--steva-font-script);
+  }
+  & .stamp__aantal {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+  }
+  & .chapter__number {
+    margin: 0;
+    color: transparent;
+    font-size: clamp(3.5rem, 8vw, 5.5rem);
+    font-weight: var(--byz-font-semibold);
+    line-height: 0.9;
+    -webkit-text-stroke: 1.5px var(--byz-color-accent);
+  }
+  & .chapter__title {
+    overflow-wrap: break-word;
+    hyphens: auto;
+    margin: var(--byz-space-2) 0 0;
+    font-size: var(--byz-text-4xl);
+    font-weight: var(--byz-font-semibold);
+    line-height: 1.1;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    text-shadow: var(--steva-tekst-schaduw);
+  }
+  & .chapter__title a {
+    color: var(--byz-color-text-primary);
+    text-decoration: none;
+  }
+  & .chapter__count {
+    margin: var(--byz-space-1) 0 var(--byz-space-5);
+    color: var(--byz-color-accent);
+    font-family: var(--steva-font-script);
+    font-size: var(--byz-text-xl);
+  }
+  & .chapter__intro {
+    max-width: 60ch;
+    margin: 0 0 var(--byz-space-6);
+    color: var(--byz-color-text-muted);
+    line-height: var(--byz-leading-relaxed);
+  }
+  & .chapter__label {
+    margin: 0 0 var(--byz-space-2);
+    color: var(--byz-color-text-secondary);
+    font-size: var(--byz-text-xs);
+    font-weight: var(--byz-font-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  & .chapter__dishes {
+    margin: 0 0 var(--byz-space-8);
+    padding: 0;
+    list-style: none;
+  }
+  & .chapter__dishes li {
+    border-top: 1px solid var(--byz-color-border);
+  }
+  & .chapter__dishes li:last-child {
+    border-bottom: 1px solid var(--byz-color-border);
+  }
+  & .chapter__dishes a {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--byz-space-4);
+    padding: var(--byz-space-3) 0;
+    color: var(--byz-color-text-primary);
+    font-weight: var(--byz-font-semibold);
+    text-decoration: none;
+  }
+  & .chapter__dishes a::after {
+    content: "→";
+    color: var(--byz-color-accent);
+    transition: transform var(--byz-duration-normal);
+  }
+  & .chapter__dishes a:hover {
+    color: var(--byz-color-text-secondary);
+  }
+  & .chapter__dishes a:hover::after {
+    transform: translateX(4px);
+  }
+  & .chapter__button {
+    display: inline-block;
+    padding: var(--byz-space-3) var(--byz-space-6);
+    border-radius: 0.5rem;
+    background: var(--byz-color-accent);
+    box-shadow: inset 0 -4px 0 var(--steva-oranje-donker), 0 2px 8px var(--steva-bordeaux-rand);
+    color: var(--steva-bordeaux-donker);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    text-decoration: none;
+    text-shadow: 0 1px 0 rgb(255 255 255 / 0.3);
+  }
+  & .chapter__button:hover {
+    background: var(--steva-oranje-donker);
+  }
+  & .chapter__button:active {
+    box-shadow: inset 0 -1px 0 var(--steva-oranje-donker), inset 0 2px 4px rgb(67 11 0 / 0.35);
+    transform: translateY(3px);
+  }
   & .cuisines__empty {
     color: var(--byz-color-text-secondary);
     font-family: var(--steva-font-script);
     font-size: var(--byz-text-xl);
     text-align: center;
   }
+
+  /* Vanaf lg: beeld 7 kolommen, tekst 5; om en om gespiegeld. */
   @media (min-width: 1024px) {
-    & .cuisines__grid {
-      gap: var(--byz-space-10);
+    & .chapter {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: var(--byz-space-12);
+    }
+    & .chapter + .chapter {
+      margin-top: var(--byz-space-24);
+    }
+    & .chapter__media {
+      grid-column: 1 / span 7;
+      grid-row: 1;
+    }
+    & .chapter__body {
+      grid-column: 8 / span 5;
+      grid-row: 1;
+    }
+    & .chapter:nth-of-type(even) .chapter__media {
+      grid-column: 6 / span 7;
+    }
+    & .chapter:nth-of-type(even) .chapter__body {
+      grid-column: 1 / span 5;
     }
   }
 }

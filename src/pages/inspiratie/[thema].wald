@@ -88,7 +88,7 @@ const othersHtml = others.length
   }
   & .theme__others a:hover {
     background: var(--byz-color-accent);
-    color: var(--steva-creme);
+    color: var(--steva-bordeaux-donker);
   }
 }
 </style>

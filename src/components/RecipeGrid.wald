@@ -4,9 +4,9 @@ import type { RecipeSummary } from '../lib/recipes'
 type Props = { recipes: RecipeSummary[], headingLevel?: 2 | 3 }
 const { recipes, headingLevel = 3 } = $$props
 // Byzantium 12-kolomsgrid: 12 kolommen op mobiel, 6 vanaf sm, 4 vanaf lg. data-cuisine
-// wordt gebruikt door de keukenfilter op /recepten, data-search door /zoeken.
+// en data-course worden gebruikt door de filters op /recepten, data-search door /zoeken.
 const cells = await Promise.all(recipes.map(async (recipe) =>
-  renderTemplate`<div class="byz-col-span-12 byz-col-span-sm-6 byz-col-span-lg-4" data-cuisine="${recipe.cuisine?.slug ?? ''}" data-search="${recipe.searchText}">${new SafeHtml(await RecipeCard.render({ recipe, headingLevel }))}</div>`
+  renderTemplate`<div class="byz-col-span-12 byz-col-span-sm-6 byz-col-span-lg-4" data-reveal="card" data-cuisine="${recipe.cuisine?.slug ?? ''}" data-course="${recipe.course}" data-search="${recipe.searchText}">${new SafeHtml(await RecipeCard.render({ recipe, headingLevel }))}</div>`
 ))
 ---
 <div class="recipe-grid byz-grid byz-grid--12 byz-gap-lg">{new SafeHtml(cells.join(''))}</div>

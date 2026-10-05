@@ -83,6 +83,10 @@ const aboutMenuLink = aboutHref ? renderTemplate`<a href="${aboutHref}">Over Ste
     color: var(--byz-color-text-primary);
   }
 }
+.site-header__search:active {
+  box-shadow: inset 0 -1px 0 var(--steva-oranje-donker), inset 0 2px 4px rgb(67 11 0 / 0.35);
+  transform: translateY(3px);
+}
 .site-header__search {
   display: inline-flex;
   align-items: center;
@@ -91,7 +95,7 @@ const aboutMenuLink = aboutHref ? renderTemplate`<a href="${aboutHref}">Over Ste
   border-radius: 0.5rem;
   background: var(--byz-color-accent);
   box-shadow: inset 0 -4px 0 var(--steva-oranje-donker), 0 2px 8px var(--steva-bordeaux-rand);
-  color: var(--byz-color-text-primary);
+  color: var(--steva-bordeaux-donker);
   font-size: 1rem;
   font-weight: var(--byz-font-semibold);
   line-height: 1.5rem;

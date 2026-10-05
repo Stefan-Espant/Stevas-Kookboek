@@ -5,6 +5,9 @@ type Props = { recipe: RecipeSummary, headingLevel?: 2 | 3 }
 const { recipe, headingLevel = 3 } = $$props
 const heading = new SafeHtml(headingLevel === 2 ? 'h2' : 'h3')
 const titleHtml = renderTemplate`<${heading} class="recipe-card__title">${recipe.title}</${heading}>`
+// Keuken en totale tijd onder de titel: genoeg om te kiezen zonder de kaart te openen.
+const meta = [recipe.cuisine?.name, recipe.totalTime ? `${recipe.totalTime} min` : ''].filter(Boolean).join(' · ')
+const metaHtml = meta ? renderTemplate`<p class="recipe-card__meta">${meta}</p>` : ''
 // Zonder foto in Centaur: marmertextuur uit het ontwerp met het logo.
 const image = recipe.image
   ? renderTemplate`<img src="${recipe.image}" alt="" loading="lazy" class="recipe-card__image">`
@@ -12,7 +15,10 @@ const image = recipe.image
 ---
 <a href={recipePath(recipe.slug)} class="recipe-card" wald:prefetch="visible">
   {new SafeHtml(image)}
-  {new SafeHtml(titleHtml)}
+  <div class="recipe-card__text">
+    {new SafeHtml(titleHtml)}
+    {new SafeHtml(metaHtml)}
+  </div>
 </a>
 
 <style>
@@ -54,10 +60,7 @@ const image = recipe.image
     /* Lange Nederlandse samenstellingen ("boerenkoolstamppot") passen anders niet op een telefoon. */
     overflow-wrap: break-word;
     hyphens: auto;
-    position: relative;
-    z-index: 1;
     margin: 0;
-    padding: 0 var(--byz-space-8) 2.0625rem;
     color: var(--byz-color-text-primary);
     font-size: var(--byz-text-2xl);
     letter-spacing: 0;
@@ -66,6 +69,21 @@ const image = recipe.image
     text-transform: uppercase;
     text-shadow: var(--steva-tekst-schaduw);
   }
+  & .recipe-card__meta {
+    margin: var(--byz-space-2) 0 0;
+    color: var(--byz-color-text-secondary);
+    font-size: var(--byz-text-sm);
+    font-weight: var(--byz-font-semibold);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-shadow: var(--steva-tekst-schaduw);
+  }
+}
+.recipe-card__text {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 0 var(--byz-space-8) var(--byz-space-8);
 }
 /* Figma: "Schaduw" — donkere verloop onderin zodat de titel leesbaar blijft. */
 .recipe-card::after {

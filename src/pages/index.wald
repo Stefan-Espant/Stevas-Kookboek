@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.wald'
 import HomeHero from '../components/HomeHero.wald'
 import RecipeCard from '../components/RecipeCard.wald'
 import TileCard from '../components/TileCard.wald'
+import CuisineMarquee from '../components/CuisineMarquee.wald'
 import { getPage, getSiteSettings } from '../lib/cms'
 import { collectionTile, cuisineTile, getCollections, getCuisines, getLatestRecipes } from '../lib/recipes'
 import { clipDescription } from '../lib/site'
@@ -17,8 +18,8 @@ const [site, page, recipes, cuisines, collections] = await Promise.all([
 // (6 kolommen × 2 rijen), de volgende vier klein (3 kolommen). Precies vijf vult het grid.
 // Tablet: groot recept over de volle breedte, de rest 2 per rij. Mobiel: alles onder elkaar.
 const cards = await Promise.all(recipes.map(async (recipe, index) => index === 0
-  ? `<div class="home__recipe home__recipe--uitgelicht byz-col-span-12 byz-col-span-lg-6">${await RecipeCard.render({ recipe })}</div>`
-  : `<div class="home__recipe byz-col-span-12 byz-col-span-sm-6 byz-col-span-lg-3">${await RecipeCard.render({ recipe })}</div>`
+  ? `<div class="home__recipe home__recipe--uitgelicht byz-col-span-12 byz-col-span-lg-6" data-reveal="card">${await RecipeCard.render({ recipe })}</div>`
+  : `<div class="home__recipe byz-col-span-12 byz-col-span-sm-6 byz-col-span-lg-3" data-reveal="card">${await RecipeCard.render({ recipe })}</div>`
 ))
 // De homepage heet in Centaur "Homepage" — als zoektitel nietszeggend, dus alleen de
 // SEO-velden uit Centaur gebruiken en anders een titel met merknaam en belofte.
@@ -34,7 +35,7 @@ const recipeList = recipes.length
 const sectionHtml = (id: string, title: string, link: [href: string, label: string] | null, content: string, band = false) => renderTemplate`
   <section class="home__section${band ? ' home__section--band' : ''}" aria-labelledby="${id}">
     <div class="home__section-inner">
-      <div class="home__section-head">
+      <div class="home__section-head" data-reveal="left">
         <h2 class="home__section-title" id="${id}">${title}</h2>
         ${new SafeHtml(link ? renderTemplate`<a class="home__section-link" href="${link[0]}">${link[1]} <span aria-hidden="true">→</span></a>` : '')}
       </div>
@@ -43,7 +44,10 @@ const sectionHtml = (id: string, title: string, link: [href: string, label: stri
   </section>`
 const tileGrid = async (tiles: Array<Parameters<typeof TileCard.render>[0]>) =>
   `<div class="home__tiles byz-grid byz-grid--12 byz-gap-lg">${(await Promise.all(tiles.map(async (tile) =>
-    `<div class="byz-col-span-12 byz-col-span-sm-6 byz-col-span-lg-4">${await TileCard.render(tile)}</div>`))).join('')}</div>`
+    `<div class="byz-col-span-12 byz-col-span-sm-6 byz-col-span-lg-4" data-reveal="wipe">${await TileCard.render(tile)}</div>`))).join('')}</div>`
+
+// Lopende band met alle keukens tussen de hero en de nieuwste recepten.
+const marqueeHtml = cuisines.length > 2 ? await CuisineMarquee.render({ cuisines }) : ''
 
 const usedImages = new Set<string>()
 const sections = [
@@ -55,6 +59,7 @@ const sections = [
 <Layout title={homeTitle} fullTitle={true} description={homeDescription} path="/">
   <main class="home">
     <HomeHero tagline={site?.tagline ?? ''} />
+    {new SafeHtml(marqueeHtml)}
     {new SafeHtml(sections)}
   </main>
 </Layout>

@@ -2,9 +2,10 @@
 import Layout from '../../layouts/Layout.wald'
 import PageHeader from '../../components/PageHeader.wald'
 import RecipeGrid from '../../components/RecipeGrid.wald'
-import { getAllRecipes, getCuisines, recipePath } from '../../lib/recipes'
+import FeaturedRecipe from '../../components/FeaturedRecipe.wald'
+import { collectionPath, getAllRecipes, getCollections, getCuisines, recipePath } from '../../lib/recipes'
 import { breadcrumbSchema, clipDescription, collectionSchema } from '../../lib/site'
-const [recipes, cuisines] = await Promise.all([getAllRecipes(), getCuisines()])
+const [recipes, cuisines, collections] = await Promise.all([getAllRecipes(), getCuisines(), getCollections()])
 const lead = `${recipes.length} ${recipes.length === 1 ? 'recept' : 'recepten'} uit keukens van over de hele wereld.`
 const description = clipDescription(`Alle recepten van Steva's Kookboek, uit keukens van over de hele wereld: ${recipes.map(r => r.title).join(', ')}.`)
 const schema = [
@@ -12,64 +13,344 @@ const schema = [
   collectionSchema('Alle recepten', description, '/recepten', recipes.map(r => [r.title, recipePath(r.slug)]))
 ]
 
-// Keukenfilter: knoppen alleen tonen als er meer dan één keuken is. Verborgen tot het
-// script draait, zodat je zonder JavaScript gewoon alle recepten ziet.
-const filterHtml = cuisines.length > 1
-  ? renderTemplate`<div class="recipes__filter" role="group" aria-label="Filter op keuken" hidden>
-      <button type="button" data-cuisine="" aria-pressed="true">Alle</button>
-      ${new SafeHtml(cuisines.map(cuisine => renderTemplate`<button type="button" data-cuisine="${cuisine.slug}" aria-pressed="false">${cuisine.name}</button>`).join(''))}
+// Kerncijfers onder de kop.
+const quick = recipes.filter(r => r.totalTime > 0 && r.totalTime <= 30).length
+const stats = [
+  [String(recipes.length), recipes.length === 1 ? 'recept' : 'recepten'],
+  [String(cuisines.length), cuisines.length === 1 ? 'keuken' : 'keukens'],
+  [String(quick), 'binnen 30 min']
+]
+const statsHtml = recipes.length
+  ? renderTemplate`<dl class="recipes__stats">${new SafeHtml(stats.map(([value, label]) => renderTemplate`<div><dt>${label}</dt><dd data-count="${value}">${value}</dd></div>`).join(''))}</dl>`
+  : ''
+
+// Uitgelicht: het nieuwste recept met een foto (anders gewoon het nieuwste).
+const featured = recipes.find(r => r.image) ?? recipes[0]
+const featuredHtml = featured ? await FeaturedRecipe.render({ recipe: featured, kicker: 'Nieuw in het kookboek' }) : ''
+
+// Thema's als horizontale strook; elk thema heeft een eigen pagina.
+const themesHtml = collections.length
+  ? renderTemplate`<section class="recipes__themes" aria-labelledby="themas">
+      <div class="recipes__themes-sticky">
+      <div class="recipes__section-head" data-reveal="left">
+        <h2 id="themas" class="recipes__heading">Waar heb je zin in?</h2>
+        <a href="/inspiratie" class="recipes__more">Alle thema's →</a>
+      </div>
+      <ul class="recipes__rail">${new SafeHtml(collections.map(c => renderTemplate`<li data-reveal><a href="${collectionPath(c.slug)}" class="recipes__theme">
+        <span class="recipes__theme-count">${c.recipes.length}</span>
+        <span class="recipes__theme-title">${c.title}</span>
+        <span class="recipes__theme-text">${c.description}</span>
+      </a></li>`).join(''))}</ul>
+      </div>
+    </section>`
+  : ''
+
+// Filters op gang en keuken. Verborgen tot het script draait, zodat je zonder JavaScript
+// gewoon alle recepten ziet.
+const COURSE_ORDER = ['Brunch', 'Voorgerecht', 'Soep', 'Hoofdgerecht', 'Bijgerecht', 'Snack', 'Dessert']
+const COURSE_LABEL: Record<string, string> = { Brunch: 'Ontbijt en brunch', Snack: 'Borrelhapjes' }
+const courses = [...new Set(recipes.map(r => r.course).filter(Boolean))]
+  .sort((a, b) => (COURSE_ORDER.indexOf(a) + 1 || 99) - (COURSE_ORDER.indexOf(b) + 1 || 99))
+const filterHtml = recipes.length > 1 && (courses.length > 1 || cuisines.length > 1)
+  ? renderTemplate`<div class="recipes__filters" hidden>
+      <div class="recipes__courses" role="group" aria-label="Filter op gang">
+        <button type="button" data-course="" aria-pressed="true">Alles</button>
+        ${new SafeHtml(courses.map(course => renderTemplate`<button type="button" data-course="${course}" aria-pressed="false">${COURSE_LABEL[course] ?? course}</button>`).join(''))}
+      </div>
+      <div class="recipes__filter-row">
+        <label class="recipes__select">
+          <span>Keuken</span>
+          <select name="keuken">
+            <option value="">Alle keukens</option>
+            ${new SafeHtml([...cuisines].sort((a, b) => a.name.localeCompare(b.name)).map(c => renderTemplate`<option value="${c.slug}">${c.name} (${c.recipes.length})</option>`).join(''))}
+          </select>
+        </label>
+        <p class="recipes__count" aria-live="polite"></p>
+      </div>
     </div>`
   : ''
 const gridHtml = recipes.length
-  ? await RecipeGrid.render({ recipes, headingLevel: 2 })
+  ? await RecipeGrid.render({ recipes, headingLevel: 3 })
   : '<p class="recipes__empty">Binnenkort verschijnen hier de eerste recepten!</p>'
+const allHtml = recipes.length
+  ? renderTemplate`<section class="recipes__all" aria-labelledby="alle-recepten">
+      <div class="recipes__section-head" data-reveal="left">
+        <h2 id="alle-recepten" class="recipes__heading">Blader door alles</h2>
+      </div>
+      ${new SafeHtml(filterHtml)}
+      ${new SafeHtml(gridHtml)}
+      <p class="recipes__none" hidden>Geen recepten met deze combinatie. <button type="button" data-reset>Wis de filters</button></p>
+    </section>`
+  : gridHtml
 ---
 <Layout title="Alle recepten" description={description} path="/recepten" schema={schema}>
   <main class="recipes">
     <PageHeader kicker="Recepten" title="Alle recepten" lead={lead} />
-    {new SafeHtml(filterHtml)}
-    {new SafeHtml(gridHtml)}
+    {new SafeHtml(statsHtml)}
+    {new SafeHtml(featuredHtml)}
+    {new SafeHtml(themesHtml)}
+    {new SafeHtml(allHtml)}
   </main>
 </Layout>
 
 <script>
-document.querySelectorAll('.recipes__filter').forEach(function (filter) {
-  var cells = document.querySelectorAll('.recipe-grid [data-cuisine]')
-  filter.addEventListener('click', function (event) {
-    var button = event.target.closest('button[data-cuisine]')
-    if (!button) return
-    var cuisine = button.dataset.cuisine
-    filter.querySelectorAll('button').forEach(function (b) {
-      b.setAttribute('aria-pressed', String(b === button))
-    })
+document.querySelectorAll('.recipes__filters').forEach(function (filters) {
+  var section = filters.closest('.recipes__all')
+  var cells = section.querySelectorAll('.recipe-grid [data-cuisine]')
+  var buttons = filters.querySelectorAll('button[data-course]')
+  var select = filters.querySelector('select')
+  var count = filters.querySelector('.recipes__count')
+  var none = section.querySelector('.recipes__none')
+  var state = { course: '', cuisine: '' }
+
+  function apply() {
+    var shown = 0
     cells.forEach(function (cell) {
-      cell.hidden = cuisine !== '' && cell.dataset.cuisine !== cuisine
+      var match = (!state.course || cell.dataset.course === state.course) &&
+        (!state.cuisine || cell.dataset.cuisine === state.cuisine)
+      cell.hidden = !match
+      if (match) shown++
     })
+    buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.course === state.course)) })
+    select.value = state.cuisine
+    count.textContent = shown + (shown === 1 ? ' recept' : ' recepten')
+    none.hidden = shown > 0
+    // Deelbare URL: /recepten?gang=Dessert&keuken=frans
+    var url = new URL(location.href)
+    state.course ? url.searchParams.set('gang', state.course) : url.searchParams.delete('gang')
+    state.cuisine ? url.searchParams.set('keuken', state.cuisine) : url.searchParams.delete('keuken')
+    history.replaceState(null, '', url)
+  }
+
+  filters.addEventListener('click', function (event) {
+    var button = event.target.closest('button[data-course]')
+    if (!button) return
+    state.course = button.dataset.course
+    apply()
   })
-  filter.hidden = false
+  select.addEventListener('change', function () {
+    state.cuisine = select.value
+    apply()
+  })
+  none.querySelector('[data-reset]').addEventListener('click', function () {
+    state.course = ''
+    state.cuisine = ''
+    apply()
+  })
+
+  var params = new URLSearchParams(location.search)
+  var course = params.get('gang') || ''
+  var cuisine = params.get('keuken') || ''
+  if ([].some.call(buttons, function (b) { return b.dataset.course === course })) state.course = course
+  if ([].some.call(select.options, function (o) { return o.value === cuisine })) state.cuisine = cuisine
+  apply()
+  filters.hidden = false
 })
 </script>
 
 <style>
-/* Filter en lege staat zijn conditioneel, dus in de frontmatter opgebouwd —
-   genest onder de gescopete main (zie RecipeCard.wald). */
+/* Thema-strook: helemaal naar links tot de laatste kaart aan de rechterrand staat. De zichtbare
+   breedte is de breedte van main (max. de paginabreedte). */
+@keyframes recipes-rail {
+  to { transform: translateX(calc(-100% + min(100vw, var(--steva-pagina-breedte)))); }
+}
+/* Alles onder de kop is conditioneel en dus in de frontmatter opgebouwd — genest onder de
+   gescopete main (zie RecipeCard.wald). */
 .recipes {
   max-width: var(--steva-pagina-breedte);
   margin: 0 auto;
   padding: var(--byz-space-12) var(--steva-pagina-marge) var(--byz-space-24);
 
-  & .recipes__filter {
+  /* Kerncijfers */
+  & .recipes__stats {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--byz-space-4) var(--byz-space-12);
+    margin: calc(-1 * var(--byz-space-4)) 0 var(--byz-space-16);
+  }
+  & .recipes__stats div {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+  & .recipes__stats dd {
+    margin: 0;
+    color: var(--byz-color-text-primary);
+    font-size: var(--byz-text-4xl);
+    font-weight: var(--byz-font-semibold);
+    line-height: 1;
+    text-shadow: var(--steva-tekst-schaduw);
+  }
+  & .recipes__stats dt {
+    color: var(--byz-color-accent);
+    font-family: var(--steva-font-script);
+    font-size: var(--byz-text-lg);
+  }
+
+  /* Koppen van de secties */
+  & .recipes__themes,
+  & .recipes__all {
+    margin-top: var(--byz-space-20);
+  }
+  & .recipes__section-head {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--byz-space-2);
-    margin-bottom: var(--byz-space-12);
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--byz-space-2) var(--byz-space-6);
+    margin-bottom: var(--byz-space-8);
   }
-  & .recipes__filter[hidden],
-  & [data-cuisine][hidden] {
+  & .recipes__heading {
+    margin: 0;
+    font-size: var(--byz-text-2xl);
+    font-weight: var(--byz-font-semibold);
+    line-height: 1.23;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    text-shadow: var(--steva-tekst-schaduw);
+  }
+  & .recipes__more {
+    color: var(--byz-color-text-secondary);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  & .recipes__more:hover {
+    color: var(--byz-color-text-primary);
+  }
+
+  /* Thema-strook: horizontaal scrollen met snap; loopt door tot de rand van het scherm. */
+  & .recipes__rail {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(15rem, 18rem);
+    gap: var(--byz-space-4);
+    margin: 0 calc(-1 * var(--steva-pagina-marge));
+    /* Ruimte boven voor de tabjes: overflow-x: auto knipt ook verticaal af. */
+    padding: var(--byz-space-6) var(--steva-pagina-marge) var(--byz-space-6);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--steva-pagina-marge);
+    scrollbar-width: none;
+    list-style: none;
+  }
+  & .recipes__rail::-webkit-scrollbar {
     display: none;
   }
-  & .recipes__filter button {
+  /* Browsers met scroll-driven animations (Chrome, Edge, Safari 26), vanaf tablet: de strook
+     blijft staan terwijl je naar beneden scrolt en de thema's schuiven horizontaal voorbij.
+     De sectie is hoger dan het scherm; die extra hoogte is de "scrollweg" van de strook.
+     Anders (en bij minder beweging): gewoon horizontaal swipen. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) and (min-width: 768px) {
+      & .recipes__themes {
+        height: 260vh;
+        view-timeline-name: --themas;
+      }
+      & .recipes__themes-sticky {
+        position: sticky;
+        top: 6rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: calc(100vh - 6rem);
+        /* Tot de rand van main afknippen, niet tot de binnenrand: anders verdwijnen de
+           kaarten al bij de paginamarge. */
+        margin-inline: calc(-1 * var(--steva-pagina-marge));
+        padding-inline: var(--steva-pagina-marge);
+        overflow-x: clip;
+      }
+      & .recipes__rail {
+        width: max-content;
+        overflow: visible;
+        scroll-snap-type: none;
+        animation: recipes-rail linear both;
+        animation-timeline: --themas;
+        animation-range: contain 0% contain 100%;
+      }
+    }
+  }
+  & .recipes__rail li {
+    scroll-snap-align: start;
+  }
+  /* Als tabbladen in een receptenbak: een tabje links boven, papierachtige rand. */
+  & .recipes__theme {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: var(--byz-space-6);
+    border-radius: 0.75rem;
+    background:
+      linear-gradient(160deg, rgb(140 35 14 / 0.9), rgb(67 11 0 / 0.9)),
+      url("/images/hero-textuur.webp") center / cover;
+    background-blend-mode: normal, multiply;
+    box-shadow: 6px 6px 16px rgb(0 0 0 / 0.25), inset 0 0 0 1px var(--byz-color-border);
+    color: var(--byz-color-text-primary);
+    text-decoration: none;
+    transition: transform var(--byz-duration-normal) var(--byz-ease-default), box-shadow var(--byz-duration-normal);
+  }
+  & .recipes__theme::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 1.25rem;
+    width: 42%;
+    height: 0.9rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+    background: rgb(140 35 14 / 0.95);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1), inset 1px 0 0 var(--byz-color-border), inset -1px 0 0 var(--byz-color-border);
+  }
+  & .recipes__rail li:nth-child(3n + 2) .recipes__theme::before {
+    left: 29%;
+  }
+  & .recipes__rail li:nth-child(3n) .recipes__theme::before {
+    left: auto;
+    right: 1.25rem;
+  }
+  & .recipes__theme:hover {
+    transform: translateY(-4px);
+    box-shadow: 6px 10px 20px rgb(0 0 0 / 0.3), inset 0 0 0 1px var(--byz-color-accent);
+  }
+  & .recipes__theme-count {
+    color: var(--byz-color-accent);
+    font-size: var(--byz-text-4xl);
+    font-weight: var(--byz-font-semibold);
+    line-height: 1;
+    text-shadow: var(--steva-tekst-schaduw);
+  }
+  & .recipes__theme-title {
+    margin: var(--byz-space-3) 0 var(--byz-space-2);
+    font-size: var(--byz-text-lg);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    text-shadow: var(--steva-tekst-schaduw);
+  }
+  & .recipes__theme-text {
+    color: var(--byz-color-text-muted);
+    font-size: var(--byz-text-sm);
+    line-height: var(--byz-leading-relaxed);
+  }
+
+  /* Filters */
+  & .recipes__filters {
+    display: grid;
+    gap: var(--byz-space-4);
+    margin-bottom: var(--byz-space-10);
+  }
+  & .recipes__filters[hidden],
+  & [data-cuisine][hidden],
+  & .recipes__none[hidden] {
+    display: none;
+  }
+  & .recipes__courses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--byz-space-2);
+  }
+  & .recipes__courses button {
     padding: var(--byz-space-2) var(--byz-space-5);
     border: 0;
     border-radius: 999px;
@@ -81,10 +362,61 @@ document.querySelectorAll('.recipes__filter').forEach(function (filter) {
     text-transform: uppercase;
     cursor: pointer;
   }
-  & .recipes__filter button[aria-pressed="true"] {
+  & .recipes__courses button[aria-pressed="true"] {
     background: var(--byz-color-accent);
     box-shadow: inset 0 -3px 0 var(--steva-oranje-donker);
-    color: var(--steva-creme);
+    color: var(--steva-bordeaux-donker);
+  }
+  & .recipes__filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--byz-space-4);
+  }
+  & .recipes__select {
+    display: flex;
+    align-items: center;
+    gap: var(--byz-space-3);
+    color: var(--byz-color-text-secondary);
+    font-size: var(--byz-text-sm);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+  }
+  & .recipes__select select {
+    max-width: 100%;
+    padding: var(--byz-space-2) var(--byz-space-8) var(--byz-space-2) var(--byz-space-4);
+    border: 0;
+    border-radius: 0.5rem;
+    background: rgb(67 11 0 / 0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23ffc471' stroke-width='2'/%3E%3C/svg%3E") right 0.75rem center no-repeat;
+    box-shadow: inset 0 0 0 1px var(--byz-color-border);
+    color: var(--byz-color-text-primary);
+    font: inherit;
+    text-transform: none;
+    appearance: none;
+    cursor: pointer;
+  }
+  & .recipes__select option {
+    background: var(--steva-bordeaux-donker);
+  }
+  & .recipes__count {
+    margin: 0;
+    color: var(--byz-color-text-muted);
+    font-family: var(--steva-font-script);
+    font-size: var(--byz-text-lg);
+  }
+  & .recipes__none {
+    color: var(--byz-color-text-muted);
+    text-align: center;
+  }
+  & .recipes__none button {
+    border: 0;
+    background: none;
+    color: var(--byz-color-text-secondary);
+    font: inherit;
+    font-weight: var(--byz-font-semibold);
+    text-decoration: underline;
+    cursor: pointer;
   }
   & .recipes__empty {
     color: var(--byz-color-text-secondary);

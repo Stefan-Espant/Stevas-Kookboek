@@ -1,0 +1,187 @@
+---
+import { recipePath, type Recipe } from '../lib/recipes'
+import { clipDescription } from '../lib/site'
+/** Groot uitgelicht recept: foto naast titel, intro, kerncijfers en een knop. */
+type Props = { recipe: Recipe, kicker?: string }
+const { recipe, kicker = 'Uitgelicht' } = $$props
+const href = recipePath(recipe.slug)
+const intro = clipDescription(recipe.introHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(), 170)
+const facts = [
+  recipe.totalTime ? ['Tijd', `${recipe.totalTime} min`] : null,
+  recipe.servings ? ['Personen', String(recipe.servings)] : null,
+  recipe.difficulty ? ['Niveau', recipe.difficulty] : null
+].filter((fact): fact is string[] => fact !== null)
+const factsHtml = facts.map(([label, value]) => renderTemplate`<div><dt>${label}</dt><dd>${value}</dd></div>`).join('')
+// Zonder foto dezelfde placeholder als de receptkaarten.
+const imageHtml = recipe.image
+  ? renderTemplate`<img src="${recipe.image}" alt="${recipe.imageAlt}" width="1200" height="900" class="featured__image">`
+  : '<div class="featured__image featured__image--placeholder"><img src="/logo-steva.svg" alt=""></div>'
+const cuisineHtml = recipe.cuisine
+  ? renderTemplate`<a class="featured__cuisine" href="/keukens/${recipe.cuisine.slug}">${recipe.cuisine.adjective} keuken</a>`
+  : ''
+---
+<article class="featured">
+  <a href={href} class="featured__media" tabindex="-1" aria-hidden="true" data-parallax>{new SafeHtml(imageHtml)}</a>
+  <div class="featured__body">
+    <p class="featured__kicker">{kicker}</p>
+    <h2 class="featured__title"><a href={href}>{recipe.title}</a></h2>
+    <p class="featured__intro">{intro}</p>
+    <dl class="featured__facts">{new SafeHtml(factsHtml)}</dl>
+    <div class="featured__actions">
+      <a href={href} class="featured__button">Naar het recept</a>
+      {new SafeHtml(cuisineHtml)}
+    </div>
+  </div>
+</article>
+
+<style>
+/* Afbeelding, feiten en keukenlink zijn in de frontmatter opgebouwd — genest onder de gescopete article. */
+.featured {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border-radius: 0.875rem;
+  background: rgb(67 11 0 / 0.55);
+  box-shadow: 8px 8px 24px rgb(0 0 0 / 0.3), inset 0 0 0 1px var(--byz-color-border);
+
+  & .featured__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 16rem;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    transition: transform var(--byz-duration-slow) var(--byz-ease-out);
+  }
+  &:hover .featured__image {
+    transform: scale(1.03);
+  }
+  & .featured__image--placeholder {
+    display: grid;
+    place-items: center;
+    background: url("/images/hero-textuur.webp") center / cover, var(--byz-color-surface);
+    background-blend-mode: multiply, normal;
+  }
+  & .featured__image--placeholder img {
+    width: 45%;
+    opacity: 0.85;
+  }
+  & .featured__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--byz-space-6);
+    margin: 0 0 var(--byz-space-8);
+  }
+  & .featured__facts dt {
+    color: var(--byz-color-text-secondary);
+    font-size: var(--byz-text-xs);
+    font-weight: var(--byz-font-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  & .featured__facts dd {
+    margin: 0;
+    font-size: var(--byz-text-lg);
+    font-weight: var(--byz-font-semibold);
+  }
+  & .featured__cuisine {
+    color: var(--byz-color-text-secondary);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  & .featured__cuisine:hover {
+    color: var(--byz-color-text-primary);
+  }
+}
+.featured__media {
+  display: block;
+  overflow: hidden;
+  border-radius: 0.875rem 0.875rem 0 0;
+}
+.featured__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--byz-space-8) var(--byz-space-6) var(--byz-space-10);
+}
+.featured__kicker {
+  margin: 0;
+  color: var(--byz-color-accent);
+  font-family: var(--steva-font-script);
+  font-size: var(--byz-text-xl);
+  text-shadow: var(--steva-tekst-schaduw);
+}
+.featured__title {
+  overflow-wrap: break-word;
+  hyphens: auto;
+  margin: var(--byz-space-1) 0 var(--byz-space-4);
+  font-size: var(--byz-text-3xl);
+  font-weight: var(--byz-font-semibold);
+  line-height: 1.15;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-shadow: var(--steva-tekst-schaduw);
+}
+.featured__title a {
+  color: var(--byz-color-text-primary);
+  text-decoration: none;
+}
+.featured__intro {
+  margin: 0 0 var(--byz-space-5);
+  color: var(--byz-color-text-muted);
+  line-height: var(--byz-leading-relaxed);
+}
+.featured__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--byz-space-4) var(--byz-space-6);
+}
+.featured__button {
+  padding: var(--byz-space-3) var(--byz-space-6);
+  border-radius: 0.5rem;
+  background: var(--byz-color-accent);
+  box-shadow: inset 0 -4px 0 var(--steva-oranje-donker), 0 2px 8px var(--steva-bordeaux-rand);
+  color: var(--steva-bordeaux-donker);
+  font-weight: var(--byz-font-semibold);
+  text-transform: uppercase;
+  text-decoration: none;
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.3);
+}
+.featured__button:hover {
+  background: var(--steva-oranje-donker);
+}
+/* Indrukken: de knop zakt in zijn "rand". */
+.featured__button:active {
+  box-shadow: inset 0 -1px 0 var(--steva-oranje-donker), inset 0 2px 4px rgb(67 11 0 / 0.35);
+  transform: translateY(3px);
+}
+@media (min-width: 1024px) {
+  /* Het hele blok moet in één keer in beeld passen (venster min. header): de foto vult de
+     rij in plaats van een vaste 4:3-verhouding, die op 7 kolommen te hoog wordt. */
+  .featured {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    height: min(34rem, calc(100vh - 10rem));
+    min-height: 28rem;
+
+    & .featured__image {
+      min-height: 0;
+      aspect-ratio: auto;
+    }
+  }
+  .featured__media {
+    grid-column: span 7;
+    border-radius: 0.875rem 0 0 0.875rem;
+  }
+  .featured__body {
+    grid-column: span 5;
+    padding: var(--byz-space-8) var(--byz-space-10);
+  }
+  .featured__title {
+    /* Genoeg ruimte: niet afbreken ("West-Afrikaan-se"). */
+    hyphens: manual;
+    font-size: var(--byz-text-3xl);
+  }
+}
+</style>

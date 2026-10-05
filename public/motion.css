@@ -1,0 +1,66 @@
+/* Beweging voor de hele site: view transitions tussen pagina's en blokken die binnenschuiven.
+   Globaal (niet gescopet) en in public/, zodat elke pagina en elk component het gebruikt.
+   Alles staat binnen prefers-reduced-motion: no-preference — wie minder beweging wil, ziet
+   gewoon de pagina. Zie ook public/motion.js. */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ── View transitions tussen pagina's (zelfde site, gewone links) ──────────────────────── */
+  @view-transition {
+    navigation: auto;
+  }
+
+  /* Header en achtergrond blijven staan; alleen de inhoud wisselt. */
+  .site-header {
+    view-transition-name: site-header;
+  }
+  .page-backdrop {
+    view-transition-name: page-backdrop;
+  }
+  ::view-transition-group(site-header),
+  ::view-transition-group(page-backdrop) {
+    animation: none;
+  }
+
+  /* Oude pagina zakt licht weg en vervaagt, nieuwe komt omhoog — als een bladzijde omslaan. */
+  ::view-transition-old(root) {
+    animation: 260ms cubic-bezier(0.4, 0, 1, 1) both steva-page-out;
+  }
+  ::view-transition-new(root) {
+    animation: 520ms cubic-bezier(0.2, 0.7, 0.2, 1) 80ms both steva-page-in;
+  }
+
+  /* Receptfoto die van kaart naar receptpagina groeit (naam gezet door motion.js). Kaart en
+     receptfoto hebben een andere verhouding: snapshots bijsnijden i.p.v. vervormen. */
+  ::view-transition-group(recipe-image) {
+    animation-duration: 560ms;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  ::view-transition-old(recipe-image),
+  ::view-transition-new(recipe-image) {
+    height: 100%;
+    object-fit: cover;
+    overflow: clip;
+  }
+
+  /* ── Blokken die binnenschuiven ────────────────────────────────────────────────────────
+     GSAP (motion.js) animeert ze; tot dat gebeurt zijn ze verborgen, maar alleen als het
+     script draait (html.motion, gezet in <head>, met een vangnet-time-out). Varianten via
+     data-reveal: "" (omhoog), "card", "left", "right", "wipe", "stamp", "fade". Nooit op iets
+     dat bij het laden al in beeld staat: dat zou de Largest Contentful Paint vertragen. */
+  .motion [data-reveal] {
+    visibility: hidden;
+  }
+}
+
+@keyframes steva-page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-0.75rem) scale(0.99);
+  }
+}
+@keyframes steva-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+}

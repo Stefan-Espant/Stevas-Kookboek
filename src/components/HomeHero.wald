@@ -3,42 +3,260 @@ import SearchForm from './SearchForm.wald'
 type Props = { tagline: string }
 // Zolang er in Centaur geen tagline staat, de tekst uit het Figma-ontwerp.
 const tagline = $$props.tagline || 'Van makkelijke maaltijden tot uitgebreide diners'
+// Wisselend woord in de titel. In de HTML staat alleen "recepten" (dat lezen Google, schermlezers
+// en de leesweergave); het script hieronder wisselt het woord als decoratie.
+const WORDS = ['recepten', 'stoofpotten', "curry's", "pasta's", 'soepen', 'desserts']
 ---
 <section class="home-hero">
-  <h1 class="home-hero__title">Ontdek de lekkerste recepten</h1>
+  <canvas class="home-hero__steam" aria-hidden="true"></canvas>
+  <h1 class="home-hero__title">
+    <span class="home-hero__line">Ontdek de lekkerste</span>
+    <span class="home-hero__line home-hero__word" data-words={WORDS.join('|')}>{WORDS[0]}</span>
+  </h1>
   <p class="home-hero__tagline">{tagline}</p>
   <div class="home-hero__search">
     <SearchForm id="zoeken" />
   </div>
 </section>
 
+<script>
+// Wisselend woord: rolt weg, wisselt, rolt terug. Alleen in beeld, bij een zichtbaar tabblad en
+// zonder "minder beweging". De echte tekst ("recepten") blijft voor schermlezers in een sr-only
+// kopie; het wisselende woord zelf is dan aria-hidden.
+(function () {
+  var word = document.querySelector('.home-hero__word')
+  if (!word || !word.animate || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  var words = word.dataset.words.split('|')
+  var label = document.createElement('span')
+  label.className = 'byz-sr-only'
+  label.textContent = word.textContent
+  word.after(label)
+  word.setAttribute('aria-hidden', 'true')
+
+  var index = 0
+  var visible = true
+  new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting }).observe(word)
+  var EASE = 'cubic-bezier(0.2, 0.7, 0.2, 1)'
+  setInterval(function () {
+    if (!visible || document.hidden) return
+    word.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-0.4em) rotateX(70deg)' }],
+      { duration: 350, easing: 'ease-in', fill: 'forwards' })
+      .finished.then(function () {
+        index = (index + 1) % words.length
+        word.textContent = words[index]
+        word.animate([{ opacity: 0, transform: 'translateY(0.4em) rotateX(-70deg)' }, { opacity: 1, transform: 'none' }],
+          { duration: 550, easing: EASE, fill: 'forwards' })
+      })
+  }, 2600)
+})()
+
+// Stoom boven de pan: een shader achter de titel, met WebGPU en anders WebGL2. Puur decoratief:
+// niet bij "minder beweging", alleen renderen als de hero in beeld en het tabblad zichtbaar is, op
+// lage resolutie (max. 1× pixeldichtheid, halve grootte). Zonder beide: de gewone achtergrond.
+// (Puntkomma vooraan: anders plakt JavaScript deze IIFE aan de vorige vast.)
+;(function () {
+  var canvas = document.querySelector('.home-hero__steam')
+  if (!canvas || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+  // De stoom zelf, gedeeld door beide varianten (WGSL en GLSL lijken genoeg op elkaar).
+  // Stoom stijgt op en kronkelt (domein vervormd door een tweede ruislaag), is het dichtst
+  // onderin het midden (de "pan") en waaiert uit en vervaagt naar boven.
+  var BODY = {
+    noise: 'h(i), h(i + V2(1.0, 0.0)), s.x), mix(h(i + V2(0.0, 1.0)), h(i + V2(1.0, 1.0)), s.x), s.y)',
+    main: [
+      'float t = u_time * 0.07;',
+      'V2 p = V2(uv.x * u_aspect, uv.y) * 2.4;',
+      'V2 warp = V2(fbm(p + V2(0.0, -t * 3.0)), fbm(p + V2(5.2, -t * 2.2)));',
+      'float d = fbm(p * 1.3 + warp * 2.0 + V2(t * 0.6, -t * 4.5));',
+      'float column = 1.0 - smoothstep(0.1, 1.05, abs(uv.x - 0.5) * 2.0 + uv.y * 0.3);',
+      'float fade = (1.0 - smoothstep(0.35, 1.0, uv.y)) * smoothstep(0.0, 0.25, uv.y);',
+      'float a = smoothstep(0.38, 0.82, d) * column * fade * 0.55;'
+    ]
+  }
+
+  var WGSL = [
+    'struct U { time: f32, aspect: f32 }',
+    '@group(0) @binding(0) var<uniform> u: U;',
+    'struct VO { @builtin(position) pos: vec4f, @location(0) uv: vec2f }',
+    '@vertex fn vs(@builtin(vertex_index) i: u32) -> VO {',
+    '  var p = array<vec2f, 3>(vec2f(-1.0, -3.0), vec2f(-1.0, 1.0), vec2f(3.0, 1.0));',
+    '  var o: VO; o.pos = vec4f(p[i], 0.0, 1.0); o.uv = p[i] * 0.5 + 0.5; return o;',
+    '}',
+    'fn h(p: vec2f) -> f32 { return fract(sin(dot(p, vec2f(127.1, 311.7))) * 43758.5453); }',
+    'fn n(p: vec2f) -> f32 { let i = floor(p); let f = fract(p); let s = f * f * (3.0 - 2.0 * f);',
+    '  return mix(mix(' + BODY.noise.replace(/V2/g, 'vec2f') + '; }',
+    'fn fbm(p0: vec2f) -> f32 { var p = p0; var v = 0.0; var a = 0.5;',
+    '  for (var k = 0; k < 5; k++) { v += a * n(p); p = p * 2.03 + vec2f(1.7, 9.2); a *= 0.5; } return v; }',
+    '@fragment fn fs(in: VO) -> @location(0) vec4f {',
+    '  let uv = in.uv; let u_time = u.time; let u_aspect = u.aspect;',
+    BODY.main.join('\n').replace(/float /g, 'let ').replace(/V2 /g, 'let ').replace(/V2/g, 'vec2f'),
+    '  return vec4f(vec3f(0.99, 0.94, 0.86) * a, a);',
+    '}'
+  ].join('\n')
+
+  var GLSL = [
+    '#version 300 es',
+    'precision mediump float;',
+    'uniform float u_time; uniform float u_aspect; in vec2 uv; out vec4 color;',
+    'float h(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
+    'float n(vec2 p) { vec2 i = floor(p); vec2 f = fract(p); vec2 s = f * f * (3.0 - 2.0 * f);',
+    '  return mix(mix(' + BODY.noise.replace(/V2/g, 'vec2') + '; }',
+    'float fbm(vec2 p) { float v = 0.0; float a = 0.5;',
+    '  for (int k = 0; k < 5; k++) { v += a * n(p); p = p * 2.03 + vec2(1.7, 9.2); a *= 0.5; } return v; }',
+    'void main() {',
+    BODY.main.join('\n').replace(/V2/g, 'vec2'),
+    '  color = vec4(vec3(0.99, 0.94, 0.86) * a, a);',
+    '}'
+  ].join('\n')
+  var GLSL_VERTEX = '#version 300 es\nout vec2 uv;\nvoid main() { vec2 p = vec2(gl_VertexID == 2 ? 3.0 : -1.0, gl_VertexID == 0 ? -3.0 : 1.0); uv = p * 0.5 + 0.5; gl_Position = vec4(p, 0.0, 1.0); }'
+
+  function resize() {
+    var scale = Math.min(window.devicePixelRatio || 1, 1) * 0.5
+    canvas.width = Math.max(1, Math.round(canvas.clientWidth * scale))
+    canvas.height = Math.max(1, Math.round(canvas.clientHeight * scale))
+  }
+
+  // Gemeenschappelijke lus: alleen tekenen als de hero in beeld en het tabblad zichtbaar is.
+  function run(render) {
+    resize()
+    new ResizeObserver(resize).observe(canvas)
+    var visible = true
+    var frame = 0
+    var start = performance.now()
+    function draw(now) {
+      frame = 0
+      if (!visible || document.hidden) return
+      render((now - start) / 1000, canvas.width / canvas.height)
+      frame = requestAnimationFrame(draw)
+    }
+    function wake() { if (!frame && visible && !document.hidden) frame = requestAnimationFrame(draw) }
+    new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; wake() }).observe(canvas)
+    document.addEventListener('visibilitychange', wake)
+    canvas.classList.add('is-on')
+    wake()
+  }
+
+  async function webgpu() {
+    var adapter = await navigator.gpu.requestAdapter({ powerPreference: 'low-power' })
+    if (!adapter) return false
+    var device = await adapter.requestDevice()
+    var context = canvas.getContext('webgpu')
+    if (!context) return false
+    var format = navigator.gpu.getPreferredCanvasFormat()
+    context.configure({ device: device, format: format, alphaMode: 'premultiplied' })
+    var module = device.createShaderModule({ code: WGSL })
+    var blend = { srcFactor: 'one', dstFactor: 'one-minus-src-alpha' }
+    var pipeline = device.createRenderPipeline({
+      layout: 'auto',
+      vertex: { module: module, entryPoint: 'vs' },
+      fragment: { module: module, entryPoint: 'fs', targets: [{ format: format, blend: { color: blend, alpha: blend } }] }
+    })
+    var uniforms = device.createBuffer({ size: 8, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST })
+    var bindGroup = device.createBindGroup({ layout: pipeline.getBindGroupLayout(0), entries: [{ binding: 0, resource: { buffer: uniforms } }] })
+    run(function (time, aspect) {
+      device.queue.writeBuffer(uniforms, 0, new Float32Array([time, aspect]))
+      var encoder = device.createCommandEncoder()
+      var pass = encoder.beginRenderPass({ colorAttachments: [{
+        view: context.getCurrentTexture().createView(), loadOp: 'clear', storeOp: 'store', clearValue: { r: 0, g: 0, b: 0, a: 0 }
+      }] })
+      pass.setPipeline(pipeline)
+      pass.setBindGroup(0, bindGroup)
+      pass.draw(3)
+      pass.end()
+      device.queue.submit([encoder.finish()])
+    })
+    return true
+  }
+
+  function webgl() {
+    var gl = canvas.getContext('webgl2', { premultipliedAlpha: true, antialias: false, powerPreference: 'low-power' })
+    if (!gl) return false
+    function shader(type, source) {
+      var sh = gl.createShader(type)
+      gl.shaderSource(sh, source)
+      gl.compileShader(sh)
+      if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(sh))
+      return sh
+    }
+    var program = gl.createProgram()
+    gl.attachShader(program, shader(gl.VERTEX_SHADER, GLSL_VERTEX))
+    gl.attachShader(program, shader(gl.FRAGMENT_SHADER, GLSL))
+    gl.linkProgram(program)
+    gl.useProgram(program)
+    var uTime = gl.getUniformLocation(program, 'u_time')
+    var uAspect = gl.getUniformLocation(program, 'u_aspect')
+    run(function (time, aspect) {
+      gl.viewport(0, 0, canvas.width, canvas.height)
+      gl.clearColor(0, 0, 0, 0)
+      gl.clear(gl.COLOR_BUFFER_BIT)
+      gl.uniform1f(uTime, time)
+      gl.uniform1f(uAspect, aspect)
+      gl.drawArrays(gl.TRIANGLES, 0, 3)
+    })
+    return true
+  }
+
+  // Eerst WebGPU; lukt dat niet (geen ondersteuning, geen adapter, fout), dan WebGL2.
+  ;(navigator.gpu ? webgpu() : Promise.resolve(false))
+    .catch(function () { return false })
+    .then(function (ok) { if (!ok) { try { webgl() } catch (e) { /* geen stoom, gewone achtergrond */ } } })
+})()
+</script>
+
 <style>
 .home-hero {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
   /* Figma: hero loopt tot 640px vanaf de bovenkant, de header (6rem) meegerekend. */
   min-height: 34rem;
-  padding: 8.875rem var(--steva-pagina-marge) 0;
+  padding: 7.5rem var(--steva-pagina-marge) 0;
   text-align: center;
+  perspective: 800px;
+}
+.home-hero__steam {
+  position: absolute;
+  inset: -6rem 0 0;
+  z-index: -1;
+  width: 100%;
+  height: calc(100% + 6rem);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 2s ease;
+}
+.home-hero__steam.is-on {
+  opacity: 1;
 }
 .home-hero__title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin: 0;
-  font-size: var(--byz-text-2xl);
+  font-size: clamp(var(--byz-text-2xl), 4.5vw, var(--byz-text-4xl));
   letter-spacing: 0;
   font-weight: var(--byz-font-semibold);
-  line-height: 1.23;
+  line-height: 1.15;
   text-transform: uppercase;
   text-shadow: var(--steva-tekst-schaduw);
+  perspective: 600px;
 }
-.home-hero__tagline {
-  margin: 0;
+/* Wisselend woord in schrijfletter onder de titel (zie het script hierboven). */
+.home-hero__word {
+  display: inline-block;
+  margin-top: var(--byz-space-1);
   color: var(--byz-color-accent);
   font-family: var(--steva-font-script);
-  font-size: var(--byz-text-xl);
-  line-height: 1.25;
-  letter-spacing: -0.04em;
+  font-size: 1.6em;
+  font-weight: 400;
+  line-height: 1.1;
+  text-transform: none;
+}
+.home-hero__tagline {
+  margin: var(--byz-space-3) 0 0;
+  color: var(--byz-color-text-muted);
+  font-size: var(--byz-text-lg);
   text-shadow: var(--steva-tekst-schaduw);
 }
 .home-hero__search {
@@ -46,6 +264,30 @@ const tagline = $$props.tagline || 'Van makkelijke maaltijden tot uitgebreide di
   justify-content: center;
   width: 100%;
   margin-top: var(--byz-space-8);
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* Entree met CSS (niet met JavaScript): de titel is het grootste element bij het laden en
+     mag dus niet op een script wachten. */
+  .home-hero__line,
+  .home-hero__tagline,
+  .home-hero__search {
+    animation: home-hero-rise 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .home-hero__line {
+    transform-origin: 50% 100%;
+  }
+  .home-hero__word {
+    animation-delay: 120ms;
+  }
+  .home-hero__tagline {
+    animation-delay: 300ms;
+  }
+  .home-hero__search {
+    animation-delay: 420ms;
+  }
+}
+@keyframes home-hero-rise {
+  from { opacity: 0; transform: translateY(1.5rem) rotateX(-35deg); }
 }
 @media (max-width: 640px) {
   .home-hero {
