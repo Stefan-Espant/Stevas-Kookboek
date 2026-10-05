@@ -1,7 +1,9 @@
 ---
 import SearchIcon from './SearchIcon.wald'
-type Props = { siteName: string }
-const { siteName } = $$props
+type Props = { siteName: string, aboutHref?: string }
+const { siteName, aboutHref = '' } = $$props
+const aboutLink = aboutHref ? renderTemplate`<a href="${aboutHref}" wald:prefetch="hover">Over Steva</a>` : ''
+const aboutMenuLink = aboutHref ? renderTemplate`<a href="${aboutHref}">Over Steva</a>` : ''
 ---
 <header class="site-header">
   <div class="site-header__inner">
@@ -12,7 +14,7 @@ const { siteName } = $$props
       <a href="/recepten" wald:prefetch="hover">Recepten</a>
       <a href="/keukens" wald:prefetch="hover">Keukens</a>
       <a href="/inspiratie" wald:prefetch="hover">Inspiratie</a>
-      <a href="/over" wald:prefetch="hover">Over Steva</a>
+      {new SafeHtml(aboutLink)}
     </nav>
     <details class="site-header__menu">
       <summary aria-label="Menu">
@@ -23,7 +25,7 @@ const { siteName } = $$props
         <a href="/recepten">Recepten</a>
         <a href="/keukens">Keukens</a>
         <a href="/inspiratie">Inspiratie</a>
-        <a href="/over">Over Steva</a>
+        {new SafeHtml(aboutMenuLink)}
       </nav>
     </details>
     <a href="/zoeken" class="site-header__search">
@@ -67,16 +69,19 @@ const { siteName } = $$props
   justify-content: flex-end;
   gap: var(--byz-space-6);
 }
-.site-header__nav a {
-  color: var(--byz-color-text-secondary);
-  font-size: 1rem;
-  font-weight: var(--byz-font-semibold);
-  text-transform: uppercase;
-  text-decoration: none;
-  text-shadow: var(--steva-tekst-schaduw);
-}
-.site-header__nav a:hover {
-  color: var(--byz-color-text-primary);
+/* "Over Steva" is optioneel en in de frontmatter opgebouwd (zonder scope-attribuut): genest. */
+.site-header__nav {
+  & a {
+    color: var(--byz-color-text-secondary);
+    font-size: 1rem;
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    text-decoration: none;
+    text-shadow: var(--steva-tekst-schaduw);
+  }
+  & a:hover {
+    color: var(--byz-color-text-primary);
+  }
 }
 .site-header__search {
   display: inline-flex;
@@ -155,17 +160,20 @@ const { siteName } = $$props
   background: var(--steva-bordeaux-donker);
   box-shadow: 0 8px 24px rgb(0 0 0 / 0.4), inset 0 0 0 1px var(--byz-color-border);
 }
-.site-header__menu-nav a {
-  padding: var(--byz-space-3) var(--byz-space-4);
-  border-radius: 0.375rem;
-  color: var(--byz-color-text-secondary);
-  font-weight: var(--byz-font-semibold);
-  text-transform: uppercase;
-  text-decoration: none;
-}
-.site-header__menu-nav a:hover {
-  background: rgb(255 174 61 / 0.15);
-  color: var(--byz-color-text-primary);
+/* "Over Steva" is optioneel en in de frontmatter opgebouwd (zonder scope-attribuut): genest. */
+.site-header__menu-nav {
+  & a {
+    padding: var(--byz-space-3) var(--byz-space-4);
+    border-radius: 0.375rem;
+    color: var(--byz-color-text-secondary);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  & a:hover {
+    background: rgb(255 174 61 / 0.15);
+    color: var(--byz-color-text-primary);
+  }
 }
 @media (max-width: 640px) {
   /* Logo + menu + zoekknop passen anders niet naast elkaar op een telefoon:

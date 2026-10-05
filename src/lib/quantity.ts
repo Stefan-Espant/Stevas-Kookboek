@@ -29,7 +29,7 @@ const UNIT_PLURALS: Record<string, string> = {
   teen: 'tenen', stengel: 'stengels', snee: 'sneeën', plak: 'plakken', blik: 'blikken',
   pot: 'potten', bos: 'bossen', takje: 'takjes', blad: 'bladen', vel: 'vellen', flesje: 'flesjes',
   zakje: 'zakjes', rol: 'rollen', stronk: 'stronken', stuk: 'stukken', kropje: 'kropjes',
-  handje: 'handjes', snuf: 'snufjes', pak: 'pakken', bakje: 'bakjes', kopje: 'kopjes', glas: 'glazen'
+  handje: 'handjes', snuf: 'snufjes', pak: 'pakken', bakje: 'bakjes', kopje: 'kopjes', glas: 'glazen', bol: 'bollen'
 }
 
 export function pluralUnit(unit: string): string {

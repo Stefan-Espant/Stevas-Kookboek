@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.wald'
 import PageHeader from '../../components/PageHeader.wald'
 import RecipeGrid from '../../components/RecipeGrid.wald'
+import Breadcrumbs from '../../components/Breadcrumbs.wald'
 import { getCuisines, recipePath } from '../../lib/recipes'
 import { breadcrumbSchema, clipDescription, collectionSchema } from '../../lib/site'
 type Props = { keuken: string }
@@ -20,14 +21,17 @@ const lead = introText ? `${introText} ${countText}` : countText
 const path = `/keukens/${cuisine.slug}`
 // Rijkere omschrijving dan alleen het aantal: de recepttitels zijn precies waar mensen op zoeken.
 const description = clipDescription(`${cuisine.adjective} recepten van Steva's Kookboek: ${cuisine.recipes.map(r => r.title).join(', ')}. Met ingrediënten, bereiding en tips.`)
+const crumbs: Array<[string, string]> = [['Home', '/'], ['Keukens', '/keukens'], [cuisine.name, path]]
+const breadcrumbs = await Breadcrumbs.render({ items: crumbs })
 const schema = [
-  breadcrumbSchema([['Home', '/'], ['Keukens', '/keukens'], [cuisine.name, path]]),
+  breadcrumbSchema(crumbs),
   collectionSchema(`De ${cuisine.adjective} keuken`, description, path, cuisine.recipes.map(r => [r.title, recipePath(r.slug)]))
 ]
 const grid = await RecipeGrid.render({ recipes: cuisine.recipes, headingLevel: 2 })
 ---
 <Layout title={cuisine.adjective + ' recepten'} description={description} path={path} schema={schema}>
   <main class="cuisine">
+    {new SafeHtml(breadcrumbs)}
     <PageHeader kicker="Keukens" title={cuisine.name} lead={lead} />
     {new SafeHtml(grid)}
     <p class="cuisine__back"><a href="/keukens">← Alle keukens</a></p>

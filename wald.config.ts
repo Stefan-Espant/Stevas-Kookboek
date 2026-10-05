@@ -59,6 +59,9 @@ function kookboekAdapter() {
       // redirect, zodat oude links en zoekresultaten blijven werken.
       const recipes = await getAllRecipes()
       vercelConfig.routes = [
+        // Eén URL per pagina: /recepten/ en /recepten zouden anders allebei werken (dubbele content).
+        // De canonical is zonder slash, dus daar ook naartoe.
+        { src: '^/(.+)/$', status: 308, headers: { Location: '/$1' } },
         ...recipes
           .filter(recipe => !existsSync(join(outDir, recipe.slug))) // nooit een echte pagina/map overschrijven
           .map(recipe => ({ src: `/${recipe.slug}/?`, status: 301, headers: { Location: recipePath(recipe.slug) } })),

@@ -1,12 +1,18 @@
 ---
 type Props = {
   siteName: string
+  aboutHref?: string
+  contactHref?: string
   instagram: string
   facebook: string
   linkedIn: string
   twitter: string
 }
-const { siteName, instagram, facebook, linkedIn, twitter } = $$props
+const { siteName, aboutHref = '', contactHref = '', instagram, facebook, linkedIn, twitter } = $$props
+const pageLinks = [['Over Steva', aboutHref], ['Contact', contactHref]]
+  .filter(([, href]) => href)
+  .map(([label, href]) => renderTemplate`<a href="${href}">${label}</a>`)
+  .join('')
 const socialLinks = [
   { label: 'Instagram', href: instagram },
   { label: 'Facebook', href: facebook },
@@ -25,8 +31,7 @@ const year = new Date().getFullYear()
     <a href="/recepten">Recepten</a>
     <a href="/keukens">Keukens</a>
     <a href="/inspiratie">Inspiratie</a>
-    <a href="/over">Over Steva</a>
-    <a href="/contact">Contact</a>
+    {new SafeHtml(pageLinks)}
   </nav>
   <div class="site-footer__social">{new SafeHtml(socialLinks)}</div>
   <p class="site-footer__copyright">&copy; {year} {siteName}</p>
@@ -55,14 +60,17 @@ const year = new Date().getFullYear()
   flex-wrap: wrap;
   justify-content: center;
 }
-.site-footer__nav a {
-  color: var(--byz-color-text-secondary);
-  font-weight: var(--byz-font-semibold);
-  text-transform: uppercase;
-  text-decoration: none;
-}
-.site-footer__nav a:hover {
-  color: var(--byz-color-text-primary);
+/* "Over Steva" en "Contact" zijn optioneel (frontmatter, zonder scope-attribuut): genest. */
+.site-footer__nav {
+  & a {
+    color: var(--byz-color-text-secondary);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  & a:hover {
+    color: var(--byz-color-text-primary);
+  }
 }
 /* Social links zijn optioneel en dus in de frontmatter opgebouwd (zonder scope-attribuut),
    vandaar genest onder de gescopete container. */

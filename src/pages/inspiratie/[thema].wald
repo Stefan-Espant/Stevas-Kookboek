@@ -1,0 +1,94 @@
+---
+import Layout from '../../layouts/Layout.wald'
+import PageHeader from '../../components/PageHeader.wald'
+import RecipeGrid from '../../components/RecipeGrid.wald'
+import Breadcrumbs from '../../components/Breadcrumbs.wald'
+import { collectionPath, getCollections, recipePath } from '../../lib/recipes'
+import { breadcrumbSchema, clipDescription, collectionSchema } from '../../lib/site'
+type Props = { thema: string }
+// Eén pagina per inspiratie-thema (airfryer, vegan, goedkoop, …): een vindbare landingspagina
+// voor precies die zoekopdracht, automatisch gevuld via de regels in getCollections().
+export async function getStaticPaths() {
+  const collections = await getCollections()
+  return collections.map(collection => ({ params: { thema: collection.slug } }))
+}
+const collections = await getCollections()
+const collection = collections.find(c => c.slug === $$props.thema)
+// Alleen bereikbaar in `wald grow`; de build rendert alleen thema's met recepten.
+if (!collection) throw new Error(`Thema "${$$props.thema}" heeft geen recepten`)
+
+const count = collection.recipes.length
+const path = collectionPath(collection.slug)
+const lead = `${collection.description} ${count} ${count === 1 ? 'recept' : 'recepten'}.`
+// Recepttitels in de omschrijving: precies waar mensen op zoeken.
+const description = clipDescription(`${collection.seoTitle}: ${collection.recipes.map(r => r.title).join(', ')}. Met ingrediënten, bereiding en tips.`)
+const crumbs: Array<[string, string]> = [['Home', '/'], ['Inspiratie', '/inspiratie'], [collection.title, path]]
+const schema = [
+  breadcrumbSchema(crumbs),
+  collectionSchema(collection.seoTitle, description, path, collection.recipes.map(r => [r.title, recipePath(r.slug)]))
+]
+const breadcrumbs = await Breadcrumbs.render({ items: crumbs })
+const grid = await RecipeGrid.render({ recipes: collection.recipes, headingLevel: 2 })
+
+// Andere thema's als interne links onderaan.
+const others = collections.filter(c => c.slug !== collection.slug)
+const othersHtml = others.length
+  ? renderTemplate`<nav class="theme__others" aria-labelledby="andere-themas"><h2 id="andere-themas">Meer inspiratie</h2><ul>${new SafeHtml(others.map(c => renderTemplate`<li><a href="${collectionPath(c.slug)}">${c.title}</a></li>`).join(''))}</ul></nav>`
+  : ''
+---
+<Layout title={collection.seoTitle} description={description} path={path} schema={schema}>
+  <main class="theme">
+    {new SafeHtml(breadcrumbs)}
+    <PageHeader kicker="Inspiratie" title={collection.title} lead={lead} />
+    {new SafeHtml(grid)}
+    {new SafeHtml(othersHtml)}
+  </main>
+</Layout>
+
+<style>
+/* "Meer inspiratie" is in de frontmatter opgebouwd — genest onder de gescopete main. */
+.theme {
+  max-width: var(--steva-pagina-breedte);
+  margin: 0 auto;
+  padding: var(--byz-space-12) var(--steva-pagina-marge) var(--byz-space-24);
+
+  & .theme__others {
+    margin-top: var(--byz-space-20);
+    text-align: center;
+  }
+  & .theme__others h2 {
+    margin-bottom: var(--byz-space-6);
+    font-size: var(--byz-text-2xl);
+    font-weight: var(--byz-font-semibold);
+    line-height: 1.23;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    text-shadow: var(--steva-tekst-schaduw);
+  }
+  & .theme__others ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--byz-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  & .theme__others a {
+    display: inline-block;
+    padding: var(--byz-space-2) var(--byz-space-5);
+    border-radius: 999px;
+    background: rgb(67 11 0 / 0.55);
+    box-shadow: inset 0 0 0 1px var(--byz-color-border);
+    color: var(--byz-color-text-secondary);
+    font-size: var(--byz-text-sm);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  & .theme__others a:hover {
+    background: var(--byz-color-accent);
+    color: var(--steva-creme);
+  }
+}
+</style>
