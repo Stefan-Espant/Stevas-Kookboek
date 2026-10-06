@@ -9,24 +9,24 @@
     navigation: auto;
   }
 
-  /* Header en achtergrond blijven staan; alleen de inhoud wisselt. */
+  /* De header blijft staan; alleen de inhoud wisselt. De achtergrond (gloed + textuur) krijgt
+     bewust géén eigen naam: dan haalt de browser hem uit de pagina-snapshot en flitst hij weg.
+     Hij is op elke pagina gelijk, dus mee-vervagen ziet eruit als stilstaan. */
   .site-header {
     view-transition-name: site-header;
   }
-  .page-backdrop {
-    view-transition-name: page-backdrop;
-  }
-  ::view-transition-group(site-header),
-  ::view-transition-group(page-backdrop) {
+  ::view-transition-group(site-header) {
     animation: none;
   }
 
-  /* Oude pagina zakt licht weg en vervaagt, nieuwe komt omhoog — als een bladzijde omslaan. */
+  /* Vervagen naar de volgende pagina: de nieuwe pagina vervaagt erin, bóven de oude. De oude
+     blijft dekkend (alleen licht wazig): als beide half doorzichtig zijn, flitst de
+     achtergrond erdoorheen. */
   ::view-transition-old(root) {
-    animation: 260ms cubic-bezier(0.4, 0, 1, 1) both steva-page-out;
+    animation: 500ms ease-in both steva-blur-out;
   }
   ::view-transition-new(root) {
-    animation: 520ms cubic-bezier(0.2, 0.7, 0.2, 1) 80ms both steva-page-in;
+    animation: 500ms ease-out both steva-fade-in;
   }
 
   /* Receptfoto die van kaart naar receptpagina groeit (naam gezet door motion.js). Kaart en
@@ -52,15 +52,14 @@
   }
 }
 
-@keyframes steva-page-out {
+@keyframes steva-blur-out {
   to {
-    opacity: 0;
-    transform: translateY(-0.75rem) scale(0.99);
+    filter: blur(4px);
   }
 }
-@keyframes steva-page-in {
+@keyframes steva-fade-in {
   from {
     opacity: 0;
-    transform: translateY(1.5rem);
+    filter: blur(4px);
   }
 }
