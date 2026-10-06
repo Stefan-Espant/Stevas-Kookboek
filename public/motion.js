@@ -102,6 +102,15 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init)
   else init()
 
+  // Shader-achtergronden (stoom, zie Layout.wald): public/effects.js alleen laden als de pagina een
+  // <canvas data-effect> heeft. Los van GSAP; effects.js regelt zelf "minder beweging".
+  if (document.querySelector('canvas[data-effect]')) {
+    var effects = document.createElement('script')
+    effects.src = '/effects.js'
+    effects.async = true
+    document.head.appendChild(effects)
+  }
+
   // ── 5. Gedeelde receptfoto tussen pagina's (cross-document view transitions) ─────────────
   // Alleen de foto van het aangeklikte recept krijgt de naam, en pas tijdens de overgang: een
   // naam moet uniek zijn, en 150 benoemde kaarten zouden elke overgang zwaar maken.

@@ -129,6 +129,7 @@ const footer = maintenance ? '' : await SiteFooter.render({
   </head>
   <body>
     <div class="page-backdrop" aria-hidden="true"></div>
+    <canvas class="page-steam" data-effect="stoom" aria-hidden="true"></canvas>
     {new SafeHtml(header)}
     {maintenance ? '' : pond}
     {new SafeHtml(footer)}
@@ -194,6 +195,23 @@ body {
   background:
     radial-gradient(50% 50% at 50% 50%, var(--byz-color-surface), var(--byz-color-background)) center top / 100% 40rem no-repeat,
     var(--byz-color-background);
+}
+/* Stoom die boven aan elke pagina opstijgt, achter de inhoud (shader in public/effects.js,
+   geladen door motion.js). Vervaagt erin zodra hij tekent; zonder WebGPU/WebGL2 of bij minder
+   beweging blijft hij leeg en zie je alleen de gloed hierboven. */
+.page-steam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 40rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 2s ease;
+}
+.page-steam.is-on {
+  opacity: 1;
 }
 .page-backdrop::before,
 .page-backdrop::after {
