@@ -20,7 +20,7 @@ const navHtml = collections.length > 1
   : ''
 const sections = await Promise.all(collections.map(async (collection) => renderTemplate`
   <section class="inspiration__section" id="${collection.slug}" aria-labelledby="${collection.slug}-titel">
-    <h2 class="inspiration__title" id="${collection.slug}-titel"><a href="${collectionPath(collection.slug)}">${collection.title}</a></h2>
+    <h2 class="inspiration__title" id="${collection.slug}-titel" data-reveal="left"><a href="${collectionPath(collection.slug)}">${collection.title}</a></h2>
     <p class="inspiration__description">${collection.description}</p>
     ${new SafeHtml(await RecipeGrid.render({ recipes: collection.recipes.slice(0, PREVIEW) }))}
     ${new SafeHtml(collection.recipes.length > PREVIEW
@@ -66,7 +66,7 @@ const sectionsHtml = sections.length
   }
   & .inspiration__nav a:hover {
     background: var(--byz-color-accent);
-    color: var(--steva-creme);
+    color: var(--steva-bordeaux-donker);
   }
   & .inspiration__section {
     /* Ruimte voor de sticky header bij springen naar een anker. */

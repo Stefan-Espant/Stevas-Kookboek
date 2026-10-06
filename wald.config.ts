@@ -1,6 +1,6 @@
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { parseEnv } from 'node:util'
 import { compile } from 'sass'
 import { defineAdapter, defineConfig, vercelAdapter } from '@waldjs/cli'
@@ -29,6 +29,11 @@ function builtPaths(dir: string, base = ''): string[] {
 const byzantiumStyles = createRequire(join(process.cwd(), 'package.json')).resolve('@byzantium-design-system/core/styles')
 mkdirSync('public/vendor', { recursive: true })
 writeFileSync('public/vendor/byzantium.css', compile(byzantiumStyles, { style: 'compressed' }).css)
+
+// GSAP (+ ScrollTrigger) voor de animaties in public/motion.js: als losse bestanden naast de
+// site, zodat ze gecachet worden en alleen geladen als de pagina beweging toont.
+const gsapDir = join(dirname(createRequire(join(process.cwd(), 'package.json')).resolve('gsap/package.json')), 'dist')
+for (const file of ['gsap.min.js', 'ScrollTrigger.min.js']) copyFileSync(join(gsapDir, file), join('public/vendor', file))
 
 // Lokaal staan de Centaur-gegevens in .env; op Vercel komen ze uit de project-env vars
 // (die winnen, vandaar ??=). BOM strippen: sommige editors zetten er een voor, en dan

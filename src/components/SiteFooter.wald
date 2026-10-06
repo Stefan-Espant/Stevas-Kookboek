@@ -49,6 +49,7 @@ const year = new Date().getFullYear()
   color: var(--byz-color-text-primary);
   text-align: center;
 }
+
 .site-footer__logo {
   width: 9rem;
   height: auto;
