@@ -69,6 +69,7 @@ const image = recipe.image
     text-transform: uppercase;
     text-shadow: var(--steva-tekst-schaduw);
     word-break: break-word;
+    text-wrap: balance;
   }
   & .recipe-card__meta {
     margin: var(--byz-space-2) 0 0;
