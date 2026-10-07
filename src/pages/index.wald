@@ -4,6 +4,7 @@ import HomeHero from '../components/HomeHero.wald'
 import RecipeCard from '../components/RecipeCard.wald'
 import TileCard from '../components/TileCard.wald'
 import CuisineMarquee from '../components/CuisineMarquee.wald'
+import RecipeSubmissionInvite from '../components/RecipeSubmissionInvite.wald'
 import { getPage, getSiteSettings } from '../lib/cms'
 import { collectionTile, cuisineTile, getCollections, getCuisines, getLatestRecipes } from '../lib/recipes'
 import { clipDescription } from '../lib/site'
@@ -61,6 +62,7 @@ const sections = [
     <HomeHero tagline={site?.tagline ?? ''} />
     {new SafeHtml(marqueeHtml)}
     {new SafeHtml(sections)}
+    <RecipeSubmissionInvite />
   </main>
 </Layout>
 
