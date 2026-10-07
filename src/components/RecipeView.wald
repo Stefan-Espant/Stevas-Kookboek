@@ -244,6 +244,7 @@ document.querySelectorAll('.recipe__scaler').forEach(function (scaler) {
   letter-spacing: 0;
   text-transform: uppercase;
   text-shadow: var(--steva-tekst-schaduw);
+  text-wrap: balance;
 }
 .recipe__lead {
   max-width: 62ch;
