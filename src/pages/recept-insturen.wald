@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.wald'
+import PageHeader from '../components/PageHeader.wald'
+import RecipeSubmissionForm from '../components/RecipeSubmissionForm.wald'
+import { breadcrumbSchema } from '../lib/site'
+const path = '/recept-insturen'
+const schema = [breadcrumbSchema([['Home', '/'], ['Recept insturen', path]])]
+---
+<Layout title="Recept insturen" description="Deel jouw favoriete recept met Steva's Kookboek. Vertel wat je nodig hebt en hoe je het maakt." path={path} schema={schema}>
+  <main class="submit-recipe">
+    <PageHeader kicker="Uit jouw keuken" title="Deel je favoriete recept" lead="Een familiegerecht, een eigen vondst of iets dat altijd in de smaak valt? Stuur het door. We bekijken je recept voordat het een plek in het kookboek krijgt." />
+    <RecipeSubmissionForm />
+  </main>
+</Layout>
+
+<style>
+.submit-recipe {
+  max-width: var(--steva-pagina-breedte);
+  margin: 0 auto;
+  padding: var(--byz-space-12) var(--steva-pagina-marge) var(--byz-space-24);
+}
+</style>

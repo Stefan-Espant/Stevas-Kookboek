@@ -63,6 +63,14 @@ const body = await BlockRenderer.render({ blocks: page.body, blockTypes, overrid
 
 `src/components/ContactForm.wald` is een kant-en-klaar formulier (naam/e-mail/bericht) dat vanuit de browser naar Centaur post. Zet `<ContactForm />` op een pagina waar je het nodig hebt.
 
+## Recept insturen
+
+`/recept-insturen` bevat het bezoekersformulier met contactgegevens, receptdetails, losse ingrediënten en stappen, tips, een optionele fotolink en bron. Inzendingen verschijnen in Centaur onder **Formulierinzendingen → Recept insturen**. De publieke API gebruikt de bestaande gepubliceerde CMS-pagina `home` als registratiepagina en `recept-inzending` als formuliercode; een extra CMS-pagina aanmaken is niet nodig. De homepage moet dus gepubliceerd blijven.
+
+Het verborgen veld `website` is een honeypot. Centaur bevestigt inzendingen met een ingevuld honeypotveld zonder ze op te slaan of meldingen te versturen. Bij gewone inzendingen wordt het lege veld verwijderd. Hiervoor is ook de API-wijziging nodig; de controle vindt op de server plaats.
+
+In Centaur kunnen Admins en Editors met **Conceptrecept maken / openen** de receptvelden overnemen in de collectie `recepten`. De Centaur-wijzigingen in de naastgelegen repository moeten hiervoor ook worden uitgerold (API én dashboard). Herhaald klikken opent hetzelfde record en behoudt handmatige wijzigingen. Contactgegevens, toestemming, bron en fotolink blijven bij de privé-inzending. De foto wordt bewust door de redacteur beoordeeld en toegevoegd; publicatie gebeurt handmatig. De automatisch unieke slug kan voor publicatie worden aangepast.
+
 ## Site-instellingen & SEO
 
 - Favicon en titel-suffix komen uit **Instellingen → Website** in het CMS. De kleuren komen uit het Figma-ontwerp (tokens in `src/layouts/Layout.wald`); de merkkleur uit het CMS wordt niet meer gebruikt.

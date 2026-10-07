@@ -11,7 +11,7 @@ type Props = { slug: string }
 export async function getStaticPaths() {
   const [slugs, recipes] = await Promise.all([getSitemapSlugs(), getAllRecipes()])
   const recipeSlugs = new Set(recipes.map(recipe => recipe.slug))
-  return slugs.filter(slug => slug !== 'home' && !recipeSlugs.has(slug)).map(slug => ({ params: { slug } }))
+  return slugs.filter(slug => slug !== 'home' && slug !== 'recept-insturen' && !recipeSlugs.has(slug)).map(slug => ({ params: { slug } }))
 }
 const [page, blockTypes] = await Promise.all([getPage($$props.slug), getBlockTypes()])
 // Alleen bereikbaar in `wald grow` (de build rendert alleen slugs uit de sitemap).
