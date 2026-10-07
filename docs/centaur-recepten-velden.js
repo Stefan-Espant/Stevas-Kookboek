@@ -1,4 +1,5 @@
-// 1. Velden van de Centaur-collectie "recepten" instellen volgens docs/centaur-collecties.md.
+// 1. Velden van de Centaur-collecties "keukens" en "recepten" instellen volgens
+//    docs/centaur-collecties.md (per collectie een eigen bevestiging).
 // 2. Daarna (optioneel, met een eigen bevestiging) alle concepten in "keukens" en "recepten"
 //    in één keer publiceren.
 //
@@ -33,6 +34,15 @@
   const id = () => crypto.randomUUID()
   const field = (name, slug, type, { required = false, config = {} } = {}) => ({ id: id(), name, slug, type, required, config })
 
+  const desiredKeukens = [
+    field('Naam', 'naam', 'text', { required: true }),
+    field('Bijvoeglijk', 'bijvoeglijk', 'text', { required: true }),
+    field('Slug', 'slug', 'text', { required: true }),
+    field('Intro', 'intro', 'richtext'),
+    field('Afbeelding', 'afbeelding', 'media'),
+    field('Alt-tekst afbeelding', 'afbeelding_alt', 'text')
+  ]
+
   const desired = [
     field('Titel', 'titel', 'text', { required: true }),
     field('Slug', 'slug', 'text', { required: true }),
@@ -63,30 +73,31 @@
     field('Meta-omschrijving', 'meta_omschrijving', 'text')
   ]
 
-  // Controle collectie "keukens": welke veldslugs bestaan daar?
-  const keukens = await call('GET', '/api/admin/collections/keukens')
-  console.log('Velden van "keukens":', keukens.fields.map(f => `${f.slug} (${f.type})`).join(', '))
+  // Velden van één collectie gelijktrekken met de gewenste lijst: bestaande velden (zelfde slug)
+  // houden hun ID, ontbrekende komen erbij, velden die niet in de lijst staan blijven achteraan.
+  const syncFields = async (collection, desiredFields) => {
+    const current = await call('GET', `/api/admin/collections/${collection}`)
+    const bySlug = new Map(current.fields.map(f => [f.slug, f]))
+    const merged = desiredFields.map(f => (bySlug.has(f.slug) ? { ...f, id: bySlug.get(f.slug).id } : f))
+    const extra = current.fields.filter(f => !desiredFields.some(d => d.slug === f.slug))
+    const fields = [...merged, ...extra]
 
-  const current = await call('GET', '/api/admin/collections/recepten')
-  const bySlug = new Map(current.fields.map(f => [f.slug, f]))
-  const merged = desired.map(f => (bySlug.has(f.slug) ? { ...f, id: bySlug.get(f.slug).id } : f))
-  const extra = current.fields.filter(f => !desired.some(d => d.slug === f.slug))
-  const fields = [...merged, ...extra]
-
-  const added = desired.filter(f => !bySlug.has(f.slug)).map(f => f.slug)
-  const updated = desired.filter(f => bySlug.has(f.slug)).map(f => f.slug)
-  const summary =
-    `Collectie "recepten" bijwerken?\n\n` +
-    `Nieuw (${added.length}): ${added.join(', ') || '—'}\n` +
-    `Bijgewerkt (${updated.length}): ${updated.join(', ') || '—'}\n` +
-    `Blijven ongewijzigd staan (${extra.length}): ${extra.map(f => f.slug).join(', ') || '—'}`
-  console.log(summary)
-  if (confirm(summary)) {
-    const result = await call('PUT', '/api/admin/collections/recepten', { name: current.name, fields })
-    console.log(`✔ Velden: "recepten" heeft nu ${result.fields.length} velden:`, result.fields.map(f => f.slug).join(', '))
-  } else {
-    console.log('Velden overgeslagen, er is niets gewijzigd.')
+    const added = desiredFields.filter(f => !bySlug.has(f.slug)).map(f => f.slug)
+    const updated = desiredFields.filter(f => bySlug.has(f.slug)).map(f => f.slug)
+    const summary =
+      `Collectie "${collection}" bijwerken?\n\n` +
+      `Nieuw (${added.length}): ${added.join(', ') || '—'}\n` +
+      `Bijgewerkt (${updated.length}): ${updated.join(', ') || '—'}\n` +
+      `Blijven ongewijzigd staan (${extra.length}): ${extra.map(f => f.slug).join(', ') || '—'}`
+    console.log(summary)
+    if (!confirm(summary)) return console.log(`Velden van "${collection}" overgeslagen, er is niets gewijzigd.`)
+    const result = await call('PUT', `/api/admin/collections/${collection}`, { name: current.name, fields })
+    console.log(`✔ Velden: "${collection}" heeft nu ${result.fields.length} velden:`, result.fields.map(f => f.slug).join(', '))
   }
+
+  // Eerst keukens: recepten verwijzen ernaar.
+  await syncFields('keukens', desiredKeukens)
+  await syncFields('recepten', desired)
 
   // ── Stap 2: alle concepten publiceren (eerst keukens, want recepten verwijzen ernaar) ──
   const allEntries = async (collection) => {
@@ -109,13 +120,20 @@
   console.log(publishSummary)
   if (!confirm(publishSummary)) return console.log('Publiceren overgeslagen.')
 
+  // Per item: een fout (bv. een verplicht veld dat nog leeg is) stopt de rest niet.
   let published = 0
+  const failed = []
   for (const collection of ['keukens', 'recepten']) {
     for (const entry of drafts[collection]) {
-      await call('POST', `/api/admin/collections/${collection}/entries/${entry.id}/publish`)
-      published++
-      if (published % 10 === 0) console.log(`… ${published} gepubliceerd`)
+      try {
+        await call('POST', `/api/admin/collections/${collection}/entries/${entry.id}/publish`)
+        published++
+        if (published % 10 === 0) console.log(`… ${published} gepubliceerd`)
+      } catch (error) {
+        failed.push(`${collection}/${entry.data.slug}: ${error.message}`)
+      }
     }
   }
   console.log(`✔ Klaar: ${published} items gepubliceerd (${drafts.keukens.length} keukens, ${drafts.recepten.length} recepten).`)
+  if (failed.length) console.warn(`${failed.length} item(s) niet gepubliceerd:\n` + failed.join('\n'))
 })().catch(error => console.error('✖ Mislukt:', error.message))
