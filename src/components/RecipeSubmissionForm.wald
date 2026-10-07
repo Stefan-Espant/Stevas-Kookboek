@@ -1,0 +1,147 @@
+---
+import { cmsConfig } from '../lib/cms'
+import { getAllCuisineEntries } from '../lib/recipes'
+const cuisines = await getAllCuisineEntries()
+const options = cuisines.map(cuisine => renderTemplate`<option value="${cuisine.id}">${cuisine.name}</option>`).join('')
+---
+<div class="recipe-submission" data-api-base={cmsConfig.apiBase} data-tenant-slug={cmsConfig.tenantSlug}>
+  <div class="recipe-submission__success" tabindex="-1" hidden>
+    <h2>Bedankt voor je recept!</h2>
+    <p>Je inzending is ontvangen. We bekijken je recept en nemen contact op als we nog vragen hebben.</p>
+    <a href="/recepten">Ontdek de recepten in het kookboek</a>
+  </div>
+  <form class="recipe-submission__form" hidden>
+    <div class="recipe-submission__honeypot" aria-hidden="true" inert>
+      <label>Laat dit veld leeg<input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
+    </div>
+    <p class="recipe-submission__hint">Velden met een * zijn verplicht.</p>
+    <fieldset>
+      <legend>Over jou</legend>
+      <div class="recipe-submission__columns">
+        <label>Je naam *<input name="naam" autocomplete="name" required maxlength="120" /></label>
+        <label>E-mailadres *<input name="email" type="email" autocomplete="email" required maxlength="254" /></label>
+      </div>
+      <p class="recipe-submission__hint">Je e-mailadres wordt alleen gebruikt voor contact over je inzending en verschijnt niet bij het recept.</p>
+    </fieldset>
+    <fieldset>
+      <legend>Jouw recept</legend>
+      <label>Naam van het gerecht *<input name="titel" required maxlength="180" placeholder="Bijvoorbeeld: oma's appeltaart" /></label>
+      <label>Vertel iets over je recept *<textarea name="intro" rows="3" required maxlength="3000" placeholder="Wat maakt dit gerecht bijzonder?" ></textarea></label>
+      <div class="recipe-submission__columns recipe-submission__columns--three">
+        <label>Aantal personen *<input name="personen" type="number" min="1" max="100" step="1" required value="4" /></label>
+        <label>Voorbereiding (minuten) *<input name="voorbereidingstijd" type="number" min="0" max="10080" step="1" required /></label>
+        <label>Bereiding (minuten) *<input name="bereidingstijd" type="number" min="0" max="10080" step="1" required /></label>
+      </div>
+      <div class="recipe-submission__columns">
+        <label>Keuken<select name="keuken"><option value="">Kies een keuken (optioneel)</option>{new SafeHtml(options)}</select></label>
+        <label>Gang<select name="gang"><option value="">Kies een gang (optioneel)</option><option>Voorgerecht</option><option>Hoofdgerecht</option><option>Bijgerecht</option><option>Soep</option><option>Dessert</option><option>Brunch</option><option>Snack</option></select></label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Ingrediënten</legend>
+      <p class="recipe-submission__hint" id="ingredient-hint">Voeg elk ingrediënt apart toe. Laat de hoeveelheid leeg voor bijvoorbeeld zout naar smaak. Gebruik een decimaal voor breuken: 0,5 voor een halve.</p>
+      <div data-ingredients aria-describedby="ingredient-hint"></div>
+      <button type="button" class="recipe-submission__secondary" data-add-ingredient>+ Ingrediënt toevoegen</button>
+    </fieldset>
+    <fieldset>
+      <legend>Bereiding</legend>
+      <p class="recipe-submission__hint">Beschrijf stap voor stap hoe je het gerecht maakt.</p>
+      <div data-steps></div>
+      <button type="button" class="recipe-submission__secondary" data-add-step>+ Stap toevoegen</button>
+    </fieldset>
+    <fieldset>
+      <legend>Een extraatje</legend>
+      <label>Tips of variaties<textarea name="tips" rows="3" maxlength="3000" placeholder="Lekker met…, of vervang…"></textarea></label>
+      <label>Link naar een eigen foto (optioneel)<input name="foto_url" type="url" maxlength="2000" placeholder="https://…" aria-describedby="photo-hint" /></label>
+      <p class="recipe-submission__hint" id="photo-hint">Heb je een foto? Deel een openbare link naar je eigen foto, bijvoorbeeld via een gedeelde map.</p>
+      <label>Bron (optioneel)<input name="bron" maxlength="500" placeholder="Eigen recept, een familielid, een boek of een website" /></label>
+    </fieldset>
+    <label class="recipe-submission__consent"><input name="toestemming" type="checkbox" required /> <span>Ik geef toestemming om dit recept en mijn eventuele eigen foto te gebruiken in Steva's Kookboek. *</span></label>
+    <p class="recipe-submission__error" role="alert" hidden></p>
+    <button type="submit" class="recipe-submission__submit">Recept insturen</button>
+    <p class="recipe-submission__hint">Je recept wordt eerst bekeken voordat het gepubliceerd wordt.</p>
+  </form>
+  <noscript><p>Schakel JavaScript in om je recept in te sturen.</p></noscript>
+</div>
+
+<script src="/recipe-submission.js" defer></script>
+
+<style>
+.recipe-submission {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: clamp(var(--byz-space-5), 4vw, var(--byz-space-10));
+  border: 1px solid var(--steva-bordeaux-rand);
+  border-radius: 1rem;
+  background: var(--steva-bordeaux-donker);
+  line-height: 1.6;
+
+  & [hidden] { display: none; }
+  & .recipe-submission__honeypot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  & fieldset {
+    min-width: 0;
+    margin: 0 0 var(--byz-space-8);
+    padding: 0;
+    border: 0;
+  }
+  & legend {
+    margin-bottom: var(--byz-space-4);
+    color: var(--byz-color-text-secondary);
+    font-size: var(--byz-text-xl);
+    font-weight: var(--byz-font-semibold);
+  }
+  & label { display: block; margin-bottom: var(--byz-space-4); }
+  & input:not([type="checkbox"]), & textarea, & select {
+    display: block;
+    width: 100%;
+    margin-top: var(--byz-space-2);
+    padding: var(--byz-space-3);
+    border: 1px solid var(--steva-goud);
+    border-radius: 0.375rem;
+    background: var(--steva-creme);
+    color: var(--steva-bordeaux-donker);
+    font: inherit;
+  }
+  & textarea { resize: vertical; }
+  & input::placeholder, & textarea::placeholder { color: #765d53; }
+  & button {
+    padding: var(--byz-space-3) var(--byz-space-5);
+    border-radius: 0.5rem;
+    font: inherit;
+    font-weight: var(--byz-font-semibold);
+    cursor: pointer;
+  }
+  & button:disabled { opacity: 0.6; cursor: wait; }
+  & .recipe-submission__columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--byz-space-4); }
+  & .recipe-submission__columns--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  & .recipe-submission__row {
+    margin-bottom: var(--byz-space-4);
+    padding: var(--byz-space-4);
+    border: 1px solid var(--steva-bordeaux-rand);
+    border-radius: 0.5rem;
+  }
+  & .recipe-submission__row-title { margin: 0 0 var(--byz-space-3); font-weight: var(--byz-font-semibold); }
+  & .recipe-submission__secondary { border: 1px solid var(--steva-goud); background: transparent; color: var(--steva-goud); }
+  & .recipe-submission__remove { padding: var(--byz-space-1) 0; border: 0; background: transparent; color: var(--steva-goud); text-decoration: underline; }
+  & .recipe-submission__hint { margin: 0 0 var(--byz-space-4); color: var(--byz-color-text-muted); font-size: var(--byz-text-sm); }
+  & .recipe-submission__consent { display: flex; align-items: flex-start; gap: var(--byz-space-3); }
+  & input[type="checkbox"] { flex-shrink: 0; width: 1.25rem; height: 1.25rem; margin-top: 0.25rem; accent-color: var(--steva-oranje); }
+  & .recipe-submission__submit { margin-bottom: var(--byz-space-4); border: 0; background: var(--steva-oranje); color: var(--steva-bordeaux-donker); box-shadow: inset 0 -3px 0 var(--steva-oranje-donker); }
+  & .recipe-submission__error { padding: var(--byz-space-4); border: 1px solid var(--steva-goud); border-radius: 0.5rem; }
+  & .recipe-submission__success h2 { color: var(--steva-goud); font-size: var(--byz-text-2xl); }
+  & .recipe-submission__success a { color: var(--steva-goud); }
+}
+@media (max-width: 640px) {
+  .recipe-submission {
+    & .recipe-submission__columns, & .recipe-submission__columns--three { grid-template-columns: 1fr; gap: 0; }
+  }
+}
+</style>

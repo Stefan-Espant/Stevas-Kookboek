@@ -14,6 +14,7 @@ const aboutMenuLink = aboutHref ? renderTemplate`<a href="${aboutHref}">Over Ste
       <a href="/recepten" wald:prefetch="hover">Recepten</a>
       <a href="/keukens" wald:prefetch="hover">Keukens</a>
       <a href="/inspiratie" wald:prefetch="hover">Inspiratie</a>
+      <a href="/recept-insturen" wald:prefetch="hover">Recept insturen</a>
       {new SafeHtml(aboutLink)}
     </nav>
     <details class="site-header__menu">
@@ -25,6 +26,7 @@ const aboutMenuLink = aboutHref ? renderTemplate`<a href="${aboutHref}">Over Ste
         <a href="/recepten">Recepten</a>
         <a href="/keukens">Keukens</a>
         <a href="/inspiratie">Inspiratie</a>
+        <a href="/recept-insturen">Recept insturen</a>
         {new SafeHtml(aboutMenuLink)}
       </nav>
     </details>
