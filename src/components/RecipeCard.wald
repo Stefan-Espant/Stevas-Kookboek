@@ -68,6 +68,7 @@ const image = recipe.image
     line-height: 1.23;
     text-transform: uppercase;
     text-shadow: var(--steva-tekst-schaduw);
+    word-break: break-word;
   }
   & .recipe-card__meta {
     margin: var(--byz-space-2) 0 0;
