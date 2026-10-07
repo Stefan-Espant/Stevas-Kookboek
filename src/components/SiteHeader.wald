@@ -210,4 +210,9 @@ const aboutMenuLink = aboutHref ? renderTemplate`<a href="${aboutHref}">Over Ste
     width: 9rem;
   }
 }
+@media (max-width: 360px) {
+  .site-header__inner {
+    gap: var(--byz-space-2);
+  }
+}
 </style>
