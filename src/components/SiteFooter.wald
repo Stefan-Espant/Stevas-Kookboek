@@ -31,6 +31,7 @@ const year = new Date().getFullYear()
     <a href="/recepten">Recepten</a>
     <a href="/keukens">Keukens</a>
     <a href="/inspiratie">Inspiratie</a>
+    <a href="/wat-eten-we">Wat eten we?</a>
     <a href="/recept-insturen">Recept insturen</a>
     {new SafeHtml(pageLinks)}
   </nav>
