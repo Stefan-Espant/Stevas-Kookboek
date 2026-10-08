@@ -1,0 +1,463 @@
+---
+import Layout from '../layouts/Layout.wald'
+import PageHeader from '../components/PageHeader.wald'
+import { getAllRecipes, recipePath } from '../lib/recipes'
+import { breadcrumbSchema } from '../lib/site'
+// Rad van het avondeten: kiest willekeurig een hoofdgerecht. Statische site, dus de gerechten
+// gaan als compacte JSON mee in de pagina en het rad wordt in de browser getekend (zie script).
+const dinners = (await getAllRecipes()).filter(recipe => recipe.course === 'Hoofdgerecht')
+const isVegetarian = (tags: string[]) => tags.some(tag => ['vegetarisch', 'vegan'].includes(tag.toLowerCase()))
+const data = dinners.map(recipe => ({
+  t: recipe.title,
+  u: recipePath(recipe.slug),
+  k: recipe.cuisine?.name ?? '',
+  m: recipe.totalTime,
+  i: recipe.image,
+  a: recipe.imageAlt,
+  v: isVegetarian(recipe.tags)
+}))
+// "<" escapen: titels komen uit het CMS en mogen nooit een </script> kunnen vormen.
+const dataHtml = `<script type="application/json" id="rad-gerechten" data-wald-no-hoist>${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`
+const lead = `Geen idee wat je vanavond kookt? Draai aan het rad en laat ${dinners.length} hoofdgerechten uit keukens van over de hele wereld voor je kiezen.`
+const schema = [breadcrumbSchema([['Home', '/'], ['Wat eten we?', '/wat-eten-we']])]
+---
+<Layout title="Wat eten we vanavond? Draai aan het rad" description={lead} path="/wat-eten-we" schema={schema}>
+  <main class="rad">
+    <PageHeader kicker="Geen inspiratie?" title="Wat eten we vanavond?" lead={lead} />
+
+    <div class="rad__filters" role="group" aria-label="Kies uit" hidden>
+      <button type="button" data-filter="alles" aria-pressed="true">Alles</button>
+      <button type="button" data-filter="snel" aria-pressed="false">Snel (≤ 30 min)</button>
+      <button type="button" data-filter="vega" aria-pressed="false">Vegetarisch</button>
+    </div>
+
+    <div class="rad__stage">
+      <div class="rad__wheel-wrap" hidden>
+        <span class="rad__pointer" aria-hidden="true"></span>
+        <div class="rad__wheel">
+          <svg class="rad__svg" viewBox="-100 -100 200 200" aria-hidden="true" focusable="false"></svg>
+        </div>
+        <button type="button" class="rad__spin">Draai</button>
+      </div>
+
+      <section class="rad__result" aria-live="polite" hidden>
+        <p class="rad__result-empty">Druk op <strong>Draai</strong> en het rad kiest je avondeten.</p>
+        <div class="rad__result-card" hidden>
+          <p class="rad__result-kicker">Vanavond eten we</p>
+          <div class="rad__result-media"><img class="rad__result-image" alt="" width="1200" height="900" /></div>
+          <h2 class="rad__result-title"></h2>
+          <p class="rad__result-meta"></p>
+          <div class="rad__result-actions">
+            <a class="rad__result-link" href="/recepten">Naar het recept</a>
+            <button type="button" class="rad__again">Nog een keer draaien</button>
+          </div>
+        </div>
+        <button type="button" class="rad__shuffle">Andere gerechten op het rad</button>
+      </section>
+    </div>
+
+    <noscript>
+      <p class="rad__noscript">
+        Het rad heeft JavaScript nodig. Kies zelf uit <a href="/recepten?gang=Hoofdgerecht">alle hoofdgerechten</a>
+        of de <a href="/inspiratie/snel-op-tafel">snelle recepten</a>.
+      </p>
+    </noscript>
+    {new SafeHtml(dataHtml)}
+  </main>
+</Layout>
+
+<script>
+(function () {
+  var main = document.querySelector('.rad')
+  var source = document.getElementById('rad-gerechten')
+  if (!main || !source) return
+  var all = JSON.parse(source.textContent || '[]')
+  if (!all.length) return
+
+  var SLICES = 12
+  var COLORS = ['#8c230e', '#6a1808', '#a8401c', '#571103']
+  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+  var wheel = main.querySelector('.rad__wheel')
+  var svg = main.querySelector('.rad__svg')
+  var spinButton = main.querySelector('.rad__spin')
+  var filters = main.querySelector('.rad__filters')
+  var result = main.querySelector('.rad__result')
+  var card = main.querySelector('.rad__result-card')
+  var empty = main.querySelector('.rad__result-empty')
+  var NS = 'http://www.w3.org/2000/svg'
+  var filter = 'alles'
+  var onWheel = []
+  var rotation = 0
+  var spinning = false
+
+  function shuffle(list) {
+    var copy = list.slice()
+    for (var i = copy.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1))
+      var tmp = copy[i]; copy[i] = copy[j]; copy[j] = tmp
+    }
+    return copy
+  }
+  function pool() {
+    return all.filter(function (d) {
+      return filter === 'snel' ? d.m > 0 && d.m <= 30 : filter === 'vega' ? d.v : true
+    })
+  }
+  function short(title) {
+    // Kort genoeg om tussen de draaiknop in het midden en de rand te passen.
+    return title.length > 15 ? title.slice(0, 14).trim() + '…' : title
+  }
+  function point(angle, radius) {
+    var rad = (angle - 90) * Math.PI / 180
+    return [Math.cos(rad) * radius, Math.sin(rad) * radius]
+  }
+  function el(name, attrs, text) {
+    var node = document.createElementNS(NS, name)
+    for (var key in attrs) node.setAttribute(key, attrs[key])
+    if (text) node.textContent = text
+    return node
+  }
+
+  // Rad tekenen: vak 0 staat bovenaan (onder de wijzer), daarna met de klok mee.
+  function draw() {
+    onWheel = shuffle(pool()).slice(0, SLICES)
+    while (svg.firstChild) svg.removeChild(svg.firstChild)
+    var n = onWheel.length
+    var seg = 360 / n
+    svg.appendChild(el('circle', { r: 99, fill: '#430b00' }))
+    onWheel.forEach(function (dish, i) {
+      var mid = i * seg
+      var a = point(mid - seg / 2, 96)
+      var b = point(mid + seg / 2, 96)
+      var large = seg > 180 ? 1 : 0
+      svg.appendChild(el('path', {
+        d: 'M0 0 L' + a[0] + ' ' + a[1] + ' A96 96 0 ' + large + ' 1 ' + b[0] + ' ' + b[1] + ' Z',
+        fill: COLORS[i % COLORS.length], stroke: '#ffc471', 'stroke-width': 0.6
+      }))
+      // Tekst langs de straal, van het midden naar de rand. Op de linkerhelft andersom
+      // gedraaid, zodat niets ondersteboven staat.
+      var flip = mid > 180
+      svg.appendChild(el('text', {
+        transform: 'rotate(' + (flip ? mid + 90 : mid - 90) + ')', x: flip ? -90 : 90, y: 0,
+        'text-anchor': flip ? 'start' : 'end', 'dominant-baseline': 'middle',
+        fill: '#fcf6ea', 'font-size': n > 8 ? 7 : 8.5, 'font-weight': 600,
+        'font-family': 'Fraunces, Georgia, serif'
+      }, short(dish.t)))
+    })
+    // Spijkertjes op de rand, zoals op een echt rad.
+    for (var k = 0; k < n; k++) {
+      var p = point(k * seg - seg / 2, 96)
+      svg.appendChild(el('circle', { cx: p[0], cy: p[1], r: 1.6, fill: '#ffc471' }))
+    }
+    spinButton.disabled = n === 0
+    card.hidden = true
+    empty.hidden = false
+    empty.innerHTML = n ? 'Druk op <strong>Draai</strong> en het rad kiest je avondeten.' : 'Geen gerechten voor deze keuze.'
+  }
+
+  function show(dish) {
+    card.querySelector('.rad__result-title').textContent = dish.t
+    card.querySelector('.rad__result-meta').textContent = [dish.k, dish.m ? dish.m + ' min' : ''].filter(Boolean).join(' · ')
+    card.querySelector('.rad__result-link').href = dish.u
+    var media = card.querySelector('.rad__result-media')
+    var img = card.querySelector('.rad__result-image')
+    media.hidden = !dish.i
+    if (dish.i) { img.src = dish.i; img.alt = dish.a || dish.t }
+    empty.hidden = true
+    card.hidden = false
+  }
+
+  function spin() {
+    if (spinning || !onWheel.length) return
+    var index = Math.floor(Math.random() * onWheel.length)
+    var seg = 360 / onWheel.length
+    // Het rad draait met de klok mee; vak "index" moet onder de wijzer (0°) eindigen, met een
+    // kleine afwijking binnen het vak zodat het niet steeds exact in het midden stopt.
+    var jitter = (Math.random() - 0.5) * seg * 0.6
+    var current = ((rotation % 360) + 360) % 360
+    var target = (360 - index * seg - current + jitter + 720) % 360
+    rotation += (reduced ? 0 : 360 * 5) + target
+    spinning = true
+    spinButton.disabled = true
+    card.hidden = true
+    empty.hidden = false
+    empty.textContent = reduced ? '' : 'Het rad draait…'
+    var done = function () {
+      spinning = false
+      spinButton.disabled = false
+      show(onWheel[index])
+    }
+    if (reduced) {
+      wheel.style.transform = 'rotate(' + rotation + 'deg)'
+      done()
+    } else {
+      wheel.addEventListener('transitionend', done, { once: true })
+      wheel.style.transform = 'rotate(' + rotation + 'deg)'
+    }
+  }
+
+  spinButton.addEventListener('click', spin)
+  main.querySelector('.rad__again').addEventListener('click', spin)
+  main.querySelector('.rad__shuffle').addEventListener('click', function () { if (!spinning) draw() })
+  filters.addEventListener('click', function (event) {
+    var button = event.target.closest('button[data-filter]')
+    if (!button || spinning) return
+    filter = button.dataset.filter
+    filters.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(b === button)) })
+    draw()
+  })
+
+  draw()
+  main.querySelectorAll('[hidden].rad__filters, [hidden].rad__wheel-wrap, [hidden].rad__result').forEach(function (node) { node.hidden = false })
+})()
+</script>
+
+<style>
+/* Resultaat, filters en knoppen staan in het template (gescopet); het SVG-rad wordt door het
+   script getekend en krijgt zijn kleuren als attributen. */
+.rad {
+  max-width: var(--steva-pagina-breedte);
+  margin: 0 auto;
+  padding: var(--byz-space-12) var(--steva-pagina-marge) var(--byz-space-24);
+}
+.rad__filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--byz-space-2);
+  margin-bottom: var(--byz-space-12);
+}
+.rad__filters[hidden],
+.rad__wheel-wrap[hidden],
+.rad__result[hidden],
+.rad__result-card[hidden],
+.rad__result-empty[hidden],
+.rad__result-media[hidden] {
+  display: none;
+}
+.rad__filters button {
+  padding: var(--byz-space-2) var(--byz-space-5);
+  border: 0;
+  border-radius: 999px;
+  background: rgb(67 11 0 / 0.55);
+  box-shadow: inset 0 0 0 1px var(--byz-color-border);
+  color: var(--byz-color-text-secondary);
+  font: inherit;
+  font-size: var(--byz-text-sm);
+  font-weight: var(--byz-font-semibold);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.rad__filters button[aria-pressed="true"] {
+  background: var(--byz-color-accent);
+  box-shadow: inset 0 -3px 0 var(--steva-oranje-donker);
+  color: var(--steva-bordeaux-donker);
+}
+.rad__stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--byz-space-12);
+  align-items: center;
+  justify-items: center;
+}
+
+/* Het rad */
+.rad__wheel-wrap {
+  position: relative;
+  width: min(100%, 30rem);
+  aspect-ratio: 1;
+}
+.rad__wheel {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px var(--steva-bordeaux-donker), 0 0 0 8px var(--steva-goud), 0 20px 40px rgb(0 0 0 / 0.45);
+  transition: transform 4.6s cubic-bezier(0.15, 0.7, 0.12, 1);
+  will-change: transform;
+}
+.rad__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* Wijzer bovenaan: een gouden driehoek die over de rand valt. */
+.rad__pointer {
+  position: absolute;
+  top: -0.9rem;
+  left: 50%;
+  z-index: 2;
+  width: 2.2rem;
+  height: 2.6rem;
+  background: var(--steva-goud);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  filter: drop-shadow(0 3px 3px rgb(0 0 0 / 0.5));
+  transform: translateX(-50%);
+}
+.rad__spin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 26%;
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 50%;
+  background: var(--byz-color-accent);
+  box-shadow: inset 0 -5px 0 var(--steva-oranje-donker), 0 0 0 5px var(--steva-bordeaux-donker), 0 6px 16px rgb(0 0 0 / 0.4);
+  color: var(--steva-bordeaux-donker);
+  font: inherit;
+  font-size: clamp(var(--byz-text-base), 3vw, var(--byz-text-xl));
+  font-weight: var(--byz-font-semibold);
+  text-transform: uppercase;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+.rad__spin:hover:not(:disabled) {
+  background: var(--steva-oranje-donker);
+}
+.rad__spin:active:not(:disabled) {
+  box-shadow: inset 0 -1px 0 var(--steva-oranje-donker), 0 0 0 5px var(--steva-bordeaux-donker);
+  transform: translate(-50%, calc(-50% + 3px));
+}
+.rad__spin:disabled {
+  cursor: wait;
+  opacity: 0.85;
+}
+
+/* Uitslag */
+.rad__result {
+  display: grid;
+  gap: var(--byz-space-6);
+  justify-items: center;
+  width: min(100%, 26rem);
+  text-align: center;
+}
+.rad__result-empty {
+  color: var(--byz-color-text-muted);
+  font-size: var(--byz-text-lg);
+
+  /* De tekst wordt door het script vervangen (zonder scope-attribuut): genest. */
+  & strong {
+    color: var(--byz-color-text-secondary);
+  }
+}
+.rad__result-card {
+  display: grid;
+  gap: var(--byz-space-3);
+  justify-items: center;
+  width: 100%;
+  animation: rad-uitslag 500ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.rad__result-kicker {
+  color: var(--byz-color-accent);
+  font-family: var(--steva-font-script);
+  font-size: var(--byz-text-xl);
+  text-shadow: var(--steva-tekst-schaduw);
+}
+.rad__result-media {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 0.875rem;
+  box-shadow: 8px 8px 24px rgb(0 0 0 / 0.3);
+}
+.rad__result-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.rad__result-title {
+  overflow-wrap: break-word;
+  hyphens: auto;
+  text-wrap: balance;
+  font-size: var(--byz-text-3xl);
+  font-weight: var(--byz-font-semibold);
+  line-height: 1.15;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-shadow: var(--steva-tekst-schaduw);
+}
+.rad__result-meta {
+  color: var(--byz-color-text-secondary);
+  font-size: var(--byz-text-sm);
+  font-weight: var(--byz-font-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.rad__result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--byz-space-3);
+  margin-top: var(--byz-space-3);
+}
+.rad__result-link {
+  padding: var(--byz-space-3) var(--byz-space-6);
+  border-radius: 0.5rem;
+  background: var(--byz-color-accent);
+  box-shadow: inset 0 -4px 0 var(--steva-oranje-donker), 0 2px 8px var(--steva-bordeaux-rand);
+  color: var(--steva-bordeaux-donker);
+  font-weight: var(--byz-font-semibold);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.rad__result-link:hover {
+  background: var(--steva-oranje-donker);
+}
+.rad__again,
+.rad__shuffle {
+  padding: var(--byz-space-3) var(--byz-space-5);
+  border: 0;
+  border-radius: 0.5rem;
+  background: rgb(67 11 0 / 0.55);
+  box-shadow: inset 0 0 0 1px var(--byz-color-border);
+  color: var(--byz-color-text-secondary);
+  font: inherit;
+  font-weight: var(--byz-font-semibold);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.rad__shuffle {
+  background: none;
+  box-shadow: none;
+  font-size: var(--byz-text-sm);
+  text-decoration: underline;
+  text-transform: none;
+}
+.rad__again:hover,
+.rad__shuffle:hover {
+  color: var(--byz-color-text-primary);
+}
+.rad__noscript {
+  color: var(--byz-color-text-muted);
+  text-align: center;
+}
+.rad__noscript a {
+  color: var(--byz-color-text-secondary);
+}
+@keyframes rad-uitslag {
+  from { opacity: 0; transform: translateY(1rem) scale(0.97); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rad__wheel,
+  .rad__result-card {
+    transition: none;
+    animation: none;
+  }
+}
+/* Vanaf lg: rad links, uitslag rechts. */
+@media (min-width: 1024px) {
+  .rad__stage {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--byz-space-10);
+  }
+  .rad__wheel-wrap {
+    grid-column: 1 / span 7;
+    justify-self: center;
+  }
+  .rad__result {
+    grid-column: 8 / span 5;
+  }
+}
+</style>

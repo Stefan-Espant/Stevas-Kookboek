@@ -142,7 +142,7 @@ const sections = [
       height: 100%;
     }
     & .home__recipe:not(.home__recipe--uitgelicht) .recipe-card__title {
-      padding: 0 var(--byz-space-5) var(--byz-space-5);
+      padding: 0;
       font-size: var(--byz-text-lg);
     }
   }
