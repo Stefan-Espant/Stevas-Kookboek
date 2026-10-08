@@ -121,7 +121,8 @@ const WORDS = ['recepten', 'stoofpotten', "curry's", "pasta's", 'soepen', 'desse
   }
 }
 @keyframes home-hero-rise {
-  from { opacity: 0; transform: translateY(1.5rem) rotateX(-35deg); }
+  /* Geen opacity: tekst die vanaf 0 infadet telt pas mee als LCP wanneer hij zichtbaar is. */
+  from { transform: translateY(1.5rem) rotateX(-35deg); }
 }
 @media (max-width: 640px) {
   .home-hero {
