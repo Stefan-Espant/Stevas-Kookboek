@@ -19,8 +19,8 @@ const [site, page, recipes, cuisines, collections] = await Promise.all([
 // (6 kolommen × 2 rijen), de volgende vier klein (3 kolommen). Precies vijf vult het grid.
 // Tablet: groot recept over de volle breedte, de rest 2 per rij. Mobiel: alles onder elkaar.
 const cards = await Promise.all(recipes.map(async (recipe, index) => index === 0
-  ? `<div class="home__recipe home__recipe--uitgelicht byz-col-span-12 byz-col-span-lg-6" data-reveal="card">${await RecipeCard.render({ recipe })}</div>`
-  : `<div class="home__recipe byz-col-span-12 byz-col-span-sm-6 byz-col-span-lg-3" data-reveal="card">${await RecipeCard.render({ recipe })}</div>`
+  ? `<div class="home__recipe home__recipe--uitgelicht byz-col-span-12 byz-col-span-lg-6" data-reveal="card">${await RecipeCard.render({ recipe, sizes: '(min-width: 1024px) 46vw, 92vw' })}</div>`
+  : `<div class="home__recipe byz-col-span-12 byz-col-span-sm-6 byz-col-span-lg-3" data-reveal="card">${await RecipeCard.render({ recipe, sizes: '(min-width: 1024px) 23vw, (min-width: 640px) 46vw, 92vw' })}</div>`
 ))
 // De homepage heet in Centaur "Homepage" — als zoektitel nietszeggend, dus alleen de
 // SEO-velden uit Centaur gebruiken en anders een titel met merknaam en belofte.

@@ -2,6 +2,7 @@
 import { recipePath, type Recipe } from '../lib/recipes'
 import { absoluteUrl, siteUrl } from '../lib/site'
 import { formatQuantity, forms, ingredientText } from '../lib/quantity'
+import { srcsetFor } from '../lib/images'
 type Props = { recipe: Recipe }
 const { recipe } = $$props
 const { title, image, imageAlt, prepTime, cookTime, servings, difficulty, tags } = recipe
@@ -20,8 +21,9 @@ const facts = [
 // Zonder foto in Centaur: placeholder in de huisstijl (marmertextuur uit het ontwerp + logo).
 // De foto is meestal het grootste element in beeld (LCP): met voorrang laden. width/height geven
 // de verhouding (4:3, zoals de CSS) door, zodat de pagina niet verspringt tijdens het laden.
+const heroSrcset = srcsetFor(image)
 const imageHtml = image
-  ? renderTemplate`<img src="${image}" alt="${imageAlt}" width="1200" height="900" fetchpriority="high" class="recipe__image">`
+  ? renderTemplate`<img src="${image}" ${new SafeHtml(heroSrcset ? renderTemplate`srcset="${heroSrcset}" sizes="(min-width: 1024px) 80vw, 92vw"` : '')} alt="${imageAlt}" width="1200" height="900" fetchpriority="high" class="recipe__image">`
   : '<div class="recipe__image recipe__image--placeholder" role="img" aria-label="Nog geen foto"><img src="/logo-steva.svg" alt=""></div>'
 const factsHtml = facts
   // data-fact="personen": de rekentool werkt dit getal mee bij (ook belangrijk voor de print).

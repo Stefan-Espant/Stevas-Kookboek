@@ -1,10 +1,12 @@
 ---
 /** Liggende fototegel met titel en ondertitel, voor keukens en inspiratie-thema's. */
+import { srcsetFor } from '../lib/images'
 type Props = { href: string, title: string, subtitle: string, image?: string }
 const { href, title, subtitle, image = '' } = $$props
+const srcset = srcsetFor(image)
 // Zelfde placeholder als RecipeCard wanneer er geen foto is.
 const imageHtml = image
-  ? renderTemplate`<img src="${image}" alt="" loading="lazy" class="tile-card__image">`
+  ? renderTemplate`<img src="${image}" ${new SafeHtml(srcset ? renderTemplate`srcset="${srcset}" sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw"` : '')} alt="" loading="lazy" decoding="async" class="tile-card__image">`
   : '<div class="tile-card__image tile-card__image--placeholder"><img src="/logo-steva.svg" alt=""></div>'
 ---
 <a href={href} class="tile-card" wald:prefetch="visible">

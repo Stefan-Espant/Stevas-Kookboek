@@ -6,6 +6,8 @@
 // tekent (gebruik dat om hem in te laten faden).
 ;(function () {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  // Wie data wil besparen (Save-Data, bv. een databundel die bijna op is) krijgt geen shader.
+  if (navigator.connection && navigator.connection.saveData) return
 
   // ── Shaders ─────────────────────────────────────────────────────────────────────────────
   // Elk effect is een functie effect(uv, t, aspect) → kleur met alpha (premultiplied), in WGSL en
