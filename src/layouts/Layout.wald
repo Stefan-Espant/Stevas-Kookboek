@@ -188,6 +188,14 @@ body {
   position: relative;
   isolation: isolate;
   min-height: 100vh;
+
+  /* Tekst over meerdere regels gelijkmatig verdelen (geen los woord op de laatste regel).
+     Genest onder body, zodat het ook geldt voor HTML uit componenten en de frontmatter.
+     Browsers balanceren alleen korte teksten (Chrome tot 6, Firefox tot 10 regels); langere
+     alinea's breken gewoon af zoals voorheen. */
+  & :is(h1, h2, h3, h4, h5, h6, p, li, dt, dd, blockquote, figcaption, label, summary, a, button) {
+    text-wrap: balance;
+  }
 }
 
 /* Korte pagina's vullen de viewport. De inhoud kan bij kleine schermen of ingezoomde
