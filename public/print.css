@@ -1,0 +1,206 @@
+/* Afdrukken (Layout.wald laadt dit met media="print", op het scherm kost het dus niets).
+   Globaal en niet gescopet: het moet ook de stijlen van componenten kunnen overschrijven.
+   Vooral voor receptpagina's: titel, intro, kerngegevens, ingrediënten en bereiding in zwart op
+   wit; alles wat alleen op het scherm zin heeft gaat weg. */
+
+@page {
+  margin: 1.5cm 1.6cm;
+}
+
+html,
+body {
+  background: #fff !important;
+  color: #111 !important;
+  font-size: 10.5pt;
+}
+*,
+*::before,
+*::after {
+  text-shadow: none !important;
+  box-shadow: none !important;
+}
+
+/* Alleen op het scherm */
+.page-backdrop,
+.page-steam,
+.site-header,
+.site-footer,
+.cms-cookie-banner,
+.recipe-page__crumbs,
+.more-recipes,
+.recipe__kicker,
+.recipe__print,
+.recipe__tags,
+.recipe__scaler button,
+.marquee-clip {
+  display: none !important;
+}
+
+/* Binnenschuivende blokken (motion.js) zijn op papier gewoon zichtbaar. */
+[data-reveal] {
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+/* ── Receptpagina ──────────────────────────────────────────────────────────────────────── */
+.recipe-page,
+.recipe {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Kop: foto klein rechts naast titel, intro en kerngegevens. */
+.recipe__hero {
+  display: grid !important;
+  grid-template-columns: 1fr 5.5cm !important;
+  gap: 0.8cm !important;
+  align-items: start !important;
+  margin: 0 0 0.8cm !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+.recipe__intro,
+.recipe__media {
+  grid-column: auto !important;
+  grid-row: auto !important;
+}
+.recipe__title {
+  margin: 0 0 0.3cm !important;
+  color: #111 !important;
+  font-size: 22pt !important;
+  line-height: 1.1 !important;
+  text-align: left !important;
+}
+.recipe__lead,
+.recipe__lead p {
+  max-width: none !important;
+  margin: 0 0 0.3cm !important;
+  color: #333 !important;
+  font-size: 10.5pt !important;
+  text-align: left !important;
+}
+.recipe__facts {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-start !important;
+  gap: 0.2cm 0.6cm !important;
+  margin: 0.3cm 0 0 !important;
+}
+.recipe__fact {
+  padding: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  text-align: left !important;
+}
+.recipe__fact dt {
+  color: #555 !important;
+  font-size: 8pt !important;
+}
+.recipe__fact dd {
+  color: #111 !important;
+  font-size: 10.5pt !important;
+}
+.recipe__meta {
+  justify-content: flex-start !important;
+  margin: 0.2cm 0 0 !important;
+  text-align: left !important;
+}
+.recipe__cuisine {
+  color: #555 !important;
+  font-size: 9pt !important;
+}
+.recipe__image {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 4 / 3 !important;
+  border-radius: 0.2cm !important;
+}
+/* Zonder foto geen marmerplaatje met logo. */
+.recipe__image--placeholder {
+  display: none !important;
+}
+
+/* Ingrediënten links, bereiding rechts. */
+.recipe__body {
+  display: grid !important;
+  grid-template-columns: 6cm 1fr !important;
+  gap: 0.9cm !important;
+}
+.recipe__body > * {
+  grid-column: auto !important;
+}
+.recipe__ingredients {
+  position: static !important;
+  padding: 0.4cm !important;
+  border: 1px solid #bbb !important;
+  border-radius: 0.2cm !important;
+  background: none !important;
+  color: #111 !important;
+  break-inside: avoid;
+}
+.recipe__ingredients li {
+  padding: 0.12cm 0 !important;
+  border-color: #ddd !important;
+  break-inside: avoid;
+}
+.recipe__scaler {
+  display: block !important;
+  margin: 0 0 0.2cm !important;
+  padding: 0 !important;
+  background: none !important;
+  color: #555 !important;
+  font-size: 9pt !important;
+}
+.recipe__scaler-label::after {
+  content: ":";
+}
+.recipe__scaler-controls,
+.recipe__scaler output {
+  display: inline !important;
+  font-size: 9pt !important;
+}
+.recipe__heading {
+  margin: 0 0 0.3cm !important;
+  color: #111 !important;
+  font-size: 13pt !important;
+}
+.recipe__steps ol > li {
+  padding-bottom: 0.35cm !important;
+  color: #111 !important;
+  break-inside: avoid;
+}
+.recipe__steps ol > li::before {
+  color: #111 !important;
+  font-size: 16pt !important;
+}
+.recipe__steps strong {
+  color: #111 !important;
+}
+.recipe__tips {
+  margin-top: 0.4cm !important;
+  padding: 0.4cm !important;
+  border: 1px solid #ddd !important;
+  background: none !important;
+  color: #111 !important;
+  break-inside: avoid;
+}
+.recipe__qty {
+  color: #111 !important;
+}
+
+/* Bron onderaan: waar het recept vandaan komt (alleen op papier). */
+.recipe__print-source {
+  display: block !important;
+  margin-top: 0.8cm !important;
+  padding-top: 0.3cm !important;
+  border-top: 1px solid #ddd !important;
+  color: #555 !important;
+  font-size: 8.5pt !important;
+}

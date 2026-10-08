@@ -128,6 +128,7 @@ const footer = maintenance ? '' : await SiteFooter.render({
     <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
     <link rel="stylesheet" href="/vendor/byzantium.css" />
     <link rel="stylesheet" href="/motion.css" />
+    <link rel="stylesheet" href="/print.css" media="print" />
     {new SafeHtml(motionHead)}
     {new SafeHtml(analyticsHead)}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
