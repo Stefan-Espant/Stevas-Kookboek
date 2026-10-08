@@ -76,7 +76,10 @@ const schema = [breadcrumbSchema([['Home', '/'], ['Wat eten we?', '/wat-eten-we'
   var all = JSON.parse(source.textContent || '[]')
   if (!all.length) return
 
-  var SLICES = 12
+  // Op een telefoon minder, grotere vakken: met 12 werd de tekst zo klein dat mensen inzoomden.
+  var smallScreen = matchMedia('(max-width: 639px)')
+  var stacked = matchMedia('(max-width: 1023px)')
+  function slices() { return smallScreen.matches ? 8 : 12 }
   var COLORS = ['#8c230e', '#6a1808', '#a8401c', '#571103']
   var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
   var wheel = main.querySelector('.rad__wheel')
@@ -105,9 +108,17 @@ const schema = [breadcrumbSchema([['Home', '/'], ['Wat eten we?', '/wat-eten-we'
       return filter === 'snel' ? d.m > 0 && d.m <= 30 : filter === 'vega' ? d.v : true
     })
   }
-  function short(title) {
-    // Kort genoeg om tussen de draaiknop in het midden en de rand te passen.
-    return title.length > 15 ? title.slice(0, 14).trim() + '…' : title
+  function cut(text, max) {
+    return text.length > max ? text.slice(0, max - 1).trim() + '…' : text
+  }
+  // Titel in hooguit twee regels die tussen de draaiknop in het midden en de rand passen.
+  function lines(title, max) {
+    if (title.length <= max) return [title]
+    var words = title.split(' ')
+    var first = words.shift()
+    while (words.length && (first + ' ' + words[0]).length <= max) first += ' ' + words.shift()
+    if (!words.length) return [cut(first, max)]
+    return [cut(first, max), cut(words.join(' '), max)]
   }
   function point(angle, radius) {
     var rad = (angle - 90) * Math.PI / 180
@@ -122,7 +133,7 @@ const schema = [breadcrumbSchema([['Home', '/'], ['Wat eten we?', '/wat-eten-we'
 
   // Rad tekenen: vak 0 staat bovenaan (onder de wijzer), daarna met de klok mee.
   function draw() {
-    onWheel = shuffle(pool()).slice(0, SLICES)
+    onWheel = shuffle(pool()).slice(0, slices())
     while (svg.firstChild) svg.removeChild(svg.firstChild)
     var n = onWheel.length
     var seg = 360 / n
@@ -139,12 +150,19 @@ const schema = [breadcrumbSchema([['Home', '/'], ['Wat eten we?', '/wat-eten-we'
       // Tekst langs de straal, van het midden naar de rand. Op de linkerhelft andersom
       // gedraaid, zodat niets ondersteboven staat.
       var flip = mid > 180
-      svg.appendChild(el('text', {
-        transform: 'rotate(' + (flip ? mid + 90 : mid - 90) + ')', x: flip ? -90 : 90, y: 0,
+      var size = n > 8 ? 7 : 9
+      var x = flip ? -90 : 90
+      var text = el('text', {
+        transform: 'rotate(' + (flip ? mid + 90 : mid - 90) + ')', y: 0,
         'text-anchor': flip ? 'start' : 'end', 'dominant-baseline': 'middle',
-        fill: '#fcf6ea', 'font-size': n > 8 ? 7 : 8.5, 'font-weight': 600,
+        fill: '#fcf6ea', 'font-size': size, 'font-weight': 600,
         'font-family': 'Fraunces, Georgia, serif'
-      }, short(dish.t)))
+      })
+      var parts = lines(dish.t, n > 8 ? 15 : 13)
+      parts.forEach(function (part, line) {
+        text.appendChild(el('tspan', { x: x, dy: line ? '1.1em' : parts.length > 1 ? '-0.55em' : '0' }, part))
+      })
+      svg.appendChild(text)
     })
     // Spijkertjes op de rand, zoals op een echt rad.
     for (var k = 0; k < n; k++) {
@@ -172,6 +190,8 @@ const schema = [breadcrumbSchema([['Home', '/'], ['Wat eten we?', '/wat-eten-we'
     }
     empty.hidden = true
     card.hidden = false
+    // Onder elkaar (telefoon, tablet) staat de uitslag onder het rad: er meteen heen scrollen.
+    if (stacked.matches) card.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' })
   }
 
   function spin() {
@@ -204,6 +224,9 @@ const schema = [breadcrumbSchema([['Home', '/'], ['Wat eten we?', '/wat-eten-we'
   }
 
   spinButton.addEventListener('click', spin)
+  // Het hele rad is ook aan te tikken (de knop blijft het toegankelijke doel).
+  wheel.addEventListener('click', spin)
+  smallScreen.addEventListener('change', function () { if (!spinning) draw() })
   main.querySelector('.rad__again').addEventListener('click', spin)
   main.querySelector('.rad__shuffle').addEventListener('click', function () { if (!spinning) draw() })
   filters.addEventListener('click', function (event) {
@@ -275,6 +298,7 @@ const schema = [breadcrumbSchema([['Home', '/'], ['Wat eten we?', '/wat-eten-we'
   aspect-ratio: 1;
 }
 .rad__wheel {
+  cursor: pointer;
   width: 100%;
   height: 100%;
   border-radius: 50%;
