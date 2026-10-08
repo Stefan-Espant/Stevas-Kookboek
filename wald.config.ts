@@ -6,6 +6,7 @@ import { compile } from 'sass'
 import { defineAdapter, defineConfig, vercelAdapter } from '@waldjs/cli'
 import { getAllRecipes, recipePath } from './src/lib/recipes'
 import { siteUrl } from './src/lib/site'
+import { IMAGE_WIDTHS, mediaOrigin } from './src/lib/images'
 
 // Alle gebouwde pagina's (…/index.html) als URL-paden, behalve pagina's met noindex (404).
 // Zo komen nieuwe pagina's — recepten, keukens, overzichten — vanzelf in de sitemap.
@@ -78,6 +79,18 @@ function kookboekAdapter() {
         { handle: 'filesystem' },
         { src: '/(.*)', status: 404, dest: '/404.html' }
       ]
+      // Vercel Image Optimization (/_vercel/image, zie src/lib/images.ts): alleen deze breedtes en
+      // alleen de opslag van de receptfoto's, zodat niemand via de site andere afbeeldingen laat
+      // verkleinen. Een maand cachen: een foto verandert in Centaur via een nieuwe upload (nieuwe URL).
+      const domains = [...new Set(recipes.map(recipe => mediaOrigin(recipe.image)).filter(Boolean).map(origin => new URL(origin).hostname))]
+      if (domains.length) {
+        vercelConfig.images = {
+          sizes: IMAGE_WIDTHS,
+          domains,
+          formats: ['image/avif', 'image/webp'],
+          minimumCacheTTL: 60 * 60 * 24 * 31
+        }
+      }
       writeFileSync(configPath, JSON.stringify(vercelConfig, null, 2) + '\n')
 
       const origin = siteUrl()

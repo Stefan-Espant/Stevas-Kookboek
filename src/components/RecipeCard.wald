@@ -1,8 +1,11 @@
 ---
 import { recipePath, type RecipeSummary } from '../lib/recipes'
-/** headingLevel: 2 op pagina's waar de kaarten direct onder de H1 staan (geen kop overslaan). */
-type Props = { recipe: RecipeSummary, headingLevel?: 2 | 3 }
-const { recipe, headingLevel = 3 } = $$props
+import { srcsetFor } from '../lib/images'
+/** headingLevel: 2 op pagina's waar de kaarten direct onder de H1 staan (geen kop overslaan).
+ *  sizes: hoe breed de kaart op het scherm is; standaard het raster van 1/2/3 kolommen. */
+type Props = { recipe: RecipeSummary, headingLevel?: 2 | 3, sizes?: string }
+const { recipe, headingLevel = 3, sizes = '(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw' } = $$props
+const srcset = srcsetFor(recipe.image)
 const heading = new SafeHtml(headingLevel === 2 ? 'h2' : 'h3')
 const titleHtml = renderTemplate`<${heading} class="recipe-card__title">${recipe.title}</${heading}>`
 // Keuken en totale tijd onder de titel: genoeg om te kiezen zonder de kaart te openen.
@@ -10,7 +13,7 @@ const meta = [recipe.cuisine?.name, recipe.totalTime ? `${recipe.totalTime} min`
 const metaHtml = meta ? renderTemplate`<p class="recipe-card__meta">${meta}</p>` : ''
 // Zonder foto in Centaur: marmertextuur uit het ontwerp met het logo.
 const image = recipe.image
-  ? renderTemplate`<img src="${recipe.image}" alt="" loading="lazy" class="recipe-card__image">`
+  ? renderTemplate`<img src="${recipe.image}" ${new SafeHtml(srcset ? renderTemplate`srcset="${srcset}" sizes="${sizes}"` : '')} alt="" loading="lazy" decoding="async" class="recipe-card__image">`
   : '<div class="recipe-card__image recipe-card__image--placeholder"><img src="/logo-steva.svg" alt=""></div>'
 ---
 <a href={recipePath(recipe.slug)} class="recipe-card" wald:prefetch="visible">

@@ -1,6 +1,7 @@
 ---
 import { recipePath, type Recipe } from '../lib/recipes'
 import { clipDescription } from '../lib/site'
+import { srcsetFor } from '../lib/images'
 /** Groot uitgelicht recept: foto naast titel, intro, kerncijfers en een knop. */
 type Props = { recipe: Recipe, kicker?: string }
 const { recipe, kicker = 'Uitgelicht' } = $$props
@@ -12,9 +13,11 @@ const facts = [
   recipe.difficulty ? ['Niveau', recipe.difficulty] : null
 ].filter((fact): fact is string[] => fact !== null)
 const factsHtml = facts.map(([label, value]) => renderTemplate`<div><dt>${label}</dt><dd>${value}</dd></div>`).join('')
-// Zonder foto dezelfde placeholder als de receptkaarten.
+// Zonder foto dezelfde placeholder als de receptkaarten. Op /recepten is dit op mobiel de grootste
+// afbeelding bij het laden (LCP): met voorrang, en de passende maat via srcset.
+const srcset = srcsetFor(recipe.image)
 const imageHtml = recipe.image
-  ? renderTemplate`<img src="${recipe.image}" alt="${recipe.imageAlt}" width="1200" height="900" class="featured__image">`
+  ? renderTemplate`<img src="${recipe.image}" ${new SafeHtml(srcset ? renderTemplate`srcset="${srcset}" sizes="(min-width: 1024px) 56vw, 92vw"` : '')} alt="${recipe.imageAlt}" width="1200" height="900" fetchpriority="high" class="featured__image">`
   : '<div class="featured__image featured__image--placeholder"><img src="/logo-steva.svg" alt=""></div>'
 const cuisineHtml = recipe.cuisine
   ? renderTemplate`<a class="featured__cuisine" href="/keukens/${recipe.cuisine.slug}">${recipe.cuisine.adjective} keuken</a>`

@@ -3,19 +3,21 @@ import Layout from '../layouts/Layout.wald'
 import PageHeader from '../components/PageHeader.wald'
 import { getAllRecipes, recipePath } from '../lib/recipes'
 import { breadcrumbSchema } from '../lib/site'
+import { srcsetFor } from '../lib/images'
 // Rad van het avondeten: kiest willekeurig een hoofdgerecht. Statische site, dus de gerechten
 // gaan als compacte JSON mee in de pagina en het rad wordt in de browser getekend (zie script).
 const dinners = (await getAllRecipes()).filter(recipe => recipe.course === 'Hoofdgerecht')
 const isVegetarian = (tags: string[]) => tags.some(tag => ['vegetarisch', 'vegan'].includes(tag.toLowerCase()))
-const data = dinners.map(recipe => ({
+const data = await Promise.all(dinners.map(async recipe => ({
   t: recipe.title,
   u: recipePath(recipe.slug),
   k: recipe.cuisine?.name ?? '',
   m: recipe.totalTime,
   i: recipe.image,
+  s: srcsetFor(recipe.image),
   a: recipe.imageAlt,
   v: isVegetarian(recipe.tags)
-}))
+})))
 // "<" escapen: titels komen uit het CMS en mogen nooit een </script> kunnen vormen.
 const dataHtml = `<script type="application/json" id="rad-gerechten" data-wald-no-hoist>${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`
 const lead = `Geen idee wat je vanavond kookt? Draai aan het rad en laat ${dinners.length} hoofdgerechten uit keukens van over de hele wereld voor je kiezen.`
@@ -162,7 +164,12 @@ const schema = [breadcrumbSchema([['Home', '/'], ['Wat eten we?', '/wat-eten-we'
     var media = card.querySelector('.rad__result-media')
     var img = card.querySelector('.rad__result-image')
     media.hidden = !dish.i
-    if (dish.i) { img.src = dish.i; img.alt = dish.a || dish.t }
+    if (dish.i) {
+      // Kleinere versie waar dat kan (zie src/lib/images.ts); sizes vóór srcset zetten.
+      if (dish.s) { img.sizes = '(min-width: 1024px) 26rem, 92vw'; img.srcset = dish.s } else img.removeAttribute('srcset')
+      img.src = dish.i
+      img.alt = dish.a || dish.t
+    }
     empty.hidden = true
     card.hidden = false
   }

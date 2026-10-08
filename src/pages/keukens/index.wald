@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.wald'
 import PageHeader from '../../components/PageHeader.wald'
 import { getCuisines, recipePath } from '../../lib/recipes'
 import { breadcrumbSchema, clipDescription, collectionSchema } from '../../lib/site'
+import { srcsetFor } from '../../lib/images'
 const cuisines = await getCuisines()
 const lead = 'Reis mee langs de keukens van Europa en daarbuiten. Kies een keuken en ontdek de recepten die erbij horen.'
 const description = clipDescription(`Recepten per keuken: ${cuisines.map(c => c.name).join(', ')}. ${lead}`)
@@ -44,7 +45,7 @@ const stampHtml = (slug: string, name: string, count: number) => {
 
 // Per keuken een "hoofdstuk": nummer, naam, intro uit de collectie, drie kenmerkende gerechten
 // (klassieke hoofdgerechten eerst) en een beeld. Om en om links/rechts, zoals de pagina's van een kookboek.
-const chapters = cuisines.map((cuisine, index) => {
+const chapters = await Promise.all(cuisines.map(async (cuisine, index) => {
   const href = `/keukens/${cuisine.slug}`
   const intro = clipDescription(stripHtml(cuisine.introHtml), 280)
   const classic = (r: typeof cuisine.recipes[number]) => r.tags.some(tag => tag.toLowerCase() === 'klassiek')
@@ -54,8 +55,9 @@ const chapters = cuisines.map((cuisine, index) => {
     ...cuisine.recipes
   ].filter((recipe, i, list) => list.indexOf(recipe) === i).slice(0, 3)
   const image = cuisine.image || cuisine.recipes.find(r => r.image)?.image || ''
+  const srcset = srcsetFor(image)
   const visual = image
-    ? renderTemplate`<img src="${image}" alt="" loading="lazy" width="1200" height="900" class="chapter__image">`
+    ? renderTemplate`<img src="${image}" ${new SafeHtml(srcset ? renderTemplate`srcset="${srcset}" sizes="(min-width: 1024px) 55vw, 92vw"` : '')} alt="" loading="lazy" decoding="async" width="1200" height="900" class="chapter__image">`
     : renderTemplate`<span class="chapter__image chapter__image--placeholder" aria-hidden="true"><span class="stamp-wrap" data-reveal="stamp">${new SafeHtml(stampHtml(cuisine.slug, cuisine.name, cuisine.recipes.length))}</span></span>`
   // Beeld en tekst schuiven vanaf hun eigen kant binnen (om en om gespiegeld vanaf lg).
   const textSide = index % 2 ? 'left' : 'right'
@@ -73,7 +75,7 @@ const chapters = cuisines.map((cuisine, index) => {
       <a href="${href}" class="chapter__button">Ontdek de ${cuisine.adjective} keuken</a>
     </div>
   </section>`
-})
+}))
 const chaptersHtml = cuisines.length
   ? chapters.join('')
   : '<p class="cuisines__empty">Binnenkort verschijnen hier de eerste keukens!</p>'
