@@ -104,11 +104,21 @@
 
   // Shader-achtergronden (stoom, zie Layout.wald): public/effects.js alleen laden als de pagina een
   // <canvas data-effect> heeft. Los van GSAP; effects.js regelt zelf "minder beweging".
-  if (document.querySelector('canvas[data-effect]')) {
+  // Pas na "load" en als de browser vrij is: de shader-start houdt anders de hoofdthread bezig
+  // terwijl de pagina nog moet verschijnen.
+  function loadEffects() {
     var effects = document.createElement('script')
     effects.src = '/effects.js'
     effects.async = true
     document.head.appendChild(effects)
+  }
+  function whenIdle() {
+    if ('requestIdleCallback' in window) requestIdleCallback(loadEffects, { timeout: 2000 })
+    else setTimeout(loadEffects, 200)
+  }
+  if (document.querySelector('canvas[data-effect]')) {
+    if (document.readyState === 'complete') whenIdle()
+    else window.addEventListener('load', whenIdle, { once: true })
   }
 
   // ── 5. Gedeelde receptfoto tussen pagina's (cross-document view transitions) ─────────────
