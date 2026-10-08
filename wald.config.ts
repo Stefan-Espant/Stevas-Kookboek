@@ -35,6 +35,11 @@ writeFileSync('public/vendor/byzantium.css', compile(byzantiumStyles, { style: '
 const gsapDir = join(dirname(createRequire(join(process.cwd(), 'package.json')).resolve('gsap/package.json')), 'dist')
 for (const file of ['gsap.min.js', 'ScrollTrigger.min.js']) copyFileSync(join(gsapDir, file), join('public/vendor', file))
 
+// Vercel Web Analytics: het ESM-bestand van @vercel/analytics heeft geen afhankelijkheden, dus het kan
+// net als GSAP als los bestand mee (WaldJS bundelt geen npm-imports in gewone <script>-blokken).
+const analyticsDist = dirname(createRequire(join(process.cwd(), 'package.json')).resolve('@vercel/analytics'))
+copyFileSync(join(analyticsDist, 'index.mjs'), join('public/vendor', 'vercel-analytics.mjs'))
+
 // Lokaal staan de Centaur-gegevens in .env; op Vercel komen ze uit de project-env vars
 // (die winnen, vandaar ??=). BOM strippen: sommige editors zetten er een voor, en dan
 // heet de eerste variabele ineens "﻿CENTAUR_API_BASE".
