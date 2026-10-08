@@ -29,7 +29,7 @@ body {
 .recipe-page__crumbs,
 .more-recipes,
 .recipe__kicker,
-.recipe__print,
+.recipe__print-row,
 .recipe__tags,
 .recipe__scaler button,
 .marquee-clip {
@@ -108,7 +108,6 @@ a {
   font-size: 10.5pt !important;
 }
 .recipe__meta {
-  justify-content: flex-start !important;
   margin: 0.2cm 0 0 !important;
   text-align: left !important;
 }
