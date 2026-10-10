@@ -240,12 +240,35 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
   function close() {
     drawer.close()
   }
+  // Safari op iOS 26 tekent de pagina ook onder de zwevende adresbalk, maar knipt de drawer en
+  // de verduistering af aan de rand van het scherm: daar bleef een strook pagina zichtbaar.
+  // Zolang de drawer open is, is de pagina daarom onzichtbaar (alleen de achtergrondkleur van
+  // de drawer blijft over). Elk element naast de drawer, tot aan <body>, wordt verborgen.
+  // De oude inline-waarde wordt bewaard: GSAP zet zelf visibility op binnenschuivende blokken.
+  var hidden = []
+  function hidePage(hide) {
+    document.documentElement.style.overflow = hide ? 'hidden' : ''
+    document.body.style.backgroundColor = hide ? getComputedStyle(drawer).backgroundColor : ''
+    if (!hide) {
+      hidden.forEach(function (item) { item[0].style.visibility = item[1] })
+      hidden = []
+      return
+    }
+    for (var node = drawer; node.parentElement; node = node.parentElement) {
+      ;[].forEach.call(node.parentElement.children, function (sibling) {
+        if (sibling === node) return
+        hidden.push([sibling, sibling.style.visibility])
+        sibling.style.visibility = 'hidden'
+      })
+      if (node.parentElement === document.body) break
+    }
+  }
   openButton.addEventListener('click', function () {
     drawer.showModal()
-    document.documentElement.style.overflow = 'hidden'
+    hidePage(true)
   })
   drawer.addEventListener('close', function () {
-    document.documentElement.style.overflow = ''
+    hidePage(false)
     openButton.focus()
   })
   drawer.querySelector('.recipes__close').addEventListener('click', close)
