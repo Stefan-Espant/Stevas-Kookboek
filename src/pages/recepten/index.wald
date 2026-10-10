@@ -45,29 +45,60 @@ const themesHtml = collections.length
     </section>`
   : ''
 
-// Filters op gang en keuken. Verborgen tot het script draait, zodat je zonder JavaScript
-// gewoon alle recepten ziet.
+// Filters op gang, keuken, tijd, niveau en dieet, plus sorteren. Verborgen tot het script draait,
+// zodat je zonder JavaScript gewoon alle recepten ziet. Elke keuze komt in de URL (deelbaar).
+const LEVEL_ORDER = ['Makkelijk', 'Gemiddeld', 'Uitdagend']
+const levels = [...new Set(recipes.map(r => r.difficulty).filter(Boolean))]
+  .sort((a, b) => (LEVEL_ORDER.indexOf(a) + 1 || 99) - (LEVEL_ORDER.indexOf(b) + 1 || 99))
+const option = (value: string, label: string) => renderTemplate`<option value="${value}">${label}</option>`
+const select = (name: string, label: string, options: string) => renderTemplate`<label class="recipes__select">
+          <span>${label}</span>
+          <select name="${name}">${new SafeHtml(options)}</select>
+        </label>`
 const COURSE_ORDER = ['Brunch', 'Voorgerecht', 'Soep', 'Hoofdgerecht', 'Bijgerecht', 'Snack', 'Dessert']
 const COURSE_LABEL: Record<string, string> = { Brunch: 'Ontbijt en brunch', Snack: 'Borrelhapjes' }
 const courses = [...new Set(recipes.map(r => r.course).filter(Boolean))]
   .sort((a, b) => (COURSE_ORDER.indexOf(a) + 1 || 99) - (COURSE_ORDER.indexOf(b) + 1 || 99))
 const filterHtml = recipes.length > 1 && (courses.length > 1 || cuisines.length > 1)
   ? renderTemplate`<div class="recipes__filters" hidden>
+      <div class="recipes__bar">
+        <button type="button" class="recipes__open" aria-haspopup="dialog" aria-controls="recepten-filters">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+          Filters <span class="recipes__badge" hidden></span>
+        </button>
+        <p class="recipes__count" aria-live="polite"></p>
+      </div>
+      <div class="recipes__slot"><div class="recipes__panel">
       <div class="recipes__courses" role="group" aria-label="Filter op gang">
         <button type="button" data-course="" aria-pressed="true">Alles</button>
         ${new SafeHtml(courses.map(course => renderTemplate`<button type="button" data-course="${course}" aria-pressed="false">${COURSE_LABEL[course] ?? course}</button>`).join(''))}
       </div>
-      <div class="recipes__filter-row">
-        <label class="recipes__select">
-          <span>Keuken</span>
-          <select name="keuken">
-            <option value="">Alle keukens</option>
-            ${new SafeHtml([...cuisines].sort((a, b) => a.name.localeCompare(b.name)).map(c => renderTemplate`<option value="${c.slug}">${c.name} (${c.recipes.length})</option>`).join(''))}
-          </select>
-        </label>
-        <p class="recipes__count" aria-live="polite"></p>
+      <div class="recipes__selects">
+        ${new SafeHtml(select('keuken', 'Keuken', option('', 'Alle keukens') + [...cuisines].sort((a, b) => a.name.localeCompare(b.name)).map(c => option(c.slug, `${c.name} (${c.recipes.length})`)).join('')))}
+        ${new SafeHtml(select('tijd', 'Tijd', option('', 'Maakt niet uit') + option('15', 'Tot 15 minuten') + option('30', 'Tot 30 minuten') + option('60', 'Tot een uur') + option('lang', 'Langer dan een uur')))}
+        ${new SafeHtml(levels.length > 1 ? select('niveau', 'Niveau', option('', 'Alle niveaus') + levels.map(level => option(level, level)).join('')) : '')}
+        ${new SafeHtml(select('dieet', 'Dieet', option('', 'Alles') + option('vegetarisch', 'Vegetarisch') + option('vegan', 'Vegan')))}
+        ${new SafeHtml(select('sorteer', 'Sorteren', option('', 'Nieuwste eerst') + option('snel', 'Snelste eerst') + option('az', 'Op naam (A–Z)')))}
       </div>
-    </div>`
+      </div></div>
+      <div class="recipes__filter-row">
+        <p class="recipes__count" aria-live="polite"></p>
+        <button type="button" class="recipes__reset" data-reset hidden>Wis alle filters</button>
+      </div>
+    </div>
+    <dialog class="recipes__drawer" id="recepten-filters" aria-labelledby="recepten-filters-titel">
+      <div class="recipes__drawer-head">
+        <h2 id="recepten-filters-titel" class="recipes__drawer-title">Filters</h2>
+        <button type="button" class="recipes__close" aria-label="Filters sluiten">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="recipes__drawer-body"></div>
+      <div class="recipes__drawer-foot">
+        <button type="button" class="recipes__drawer-reset" data-reset>Wis alles</button>
+        <button type="button" class="recipes__show">Toon recepten</button>
+      </div>
+    </dialog>`
   : ''
 const gridHtml = recipes.length
   ? await RecipeGrid.render({ recipes, headingLevel: 3, eager: 1 })
@@ -96,53 +127,145 @@ const allHtml = recipes.length
 <script>
 document.querySelectorAll('.recipes__filters').forEach(function (filters) {
   var section = filters.closest('.recipes__all')
-  var cells = section.querySelectorAll('.recipe-grid [data-cuisine]')
+  var grid = section.querySelector('.recipe-grid')
+  var cells = [].slice.call(grid.querySelectorAll('[data-cuisine]'))
   var buttons = filters.querySelectorAll('button[data-course]')
-  var select = filters.querySelector('select')
-  var count = filters.querySelector('.recipes__count')
+  var selects = [].slice.call(filters.querySelectorAll('select'))
+  var counts = section.querySelectorAll('.recipes__count')
+  var reset = filters.querySelector('.recipes__reset')
   var none = section.querySelector('.recipes__none')
-  var state = { course: '', cuisine: '' }
+  // Mobiel: de filters (het paneel) verhuizen naar een drawer onderin; de knop "Filters" opent
+  // hem. Een <dialog> als modal: focus blijft erin, Esc sluit, de rest van de pagina is inert.
+  var drawer = section.querySelector('.recipes__drawer')
+  var panel = filters.querySelector('.recipes__panel')
+  var slot = filters.querySelector('.recipes__slot')
+  var drawerBody = drawer.querySelector('.recipes__drawer-body')
+  var openButton = filters.querySelector('.recipes__open')
+  var badge = filters.querySelector('.recipes__badge')
+  var showButton = drawer.querySelector('.recipes__show')
+  var drawerReset = drawer.querySelector('.recipes__drawer-reset')
+  var mobile = matchMedia('(max-width: 767px)')
+  // Gang heet in de URL "gang"; de selects gebruiken hun eigen naam (keuken, tijd, niveau, …).
+  var state = { gang: '' }
+  selects.forEach(function (select) { state[select.name] = '' })
+  var original = cells.slice()
+  var titles = new Map(cells.map(function (cell) {
+    var title = cell.querySelector('.recipe-card__title')
+    return [cell, title ? title.textContent.trim() : '']
+  }))
+
+  function timeMatches(minutes, choice) {
+    if (!choice) return true
+    if (!minutes) return false
+    return choice === 'lang' ? minutes > 60 : minutes <= Number(choice)
+  }
+  function matches(cell) {
+    var d = cell.dataset
+    return (!state.gang || d.course === state.gang) &&
+      (!state.keuken || d.cuisine === state.keuken) &&
+      timeMatches(Number(d.time), state.tijd) &&
+      (!state.niveau || d.level === state.niveau) &&
+      (!state.dieet || (' ' + d.diet + ' ').indexOf(' ' + state.dieet + ' ') !== -1)
+  }
+  function order() {
+    if (state.sorteer === 'snel') {
+      // Recepten zonder tijd achteraan.
+      return original.slice().sort(function (a, b) { return (Number(a.dataset.time) || 1e6) - (Number(b.dataset.time) || 1e6) })
+    }
+    if (state.sorteer === 'az') {
+      return original.slice().sort(function (a, b) { return titles.get(a).localeCompare(titles.get(b), 'nl') })
+    }
+    return original
+  }
 
   function apply() {
     var shown = 0
-    cells.forEach(function (cell) {
-      var match = (!state.course || cell.dataset.course === state.course) &&
-        (!state.cuisine || cell.dataset.cuisine === state.cuisine)
+    order().forEach(function (cell) {
+      var match = matches(cell)
       cell.hidden = !match
       if (match) shown++
+      grid.appendChild(cell)
     })
-    buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.course === state.course)) })
-    select.value = state.cuisine
-    count.textContent = shown + (shown === 1 ? ' recept' : ' recepten')
+    buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.course === state.gang)) })
+    selects.forEach(function (select) {
+      select.value = state[select.name]
+      select.classList.toggle('is-active', !!state[select.name])
+    })
+    var label = shown + (shown === 1 ? ' recept' : ' recepten')
+    counts.forEach(function (count) { count.textContent = label })
+    showButton.textContent = shown ? 'Toon ' + label : 'Geen recepten'
     none.hidden = shown > 0
-    // Deelbare URL: /recepten?gang=Dessert&keuken=frans
+    // Aantal actieve filters (sorteren telt niet mee) op de knop "Filters".
+    var active = Object.keys(state).filter(function (key) { return key !== 'sorteer' && state[key] }).length
+    badge.textContent = active
+    badge.hidden = !active
+    openButton.setAttribute('aria-label', active ? 'Filters, ' + active + ' actief' : 'Filters')
+    reset.hidden = !Object.keys(state).some(function (key) { return state[key] })
+    drawerReset.disabled = reset.hidden
+    // Deelbare URL: /recepten?gang=Hoofdgerecht&tijd=30&dieet=vegetarisch
     var url = new URL(location.href)
-    state.course ? url.searchParams.set('gang', state.course) : url.searchParams.delete('gang')
-    state.cuisine ? url.searchParams.set('keuken', state.cuisine) : url.searchParams.delete('keuken')
+    Object.keys(state).forEach(function (key) {
+      state[key] ? url.searchParams.set(key, state[key]) : url.searchParams.delete(key)
+    })
     history.replaceState(null, '', url)
+    if (window.ScrollTrigger) window.ScrollTrigger.refresh()
+  }
+  function clear() {
+    Object.keys(state).forEach(function (key) { state[key] = '' })
+    apply()
   }
 
-  filters.addEventListener('click', function (event) {
+  // Op de sectie, niet op .recipes__filters: op mobiel staan de knoppen in de drawer.
+  section.addEventListener('click', function (event) {
     var button = event.target.closest('button[data-course]')
     if (!button) return
-    state.course = button.dataset.course
+    state.gang = button.dataset.course
     apply()
   })
-  select.addEventListener('change', function () {
-    state.cuisine = select.value
-    apply()
+  selects.forEach(function (select) {
+    select.addEventListener('change', function () {
+      state[select.name] = select.value
+      apply()
+    })
   })
-  none.querySelector('[data-reset]').addEventListener('click', function () {
-    state.course = ''
-    state.cuisine = ''
-    apply()
-  })
+  section.querySelectorAll('[data-reset]').forEach(function (button) { button.addEventListener('click', clear) })
 
+  function place() {
+    if (mobile.matches) drawerBody.appendChild(panel)
+    else {
+      slot.appendChild(panel)
+      if (drawer.open) drawer.close()
+    }
+  }
+  function close() {
+    drawer.close()
+  }
+  openButton.addEventListener('click', function () {
+    drawer.showModal()
+    document.documentElement.style.overflow = 'hidden'
+  })
+  drawer.addEventListener('close', function () {
+    document.documentElement.style.overflow = ''
+    openButton.focus()
+  })
+  drawer.querySelector('.recipes__close').addEventListener('click', close)
+  // Tik naast het paneel (op de achtergrond) sluit ook.
+  drawer.addEventListener('click', function (event) { if (event.target === drawer) close() })
+  showButton.addEventListener('click', function () {
+    close()
+    grid.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
+  })
+  mobile.addEventListener('change', place)
+  place()
+
+  // Beginstand uit de URL; onbekende waarden negeren.
   var params = new URLSearchParams(location.search)
   var course = params.get('gang') || ''
-  var cuisine = params.get('keuken') || ''
-  if ([].some.call(buttons, function (b) { return b.dataset.course === course })) state.course = course
-  if ([].some.call(select.options, function (o) { return o.value === cuisine })) state.cuisine = cuisine
+  if ([].some.call(buttons, function (b) { return b.dataset.course === course })) state.gang = course
+  selects.forEach(function (select) {
+    var value = params.get(select.name) || ''
+    if ([].some.call(select.options, function (o) { return o.value === value })) state[select.name] = value
+  })
   apply()
   filters.hidden = false
 })
@@ -151,6 +274,12 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
 <style>
 /* Thema-strook: helemaal naar links tot de laatste kaart aan de rechterrand staat. De zichtbare
    breedte is de breedte van main (max. de paginabreedte). */
+@keyframes recipes-drawer {
+  from { transform: translateY(100%); }
+}
+@keyframes recipes-backdrop {
+  from { opacity: 0; }
+}
 @keyframes recipes-rail {
   to { transform: translateX(calc(-100% + min(100vw, var(--steva-pagina-breedte)))); }
 }
@@ -189,9 +318,15 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
   }
 
   /* Koppen van de secties */
-  & .recipes__themes,
-  & .recipes__all {
+  & .recipes__themes {
     margin-top: var(--byz-space-20);
+  }
+  /* "Blader door alles": meer lucht erboven en tussen de kop en de filters. */
+  & .recipes__all {
+    margin-top: var(--byz-space-24);
+  }
+  & .recipes__all .recipes__section-head {
+    margin-bottom: var(--byz-space-12);
   }
   & .recipes__section-head {
     display: flex;
@@ -335,9 +470,10 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
   }
 
   /* Filters */
+  /* Lucht tussen de gang-knoppen, de keuzelijsten en het aantal. */
   & .recipes__filters {
     display: grid;
-    gap: var(--byz-space-4);
+    gap: var(--byz-space-8);
     margin-bottom: var(--byz-space-10);
   }
   & .recipes__filters[hidden],
@@ -367,6 +503,15 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
     box-shadow: inset 0 -3px 0 var(--steva-oranje-donker);
     color: var(--steva-bordeaux-donker);
   }
+  & .recipes__slot .recipes__panel {
+    display: grid;
+    gap: var(--byz-space-8);
+  }
+  & .recipes__selects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr));
+    gap: var(--byz-space-3) var(--byz-space-4);
+  }
   & .recipes__filter-row {
     display: flex;
     flex-wrap: wrap;
@@ -376,14 +521,15 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
   }
   & .recipes__select {
     display: flex;
-    align-items: center;
-    gap: var(--byz-space-3);
+    flex-direction: column;
+    gap: var(--byz-space-1);
     color: var(--byz-color-text-secondary);
     font-size: var(--byz-text-sm);
     font-weight: var(--byz-font-semibold);
     text-transform: uppercase;
   }
   & .recipes__select select {
+    width: 100%;
     max-width: 100%;
     padding: var(--byz-space-2) var(--byz-space-8) var(--byz-space-2) var(--byz-space-4);
     border: 0;
@@ -396,6 +542,26 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
     appearance: none;
     cursor: pointer;
   }
+  /* Gekozen filter: oranje rand, zodat je ziet wat er aan staat. */
+  & .recipes__select select.is-active {
+    box-shadow: inset 0 0 0 2px var(--byz-color-accent);
+  }
+  & .recipes__reset[hidden] {
+    display: none;
+  }
+  & .recipes__reset {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--byz-color-text-secondary);
+    font: inherit;
+    font-weight: var(--byz-font-semibold);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  & .recipes__reset:hover {
+    color: var(--byz-color-text-primary);
+  }
   & .recipes__select option {
     background: var(--steva-bordeaux-donker);
   }
@@ -404,6 +570,167 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
     color: var(--byz-color-text-muted);
     font-family: var(--steva-font-script);
     font-size: var(--byz-text-lg);
+  }
+  /* Mobiel: knop "Filters" met teller; het paneel zit dan in de drawer. */
+  & .recipes__bar {
+    display: none;
+  }
+  @media (max-width: 767px) {
+    & .recipes__bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--byz-space-4);
+    }
+    & .recipes__filter-row {
+      display: none;
+    }
+    & .recipes__filters {
+      margin-bottom: var(--byz-space-8);
+    }
+  }
+  & .recipes__open {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--byz-space-2);
+    padding: var(--byz-space-3) var(--byz-space-5);
+    border: 0;
+    border-radius: 999px;
+    background: var(--byz-color-accent);
+    box-shadow: inset 0 -3px 0 var(--steva-oranje-donker), 0 2px 8px var(--steva-bordeaux-rand);
+    color: var(--steva-bordeaux-donker);
+    font: inherit;
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  & .recipes__badge {
+    display: inline-grid;
+    place-items: center;
+    min-width: 1.4rem;
+    height: 1.4rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    background: var(--steva-bordeaux-donker);
+    color: var(--byz-color-accent);
+    font-size: var(--byz-text-xs);
+    line-height: 1;
+  }
+  & .recipes__badge[hidden] {
+    display: none;
+  }
+
+  /* De drawer: schuift van onderen in beeld, maximaal 85% van het scherm hoog. */
+  & .recipes__drawer {
+    position: fixed;
+    inset: auto 0 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: 85dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 1.25rem 1.25rem 0 0;
+    background: var(--steva-bordeaux-donker);
+    box-shadow: 0 -10px 40px rgb(0 0 0 / 0.45), inset 0 1px 0 var(--byz-color-border);
+    color: var(--byz-color-text-primary);
+  }
+  & .recipes__drawer[open] {
+    display: flex;
+    flex-direction: column;
+  }
+  & .recipes__drawer::backdrop {
+    background: rgb(20 3 0 / 0.6);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    & .recipes__drawer[open] {
+      animation: recipes-drawer 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    & .recipes__drawer[open]::backdrop {
+      animation: recipes-backdrop 320ms ease;
+    }
+  }
+  & .recipes__drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--byz-space-5) var(--steva-pagina-marge) var(--byz-space-3);
+  }
+  /* Greepje bovenaan, zoals bij een bottom sheet. */
+  & .recipes__drawer-head::before {
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    left: 50%;
+    width: 2.5rem;
+    height: 0.3rem;
+    border-radius: 999px;
+    background: var(--byz-color-border);
+    transform: translateX(-50%);
+  }
+  & .recipes__drawer-title {
+    margin: 0;
+    font-size: var(--byz-text-xl);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+  }
+  & .recipes__close {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.06);
+    color: var(--byz-color-text-secondary);
+    cursor: pointer;
+  }
+  & .recipes__drawer-body {
+    flex: 1;
+    min-height: 0;
+    padding: var(--byz-space-3) var(--steva-pagina-marge) var(--byz-space-6);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  & .recipes__drawer-body .recipes__panel {
+    display: grid;
+    gap: var(--byz-space-8);
+  }
+  & .recipes__drawer-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--byz-space-4);
+    padding: var(--byz-space-4) var(--steva-pagina-marge) calc(var(--byz-space-4) + env(safe-area-inset-bottom));
+    box-shadow: inset 0 1px 0 var(--byz-color-border);
+  }
+  & .recipes__drawer-reset {
+    padding: var(--byz-space-2) 0;
+    border: 0;
+    background: none;
+    color: var(--byz-color-text-secondary);
+    font: inherit;
+    font-weight: var(--byz-font-semibold);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  & .recipes__drawer-reset:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+  & .recipes__show {
+    flex: 1;
+    max-width: 16rem;
+    padding: var(--byz-space-3) var(--byz-space-5);
+    border: 0;
+    border-radius: 0.5rem;
+    background: var(--byz-color-accent);
+    box-shadow: inset 0 -4px 0 var(--steva-oranje-donker);
+    color: var(--steva-bordeaux-donker);
+    font: inherit;
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    cursor: pointer;
   }
   & .recipes__none {
     color: var(--byz-color-text-muted);
