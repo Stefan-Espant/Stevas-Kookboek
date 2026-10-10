@@ -5,6 +5,7 @@ import CookieBanner from '../components/CookieBanner.wald'
 import MaintenanceScreen from '../components/MaintenanceScreen.wald'
 import { getSiteSettings, getSitemapSlugs } from '../lib/cms'
 import { absoluteUrl, siteUrl } from '../lib/site'
+import { readFileSync } from 'node:fs'
 type Props = {
   title?: string | null
   /** true: titel zoals hij is, zonder " | Steva's Kookboek" (bv. de homepage). */
@@ -83,6 +84,11 @@ const jsonLd = `<script type="application/ld+json" data-wald-no-hoist>${JSON.str
   '@graph': schema
 }).replace(/</g, '\\u003c')}</script>`
 
+// Byzantium (tokens, reset, utilities) en motion.css zijn klein: inline in <head> in plaats van
+// twee stylesheets die elk de eerste paint blokkeren. byzantium.css wordt door wald.config.ts
+// gecompileerd vóór de pagina's renderen. "</" escapen, zodat de CSS de <style> niet kan sluiten.
+const inlineCss = `<style data-wald-no-hoist>${[readFileSync('public/vendor/byzantium.css', 'utf8'), readFileSync('public/motion.css', 'utf8')].join('\n').replace(/<\//g, '<\\/')}</style>`
+
 // Beweging (public/motion.css + motion.js met GSAP). html.motion verbergt binnenschuivende blokken
 // tot het script ze toont; staat het script na 3 s nog niet aan (niet geladen, fout), dan gaat de
 // klasse eraf en is alles gewoon zichtbaar. Scripts met defer: ze blokkeren de eerste paint niet.
@@ -136,8 +142,7 @@ const footer = maintenance ? '' : await SiteFooter.render({
     {new SafeHtml(headTags)}
     {new SafeHtml(jsonLd)}
     <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
-    <link rel="stylesheet" href="/vendor/byzantium.css" />
-    <link rel="stylesheet" href="/motion.css" />
+    {new SafeHtml(inlineCss)}
     <link rel="stylesheet" href="/print.css" media="print" />
     {new SafeHtml(motionHead)}
     {new SafeHtml(analyticsHead)}
