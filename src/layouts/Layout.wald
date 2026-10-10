@@ -137,7 +137,7 @@ const footer = maintenance ? '' : await SiteFooter.render({
 <html lang="nl">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     {new SafeHtml(headTags)}
     {new SafeHtml(jsonLd)}
@@ -176,7 +176,9 @@ body {
   --steva-oranje-donker: #d47c02;
   --steva-font-script: "Marck Script", "Brush Script MT", cursive;
   --steva-tekst-schaduw: 0 2px 4px var(--steva-bordeaux-donker);
-  --steva-pagina-marge: clamp(var(--byz-space-4), 4.6vw, 4.4rem);
+  /* viewport-fit=cover (zie <head>): de pagina loopt door achter de notch en de adresbalk van
+     iOS. De marge groeit mee met de veilige zone, zodat tekst nooit achter de notch valt. */
+  --steva-pagina-marge: max(clamp(var(--byz-space-4), 4.6vw, 4.4rem), env(safe-area-inset-left), env(safe-area-inset-right));
   /* Contentbreedte 86rem (Figma: 1372px) plus de marges — Byzantium zet box-sizing op
      border-box, dus de padding valt binnen de max-width. */
   --steva-pagina-breedte: calc(86rem + 2 * var(--steva-pagina-marge));
