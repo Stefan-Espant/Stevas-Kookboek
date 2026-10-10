@@ -4,16 +4,19 @@ import HomeHero from '../components/HomeHero.wald'
 import RecipeCard from '../components/RecipeCard.wald'
 import TileCard from '../components/TileCard.wald'
 import CuisineMarquee from '../components/CuisineMarquee.wald'
+import RecipeGrid from '../components/RecipeGrid.wald'
 import RecipeSubmissionInvite from '../components/RecipeSubmissionInvite.wald'
 import { getPage, getSiteSettings } from '../lib/cms'
-import { collectionTile, cuisineTile, getCollections, getCuisines, getLatestRecipes } from '../lib/recipes'
+import { collectionPath, collectionTile, cuisineTile, getAllRecipes, getCollections, getCuisines, getLatestRecipes } from '../lib/recipes'
+import { SEASONS, seasonFor, seasonRecipes } from '../lib/seasons'
 import { clipDescription } from '../lib/site'
-const [site, page, recipes, cuisines, collections] = await Promise.all([
+const [site, page, recipes, cuisines, collections, allRecipes] = await Promise.all([
   getSiteSettings(),
   getPage('home'),
   getLatestRecipes(5),
   getCuisines(),
-  getCollections()
+  getCollections(),
+  getAllRecipes()
 ])
 // Mozaïek op het Byzantium 12-kolomsgrid (voorstel C): het nieuwste recept is groot
 // (6 kolommen × 2 rijen), de volgende vier klein (3 kolommen). Precies vijf vult het grid.
@@ -33,8 +36,8 @@ const recipeList = recipes.length
 
 // Secties onder het mozaïek: elk met een kop en rechts een link naar het volledige overzicht.
 // Een sectie zonder inhoud (nog geen keukens/thema's) wordt overgeslagen.
-const sectionHtml = (id: string, title: string, link: [href: string, label: string] | null, content: string, band = false) => renderTemplate`
-  <section class="home__section${band ? ' home__section--band' : ''}" aria-labelledby="${id}">
+const sectionHtml = (id: string, title: string, link: [href: string, label: string] | null, content: string, band = false, attributes = '') => renderTemplate`
+  <section class="home__section${band ? ' home__section--band' : ''}" aria-labelledby="${id}"${new SafeHtml(attributes)}>
     <div class="home__section-inner">
       <div class="home__section-head" data-reveal="left">
         <h2 class="home__section-title" id="${id}">${title}</h2>
@@ -50,8 +53,22 @@ const tileGrid = async (tiles: Array<Parameters<typeof TileCard.render>[0]>) =>
 // Lopende band met alle keukens tussen de hero en de nieuwste recepten.
 const marqueeHtml = cuisines.length > 2 ? await CuisineMarquee.render({ cuisines }) : ''
 
+// Nu in het seizoen: alle vier de seizoenen gaan mee in de pagina; het script erachter toont
+// dat van vandaag (de site wordt niet elke maand opnieuw gebouwd). Zonder JavaScript blijft het
+// seizoen van de builddatum staan. Recepten met een foto eerst.
+const buildSeason = seasonFor(new Date())
+const seasonSections = await Promise.all(SEASONS.map(async season => {
+  const list = seasonRecipes(allRecipes, season)
+  if (list.length < 3) return ''
+  const picks = [...list.filter(recipe => recipe.image), ...list.filter(recipe => !recipe.image)].slice(0, 6)
+  const attributes = ` data-season-months="${season.months.join(',')}"${season === buildSeason ? '' : ' hidden'}`
+  return sectionHtml(`seizoen-${season.slug}`, season.title, [collectionPath(season.slug), `Meer ${season.name.toLowerCase()}recepten`], await RecipeGrid.render({ recipes: picks }), false, attributes)
+}))
+const seasonScript = `<script data-wald-no-hoist>(function(){var m=String(new Date().getMonth()+1);document.querySelectorAll('[data-season-months]').forEach(function(s){s.hidden=s.dataset.seasonMonths.split(',').indexOf(m)<0})})()</script>`
+
 const usedImages = new Set<string>()
 const sections = [
+  seasonSections.join('') + seasonScript,
   sectionHtml('nieuwste-recepten', 'De nieuwste recepten', recipes.length ? ['/recepten', 'Alle recepten'] : null, recipeList),
   cuisines.length ? sectionHtml('keukens', 'Kook de wereld rond', ['/keukens', 'Alle keukens'], await tileGrid(cuisines.slice(0, 3).map(cuisine => cuisineTile(cuisine, new Set())))) : '',
   collections.length ? sectionHtml('inspiratie', 'Inspiratie', ['/inspiratie', 'Alle thema\'s'], await tileGrid(collections.slice(0, 3).map(collection => collectionTile(collection, usedImages))), true) : ''
@@ -77,7 +94,11 @@ const sections = [
     margin: 0 auto;
     padding: 0 var(--steva-pagina-marge);
   }
-  & .home__section + .home__section {
+  /* Verborgen seizoenen tellen niet mee voor de ruimte tussen secties. */
+  & .home__section[hidden] {
+    display: none;
+  }
+  & .home__section:not([hidden]) ~ .home__section {
     margin-top: var(--byz-space-24);
   }
   /* Donkere band over de volle breedte, voor ritme tussen de secties. */

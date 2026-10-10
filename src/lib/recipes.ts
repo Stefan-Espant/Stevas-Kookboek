@@ -2,6 +2,7 @@
 // docs/centaur-collecties.md voor de velden). Alle pagina's lezen via deze module.
 import { getCollection, type CentaurEntry } from './cms'
 import type { Ingredient } from './quantity'
+import { SEASONS, seasonRecipes } from './seasons'
 
 export type { Ingredient } from './quantity'
 
@@ -315,6 +316,16 @@ export async function getCollections(): Promise<Collection[]> {
       recipes: tagged('gezellig', 'feest', 'fondue', 'delen', 'barbecue')
     }
   ]
+  // Seizoenen achteraan: de homepage toont het seizoen van vandaag zelf (zie index.wald).
+  for (const season of SEASONS) {
+    collections.push({
+      slug: season.slug,
+      title: `${season.name}recepten`,
+      seoTitle: `${season.name}recepten: wat je nu kookt`,
+      description: season.description,
+      recipes: seasonRecipes(recipes, season)
+    })
+  }
   return collections.filter(collection => collection.recipes.length > 0)
 }
 

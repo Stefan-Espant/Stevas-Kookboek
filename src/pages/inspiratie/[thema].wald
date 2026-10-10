@@ -32,12 +32,14 @@ const grid = await RecipeGrid.render({ recipes: collection.recipes, headingLevel
 
 // Andere thema's als interne links onderaan.
 const others = collections.filter(c => c.slug !== collection.slug)
+// Seizoenseffect: vallende bladeren op de herfstpagina (public/leaves.js, via motion.js).
+const seasonEffect = collection.slug === 'herfst' ? 'herfst' : undefined
 const othersHtml = others.length
   ? renderTemplate`<nav class="theme__others" aria-labelledby="andere-themas"><h2 id="andere-themas">Meer inspiratie</h2><ul>${new SafeHtml(others.map(c => renderTemplate`<li><a href="${collectionPath(c.slug)}">${c.title}</a></li>`).join(''))}</ul></nav>`
   : ''
 ---
 <Layout title={collection.seoTitle} description={description} path={path} schema={schema}>
-  <main class="theme">
+  <main class="theme" data-season-effect={seasonEffect}>
     {new SafeHtml(breadcrumbs)}
     <PageHeader kicker="Inspiratie" title={collection.title} lead={lead} />
     {new SafeHtml(grid)}

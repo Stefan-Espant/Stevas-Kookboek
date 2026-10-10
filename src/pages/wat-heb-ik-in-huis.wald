@@ -1,0 +1,287 @@
+---
+import Layout from '../layouts/Layout.wald'
+import PageHeader from '../components/PageHeader.wald'
+import RecipeCard from '../components/RecipeCard.wald'
+import { getAllRecipes } from '../lib/recipes'
+import { breadcrumbSchema } from '../lib/site'
+// Zoeken op wat je in huis hebt: je typt ingrediënten ("kip, paprika, rijst") en ziet de recepten
+// waarvoor je het meeste al hebt. Statische site, dus alle recepten staan op de pagina met hun
+// ingrediënten (data-ing, "naam;meervoud|…") en het script hieronder sorteert en filtert.
+const recipes = await getAllRecipes()
+const cells = await Promise.all(recipes.map(async recipe => {
+  const ingredients = recipe.ingredients.map(ingredient => `${ingredient.name};${ingredient.plural}`).join('|')
+  return renderTemplate`<div class="in-huis__cell byz-col-span-12 byz-col-span-sm-6 byz-col-span-lg-4" data-ing="${ingredients}" hidden>${new SafeHtml(await RecipeCard.render({ recipe, headingLevel: 2 }))}</div>`
+}))
+const grid = `<div class="in-huis__grid byz-grid byz-grid--12 byz-gap-lg">${cells.join('')}</div>`
+// Veelgebruikte ingrediënten om aan te tikken (handig op een telefoon).
+const suggestions = ['kip', 'gehakt', 'rundvlees', 'vis', 'garnalen', 'ei', 'kaas', 'feta', 'aardappel', 'rijst', 'pasta', 'ui', 'paprika', 'tomaat', 'courgette', 'aubergine', 'spinazie', 'champignon', 'wortel', 'prei', 'kikkererwten', 'bonen', 'linzen', 'kokosmelk']
+const chips = suggestions.map(term => renderTemplate`<button type="button" class="in-huis__chip" data-term="${term}" aria-pressed="false">${term}</button>`).join('')
+const lead = 'Typ wat er in je koelkast en voorraadkast ligt. Je ziet meteen welke recepten je ermee kunt maken, en wat je nog mist.'
+const schema = [breadcrumbSchema([['Home', '/'], ['Wat heb ik in huis?', '/wat-heb-ik-in-huis']])]
+---
+<Layout title="Recepten zoeken op ingrediënten: wat heb je in huis?" description={lead} path="/wat-heb-ik-in-huis" schema={schema}>
+  <main class="in-huis">
+    <PageHeader kicker="Koken met wat je hebt" title="Wat heb je in huis?" lead={lead} />
+
+    <form class="in-huis__form" role="search" hidden>
+      <label class="in-huis__label" for="in-huis-ingredienten">Ingrediënten, gescheiden door komma's</label>
+      <input id="in-huis-ingredienten" class="in-huis__input" type="text" name="q" placeholder="Bijv. kip, paprika, rijst" autocomplete="off" enterkeyhint="search" />
+    </form>
+    <div class="in-huis__chips" role="group" aria-label="Snel toevoegen" hidden>{new SafeHtml(chips)}</div>
+
+    <p class="in-huis__status" aria-live="polite"></p>
+    {new SafeHtml(grid)}
+
+    <noscript>
+      <p class="in-huis__noscript">
+        Zoeken op ingrediënten heeft JavaScript nodig. Gebruik anders <a href="/zoeken">de gewone zoekfunctie</a>.
+      </p>
+    </noscript>
+  </main>
+</Layout>
+
+<script>
+(function () {
+  var main = document.querySelector('.in-huis')
+  if (!main) return
+  var form = main.querySelector('.in-huis__form')
+  var input = main.querySelector('.in-huis__input')
+  var chipBox = main.querySelector('.in-huis__chips')
+  var status = main.querySelector('.in-huis__status')
+  var grid = main.querySelector('.in-huis__grid')
+
+  // Zout, peper, olie en water heeft iedereen: die tellen niet als "nog nodig".
+  var STAPLE = /\b(zout|peper|water|ijsblokjes)\b|olie\b|^(suiker|kristalsuiker|bloem|tarwebloem)$/
+  // "kip" hoort niet bij kippenbouillon, "paprika" niet bij paprikapoeder, "tomaat" niet bij tomatenpuree.
+  var NO_MATCH = /bouillon|fond\b|poeder|puree/
+  // Woorden die voor een hele groep staan.
+  var GROUPS = {
+    pasta: ['pasta', 'spaghetti', 'penne', 'tagliatelle', 'macaroni', 'orzo', 'lasagne', 'fusilli', 'rigatoni', 'linguine', 'pappardelle', 'farfalle'],
+    vis: ['vis', 'zalm', 'kabeljauw', 'tonijn', 'koolvis', 'schelvis', 'forel', 'makreel', 'pangasius', 'witvis', 'zeebaars', 'dorade']
+  }
+
+  function normalize(text) {
+    return text.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/'s\b/g, '').trim()
+  }
+
+  var recipes = Array.prototype.map.call(main.querySelectorAll('.in-huis__cell'), function (cell) {
+    return {
+      cell: cell,
+      ingredients: cell.dataset.ing.split('|').filter(Boolean).map(function (pair) {
+        var parts = pair.split(';')
+        return { name: parts[0], texts: [normalize(parts[0]), normalize(parts[1] || '')] }
+      }),
+      badge: null
+    }
+  })
+
+  function terms(value) {
+    var seen = {}
+    return value.split(/,|\n|\s+en\s+/).map(normalize).filter(function (term) {
+      if (!term || seen[term]) return false
+      seen[term] = true
+      return true
+    })
+  }
+  // Begin van een woord ("kip" → kipfilet), of het eind bij samenstellingen ("rijst" → basmatirijst).
+  function wordMatch(text, term) {
+    if (/[\s-]/.test(term)) return text.indexOf(term) !== -1
+    // tomaat → tomaten, ui → uien (het meervoud uit het CMS dekt de rest).
+    var plural = term.replace(/([aeou])\1([^aeiou])$/, '$1$2en')
+    return text.split(/[^a-z]+/).some(function (word) {
+      return word.indexOf(term) === 0 || word.indexOf(plural) === 0 || (term.length >= 4 && word.length > term.length && word.slice(-term.length) === term)
+    })
+  }
+  function matches(ingredient, term) {
+    if (NO_MATCH.test(ingredient.texts[0]) && !NO_MATCH.test(term)) return false
+    var options = GROUPS[term] || [term]
+    return options.some(function (option) {
+      return ingredient.texts.some(function (text) { return text && wordMatch(text, option) })
+    })
+  }
+  function list(items, joiner) {
+    return items.length > 1 ? items.slice(0, -1).join(', ') + ' ' + (joiner || 'en') + ' ' + items[items.length - 1] : items[0]
+  }
+
+  function update() {
+    var wanted = terms(input.value)
+    chipBox.querySelectorAll('.in-huis__chip').forEach(function (chip) {
+      chip.setAttribute('aria-pressed', String(wanted.indexOf(chip.dataset.term) !== -1))
+    })
+    var results = []
+    recipes.forEach(function (recipe) {
+      var have = wanted.filter(function (term) {
+        return recipe.ingredients.some(function (ingredient) { return matches(ingredient, term) })
+      })
+      recipe.cell.hidden = have.length === 0
+      if (!have.length) return
+      var missing = recipe.ingredients.filter(function (ingredient) {
+        return !STAPLE.test(ingredient.texts[0]) && !wanted.some(function (term) { return matches(ingredient, term) })
+      }).map(function (ingredient) { return ingredient.name })
+      results.push({ recipe: recipe, have: have, missing: missing })
+    })
+    // Meeste van jouw ingrediënten bovenaan, daarna wat het minst mist.
+    results.sort(function (a, b) { return b.have.length - a.have.length || a.missing.length - b.missing.length })
+    results.forEach(function (result) {
+      var recipe = result.recipe
+      if (!recipe.badge) {
+        recipe.badge = document.createElement('p')
+        recipe.badge.className = 'in-huis__match'
+        recipe.cell.appendChild(recipe.badge)
+      }
+      var shown = result.missing.slice(0, 3)
+      var more = result.missing.length - shown.length
+      recipe.badge.innerHTML = '<span class="in-huis__have">Je hebt: ' + escape(list(result.have)) + '</span>' +
+        (result.missing.length
+          ? '<span class="in-huis__missing">Nog nodig: ' + escape(shown.join(', ')) + (more ? ' en ' + more + ' meer' : '') + '</span>'
+          : '<span class="in-huis__missing">Verder alleen basisspullen</span>')
+      grid.appendChild(recipe.cell)
+    })
+
+    if (!wanted.length) status.textContent = ''
+    else if (!results.length) status.textContent = 'Geen recepten met ' + list(wanted, 'of') + '. Probeer een ander ingrediënt.'
+    else status.textContent = results.length + (results.length === 1 ? ' recept' : ' recepten') + ' met ' + list(wanted, 'of') + (wanted.length > 1 ? ', met de beste match bovenaan.' : '.')
+
+    var url = new URL(location.href)
+    if (wanted.length) url.searchParams.set('q', wanted.join(', '))
+    else url.searchParams.delete('q')
+    history.replaceState(null, '', url)
+  }
+  function escape(text) {
+    var span = document.createElement('span')
+    span.textContent = text
+    return span.innerHTML
+  }
+
+  input.addEventListener('input', update)
+  form.addEventListener('submit', function (event) { event.preventDefault(); input.blur() })
+  chipBox.addEventListener('click', function (event) {
+    var chip = event.target.closest('.in-huis__chip')
+    if (!chip) return
+    var current = terms(input.value)
+    var term = chip.dataset.term
+    var index = current.indexOf(term)
+    if (index === -1) current.push(term)
+    else current.splice(index, 1)
+    input.value = current.join(', ') + (current.length ? ', ' : '')
+    update()
+  })
+
+  form.hidden = false
+  chipBox.hidden = false
+  input.value = new URLSearchParams(location.search).get('q') || ''
+  update()
+})()
+</script>
+
+<style>
+/* Kaarten en uitslagregels worden in de frontmatter of door het script gemaakt: genest gestyled. */
+.in-huis {
+  max-width: var(--steva-pagina-breedte);
+  margin: 0 auto;
+  padding: var(--byz-space-12) var(--steva-pagina-marge) var(--byz-space-24);
+
+  & .in-huis__cell[hidden] {
+    display: none;
+  }
+  & .in-huis__cell {
+    display: flex;
+    flex-direction: column;
+    gap: var(--byz-space-3);
+  }
+  & .in-huis__match {
+    display: grid;
+    gap: var(--byz-space-1);
+    font-size: var(--byz-text-sm);
+    line-height: 1.4;
+  }
+  & .in-huis__have {
+    color: var(--byz-color-accent);
+    font-weight: var(--byz-font-semibold);
+  }
+  & .in-huis__missing {
+    color: var(--byz-color-text-secondary);
+  }
+  /* Knoppen uit de frontmatter. */
+  & .in-huis__chip {
+    padding: var(--byz-space-2) var(--byz-space-4);
+    border: 0;
+    border-radius: 999px;
+    background: rgb(67 11 0 / 0.55);
+    box-shadow: inset 0 0 0 1px var(--byz-color-border);
+    color: var(--byz-color-text-secondary);
+    font: inherit;
+    font-size: var(--byz-text-sm);
+    font-weight: var(--byz-font-semibold);
+    cursor: pointer;
+  }
+  & .in-huis__chip[aria-pressed="true"] {
+    background: var(--byz-color-accent);
+    box-shadow: inset 0 -3px 0 var(--steva-oranje-donker);
+    color: var(--steva-bordeaux-donker);
+  }
+  & .in-huis__chip:hover {
+    color: var(--byz-color-text-primary);
+  }
+  & .in-huis__chip[aria-pressed="true"]:hover {
+    color: var(--steva-bordeaux-donker);
+  }
+}
+.in-huis__form[hidden],
+.in-huis__chips[hidden] {
+  display: none;
+}
+.in-huis__form {
+  display: grid;
+  gap: var(--byz-space-2);
+  width: min(100%, 41.5rem);
+  margin: calc(-1 * var(--byz-space-4)) auto 0;
+}
+.in-huis__label {
+  color: var(--byz-color-text-secondary);
+  font-size: var(--byz-text-sm);
+  font-weight: var(--byz-font-semibold);
+  text-align: center;
+}
+.in-huis__input {
+  width: 100%;
+  padding: var(--byz-space-3) var(--byz-space-6);
+  border: 0;
+  border-radius: 2rem;
+  background: var(--steva-creme);
+  box-shadow: inset 0 2px 4px var(--byz-color-accent), 0 2px 8px var(--steva-bordeaux-rand);
+  color: var(--steva-bordeaux-donker);
+  font: var(--byz-font-semibold) var(--byz-text-lg) var(--byz-font-serif);
+}
+.in-huis__input:focus {
+  outline: 2px solid var(--byz-color-focus);
+  outline-offset: 2px;
+}
+/* Contrast placeholder op crème: bordeaux op 65% blijft boven 4.5:1 (WCAG AA). */
+.in-huis__input::placeholder {
+  color: rgb(67 11 0 / 0.65);
+  font-weight: var(--byz-font-normal);
+}
+.in-huis__chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--byz-space-2);
+  max-width: 50rem;
+  margin: var(--byz-space-6) auto 0;
+}
+.in-huis__status {
+  min-height: 1.5em;
+  margin: var(--byz-space-8) 0;
+  color: var(--byz-color-text-secondary);
+  font-weight: var(--byz-font-semibold);
+  text-align: center;
+}
+.in-huis__noscript {
+  color: var(--byz-color-text-muted);
+  text-align: center;
+}
+.in-huis__noscript a {
+  color: var(--byz-color-text-secondary);
+}
+</style>
