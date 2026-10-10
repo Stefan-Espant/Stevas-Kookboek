@@ -70,7 +70,7 @@ const filterHtml = recipes.length > 1 && (courses.length > 1 || cuisines.length 
     </div>`
   : ''
 const gridHtml = recipes.length
-  ? await RecipeGrid.render({ recipes, headingLevel: 3 })
+  ? await RecipeGrid.render({ recipes, headingLevel: 3, eager: 1 })
   : '<p class="recipes__empty">Binnenkort verschijnen hier de eerste recepten!</p>'
 const allHtml = recipes.length
   ? renderTemplate`<section class="recipes__all" aria-labelledby="alle-recepten">
