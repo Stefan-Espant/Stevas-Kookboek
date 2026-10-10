@@ -243,9 +243,15 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
   }
 
   /* Koppen van de secties */
-  & .recipes__themes,
-  & .recipes__all {
+  & .recipes__themes {
     margin-top: var(--byz-space-20);
+  }
+  /* "Blader door alles": meer lucht erboven en tussen de kop en de filters. */
+  & .recipes__all {
+    margin-top: var(--byz-space-24);
+  }
+  & .recipes__all .recipes__section-head {
+    margin-bottom: var(--byz-space-12);
   }
   & .recipes__section-head {
     display: flex;
