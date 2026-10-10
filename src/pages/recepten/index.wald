@@ -627,8 +627,8 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
     width: 100%;
     max-width: 100%;
     /* Vaste hoogte (niet alleen max-height): dan krijgt het middendeel altijd ruimte. */
-    height: min(34rem, 90vh);
-    height: min(34rem, calc(100dvh - 2.5rem));
+    height: min(31rem, 90vh);
+    height: min(31rem, calc(100dvh - 2.5rem));
     max-height: none;
     margin: 0;
     padding: 0;
