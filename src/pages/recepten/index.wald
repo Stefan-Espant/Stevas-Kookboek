@@ -627,28 +627,16 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
     width: 100%;
     max-width: 100%;
     /* Vaste hoogte (niet alleen max-height): dan krijgt het middendeel altijd ruimte. */
-    height: min(31rem, 90vh);
-    height: min(31rem, calc(100dvh - 2.5rem));
+    height: min(calc(31rem + env(safe-area-inset-bottom)), 90vh);
+    height: min(calc(31rem + env(safe-area-inset-bottom)), calc(100dvh - 2.5rem));
     max-height: none;
     margin: 0;
     padding: 0;
     border: 0;
     border-radius: 1.25rem 1.25rem 0 0;
-    overflow: visible;
     background: var(--steva-bordeaux-donker);
     box-shadow: 0 -10px 40px rgb(0 0 0 / 0.45), inset 0 1px 0 var(--byz-color-border);
     color: var(--byz-color-text-primary);
-  }
-  /* Safari (iOS 26) tekent de pagina ook onder de zwevende adresbalk: de drawer loopt daar
-     door, anders zie je onder de knoppen nog een strook van de pagina. */
-  & .recipes__drawer::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    height: 50vh;
-    background: var(--steva-bordeaux-donker);
   }
   & .recipes__drawer[open] {
     display: flex;
