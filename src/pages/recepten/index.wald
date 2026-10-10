@@ -240,12 +240,35 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
   function close() {
     drawer.close()
   }
+  // Safari op iOS 26 tekent de pagina ook onder de zwevende adresbalk, maar knipt de drawer en
+  // de verduistering af aan de rand van het scherm: daar bleef een strook pagina zichtbaar.
+  // Zolang de drawer open is, is de pagina daarom onzichtbaar (alleen de achtergrondkleur van
+  // de drawer blijft over). Elk element naast de drawer, tot aan <body>, wordt verborgen.
+  // De oude inline-waarde wordt bewaard: GSAP zet zelf visibility op binnenschuivende blokken.
+  var hidden = []
+  function hidePage(hide) {
+    document.documentElement.style.overflow = hide ? 'hidden' : ''
+    document.body.style.backgroundColor = hide ? getComputedStyle(drawer).backgroundColor : ''
+    if (!hide) {
+      hidden.forEach(function (item) { item[0].style.visibility = item[1] })
+      hidden = []
+      return
+    }
+    for (var node = drawer; node.parentElement; node = node.parentElement) {
+      ;[].forEach.call(node.parentElement.children, function (sibling) {
+        if (sibling === node) return
+        hidden.push([sibling, sibling.style.visibility])
+        sibling.style.visibility = 'hidden'
+      })
+      if (node.parentElement === document.body) break
+    }
+  }
   openButton.addEventListener('click', function () {
     drawer.showModal()
-    document.documentElement.style.overflow = 'hidden'
+    hidePage(true)
   })
   drawer.addEventListener('close', function () {
-    document.documentElement.style.overflow = ''
+    hidePage(false)
     openButton.focus()
   })
   drawer.querySelector('.recipes__close').addEventListener('click', close)
@@ -626,7 +649,10 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
     inset: auto 0 0;
     width: 100%;
     max-width: 100%;
-    max-height: 85dvh;
+    /* Vaste hoogte (niet alleen max-height): dan krijgt het middendeel altijd ruimte. */
+    height: min(calc(31rem + env(safe-area-inset-bottom)), 90vh);
+    height: min(calc(31rem + env(safe-area-inset-bottom)), calc(100dvh - 2.5rem));
+    max-height: none;
     margin: 0;
     padding: 0;
     border: 0;
@@ -685,8 +711,10 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
     color: var(--byz-color-text-secondary);
     cursor: pointer;
   }
+  /* flex: 1 1 auto, niet flex: 1: Safari geeft een item met basis 0% in een container zonder
+     vaste hoogte anders hoogte 0, en dan zie je alleen de kop en de knoppen. */
   & .recipes__drawer-body {
-    flex: 1;
+    flex: 1 1 auto;
     min-height: 0;
     padding: var(--byz-space-3) var(--steva-pagina-marge) var(--byz-space-6);
     overflow-y: auto;
@@ -694,7 +722,26 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
   }
   & .recipes__drawer-body .recipes__panel {
     display: grid;
-    gap: var(--byz-space-8);
+    gap: var(--byz-space-6);
+  }
+  /* In de drawer: gangen op één regel om horizontaal te vegen, zodat alles in beeld past. */
+  & .recipes__drawer-body .recipes__courses {
+    flex-wrap: nowrap;
+    margin-inline: calc(-1 * var(--steva-pagina-marge));
+    padding: var(--byz-space-1) var(--steva-pagina-marge);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  & .recipes__drawer-body .recipes__courses::-webkit-scrollbar {
+    display: none;
+  }
+  & .recipes__drawer-body .recipes__courses button {
+    flex-shrink: 0;
+  }
+  /* Minstens 16px: kleiner laat Safari op de iPhone inzoomen zodra je een keuzelijst aantikt. */
+  & .recipes__drawer-body .recipes__select select {
+    font-size: max(1rem, 16px);
   }
   & .recipes__drawer-foot {
     display: flex;
