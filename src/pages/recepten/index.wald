@@ -45,8 +45,16 @@ const themesHtml = collections.length
     </section>`
   : ''
 
-// Filters op gang en keuken. Verborgen tot het script draait, zodat je zonder JavaScript
-// gewoon alle recepten ziet.
+// Filters op gang, keuken, tijd, niveau en dieet, plus sorteren. Verborgen tot het script draait,
+// zodat je zonder JavaScript gewoon alle recepten ziet. Elke keuze komt in de URL (deelbaar).
+const LEVEL_ORDER = ['Makkelijk', 'Gemiddeld', 'Uitdagend']
+const levels = [...new Set(recipes.map(r => r.difficulty).filter(Boolean))]
+  .sort((a, b) => (LEVEL_ORDER.indexOf(a) + 1 || 99) - (LEVEL_ORDER.indexOf(b) + 1 || 99))
+const option = (value: string, label: string) => renderTemplate`<option value="${value}">${label}</option>`
+const select = (name: string, label: string, options: string) => renderTemplate`<label class="recipes__select">
+          <span>${label}</span>
+          <select name="${name}">${new SafeHtml(options)}</select>
+        </label>`
 const COURSE_ORDER = ['Brunch', 'Voorgerecht', 'Soep', 'Hoofdgerecht', 'Bijgerecht', 'Snack', 'Dessert']
 const COURSE_LABEL: Record<string, string> = { Brunch: 'Ontbijt en brunch', Snack: 'Borrelhapjes' }
 const courses = [...new Set(recipes.map(r => r.course).filter(Boolean))]
@@ -57,15 +65,16 @@ const filterHtml = recipes.length > 1 && (courses.length > 1 || cuisines.length 
         <button type="button" data-course="" aria-pressed="true">Alles</button>
         ${new SafeHtml(courses.map(course => renderTemplate`<button type="button" data-course="${course}" aria-pressed="false">${COURSE_LABEL[course] ?? course}</button>`).join(''))}
       </div>
+      <div class="recipes__selects">
+        ${new SafeHtml(select('keuken', 'Keuken', option('', 'Alle keukens') + [...cuisines].sort((a, b) => a.name.localeCompare(b.name)).map(c => option(c.slug, `${c.name} (${c.recipes.length})`)).join('')))}
+        ${new SafeHtml(select('tijd', 'Tijd', option('', 'Maakt niet uit') + option('15', 'Tot 15 minuten') + option('30', 'Tot 30 minuten') + option('60', 'Tot een uur') + option('lang', 'Langer dan een uur')))}
+        ${new SafeHtml(levels.length > 1 ? select('niveau', 'Niveau', option('', 'Alle niveaus') + levels.map(level => option(level, level)).join('')) : '')}
+        ${new SafeHtml(select('dieet', 'Dieet', option('', 'Alles') + option('vegetarisch', 'Vegetarisch') + option('vegan', 'Vegan')))}
+        ${new SafeHtml(select('sorteer', 'Sorteren', option('', 'Nieuwste eerst') + option('snel', 'Snelste eerst') + option('az', 'Op naam (A–Z)')))}
+      </div>
       <div class="recipes__filter-row">
-        <label class="recipes__select">
-          <span>Keuken</span>
-          <select name="keuken">
-            <option value="">Alle keukens</option>
-            ${new SafeHtml([...cuisines].sort((a, b) => a.name.localeCompare(b.name)).map(c => renderTemplate`<option value="${c.slug}">${c.name} (${c.recipes.length})</option>`).join(''))}
-          </select>
-        </label>
         <p class="recipes__count" aria-live="polite"></p>
+        <button type="button" class="recipes__reset" data-reset hidden>Wis alle filters</button>
       </div>
     </div>`
   : ''
@@ -96,53 +105,98 @@ const allHtml = recipes.length
 <script>
 document.querySelectorAll('.recipes__filters').forEach(function (filters) {
   var section = filters.closest('.recipes__all')
-  var cells = section.querySelectorAll('.recipe-grid [data-cuisine]')
+  var grid = section.querySelector('.recipe-grid')
+  var cells = [].slice.call(grid.querySelectorAll('[data-cuisine]'))
   var buttons = filters.querySelectorAll('button[data-course]')
-  var select = filters.querySelector('select')
+  var selects = [].slice.call(filters.querySelectorAll('select'))
   var count = filters.querySelector('.recipes__count')
+  var reset = filters.querySelector('.recipes__reset')
   var none = section.querySelector('.recipes__none')
-  var state = { course: '', cuisine: '' }
+  // Gang heet in de URL "gang"; de selects gebruiken hun eigen naam (keuken, tijd, niveau, …).
+  var state = { gang: '' }
+  selects.forEach(function (select) { state[select.name] = '' })
+  var original = cells.slice()
+  var titles = new Map(cells.map(function (cell) {
+    var title = cell.querySelector('.recipe-card__title')
+    return [cell, title ? title.textContent.trim() : '']
+  }))
+
+  function timeMatches(minutes, choice) {
+    if (!choice) return true
+    if (!minutes) return false
+    return choice === 'lang' ? minutes > 60 : minutes <= Number(choice)
+  }
+  function matches(cell) {
+    var d = cell.dataset
+    return (!state.gang || d.course === state.gang) &&
+      (!state.keuken || d.cuisine === state.keuken) &&
+      timeMatches(Number(d.time), state.tijd) &&
+      (!state.niveau || d.level === state.niveau) &&
+      (!state.dieet || (' ' + d.diet + ' ').indexOf(' ' + state.dieet + ' ') !== -1)
+  }
+  function order() {
+    if (state.sorteer === 'snel') {
+      // Recepten zonder tijd achteraan.
+      return original.slice().sort(function (a, b) { return (Number(a.dataset.time) || 1e6) - (Number(b.dataset.time) || 1e6) })
+    }
+    if (state.sorteer === 'az') {
+      return original.slice().sort(function (a, b) { return titles.get(a).localeCompare(titles.get(b), 'nl') })
+    }
+    return original
+  }
 
   function apply() {
     var shown = 0
-    cells.forEach(function (cell) {
-      var match = (!state.course || cell.dataset.course === state.course) &&
-        (!state.cuisine || cell.dataset.cuisine === state.cuisine)
+    order().forEach(function (cell) {
+      var match = matches(cell)
       cell.hidden = !match
       if (match) shown++
+      grid.appendChild(cell)
     })
-    buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.course === state.course)) })
-    select.value = state.cuisine
+    buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.course === state.gang)) })
+    selects.forEach(function (select) {
+      select.value = state[select.name]
+      select.classList.toggle('is-active', !!state[select.name])
+    })
     count.textContent = shown + (shown === 1 ? ' recept' : ' recepten')
     none.hidden = shown > 0
-    // Deelbare URL: /recepten?gang=Dessert&keuken=frans
+    reset.hidden = !Object.keys(state).some(function (key) { return state[key] })
+    // Deelbare URL: /recepten?gang=Hoofdgerecht&tijd=30&dieet=vegetarisch
     var url = new URL(location.href)
-    state.course ? url.searchParams.set('gang', state.course) : url.searchParams.delete('gang')
-    state.cuisine ? url.searchParams.set('keuken', state.cuisine) : url.searchParams.delete('keuken')
+    Object.keys(state).forEach(function (key) {
+      state[key] ? url.searchParams.set(key, state[key]) : url.searchParams.delete(key)
+    })
     history.replaceState(null, '', url)
+    if (window.ScrollTrigger) window.ScrollTrigger.refresh()
+  }
+  function clear() {
+    Object.keys(state).forEach(function (key) { state[key] = '' })
+    apply()
   }
 
   filters.addEventListener('click', function (event) {
     var button = event.target.closest('button[data-course]')
     if (!button) return
-    state.course = button.dataset.course
+    state.gang = button.dataset.course
     apply()
   })
-  select.addEventListener('change', function () {
-    state.cuisine = select.value
-    apply()
+  selects.forEach(function (select) {
+    select.addEventListener('change', function () {
+      state[select.name] = select.value
+      apply()
+    })
   })
-  none.querySelector('[data-reset]').addEventListener('click', function () {
-    state.course = ''
-    state.cuisine = ''
-    apply()
-  })
+  reset.addEventListener('click', clear)
+  none.querySelector('[data-reset]').addEventListener('click', clear)
 
+  // Beginstand uit de URL; onbekende waarden negeren.
   var params = new URLSearchParams(location.search)
   var course = params.get('gang') || ''
-  var cuisine = params.get('keuken') || ''
-  if ([].some.call(buttons, function (b) { return b.dataset.course === course })) state.course = course
-  if ([].some.call(select.options, function (o) { return o.value === cuisine })) state.cuisine = cuisine
+  if ([].some.call(buttons, function (b) { return b.dataset.course === course })) state.gang = course
+  selects.forEach(function (select) {
+    var value = params.get(select.name) || ''
+    if ([].some.call(select.options, function (o) { return o.value === value })) state[select.name] = value
+  })
   apply()
   filters.hidden = false
 })
@@ -367,6 +421,11 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
     box-shadow: inset 0 -3px 0 var(--steva-oranje-donker);
     color: var(--steva-bordeaux-donker);
   }
+  & .recipes__selects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr));
+    gap: var(--byz-space-3) var(--byz-space-4);
+  }
   & .recipes__filter-row {
     display: flex;
     flex-wrap: wrap;
@@ -376,14 +435,15 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
   }
   & .recipes__select {
     display: flex;
-    align-items: center;
-    gap: var(--byz-space-3);
+    flex-direction: column;
+    gap: var(--byz-space-1);
     color: var(--byz-color-text-secondary);
     font-size: var(--byz-text-sm);
     font-weight: var(--byz-font-semibold);
     text-transform: uppercase;
   }
   & .recipes__select select {
+    width: 100%;
     max-width: 100%;
     padding: var(--byz-space-2) var(--byz-space-8) var(--byz-space-2) var(--byz-space-4);
     border: 0;
@@ -395,6 +455,26 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
     text-transform: none;
     appearance: none;
     cursor: pointer;
+  }
+  /* Gekozen filter: oranje rand, zodat je ziet wat er aan staat. */
+  & .recipes__select select.is-active {
+    box-shadow: inset 0 0 0 2px var(--byz-color-accent);
+  }
+  & .recipes__reset[hidden] {
+    display: none;
+  }
+  & .recipes__reset {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--byz-color-text-secondary);
+    font: inherit;
+    font-weight: var(--byz-font-semibold);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  & .recipes__reset:hover {
+    color: var(--byz-color-text-primary);
   }
   & .recipes__select option {
     background: var(--steva-bordeaux-donker);
