@@ -400,7 +400,6 @@ const schema = [breadcrumbSchema([['Home', '/'], ['Wat eten we?', '/wat-eten-we'
 }
 .rad__result-title {
   overflow-wrap: break-word;
-  hyphens: auto;
   text-wrap: balance;
   font-size: var(--byz-text-3xl);
   font-weight: var(--byz-font-semibold);
