@@ -15,6 +15,7 @@ const grid = await RecipeGrid.render({ recipes, headingLevel: 2 })
     <div class="search__form">
       <SearchForm id="zoeken-pagina" />
     </div>
+    <p class="search__pantry"><a href="/wat-heb-ik-in-huis">Zoek op wat je in huis hebt</a></p>
     <p class="search__status" aria-live="polite"></p>
     {new SafeHtml(grid)}
     <p class="search__empty" hidden>
@@ -85,6 +86,15 @@ const grid = await RecipeGrid.render({ recipes, headingLevel: 2 })
   display: flex;
   justify-content: center;
   margin-top: calc(-1 * var(--byz-space-4));
+}
+.search__pantry {
+  margin-top: var(--byz-space-4);
+  font-size: var(--byz-text-sm);
+  text-align: center;
+}
+.search__pantry a {
+  color: var(--byz-color-text-secondary);
+  font-weight: var(--byz-font-semibold);
 }
 .search__status {
   min-height: 1.5em;
