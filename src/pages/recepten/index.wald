@@ -626,7 +626,8 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
     inset: auto 0 0;
     width: 100%;
     max-width: 100%;
-    max-height: 85dvh;
+    max-height: 90vh;
+    max-height: calc(100dvh - 2.5rem);
     margin: 0;
     padding: 0;
     border: 0;
@@ -694,7 +695,26 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
   }
   & .recipes__drawer-body .recipes__panel {
     display: grid;
-    gap: var(--byz-space-8);
+    gap: var(--byz-space-6);
+  }
+  /* In de drawer: gangen op één regel om horizontaal te vegen, zodat alles in beeld past. */
+  & .recipes__drawer-body .recipes__courses {
+    flex-wrap: nowrap;
+    margin-inline: calc(-1 * var(--steva-pagina-marge));
+    padding: var(--byz-space-1) var(--steva-pagina-marge);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  & .recipes__drawer-body .recipes__courses::-webkit-scrollbar {
+    display: none;
+  }
+  & .recipes__drawer-body .recipes__courses button {
+    flex-shrink: 0;
+  }
+  /* Minstens 16px: kleiner laat Safari op de iPhone inzoomen zodra je een keuzelijst aantikt. */
+  & .recipes__drawer-body .recipes__select select {
+    font-size: max(1rem, 16px);
   }
   & .recipes__drawer-foot {
     display: flex;
