@@ -395,9 +395,10 @@ document.querySelectorAll('.recipes__filters').forEach(function (filters) {
   }
 
   /* Filters */
+  /* Lucht tussen de gang-knoppen, de keuzelijsten en het aantal. */
   & .recipes__filters {
     display: grid;
-    gap: var(--byz-space-4);
+    gap: var(--byz-space-8);
     margin-bottom: var(--byz-space-10);
   }
   & .recipes__filters[hidden],
