@@ -27,7 +27,7 @@ const schema = [
   breadcrumbSchema(crumbs),
   collectionSchema(`De ${cuisine.adjective} keuken`, description, path, cuisine.recipes.map(r => [r.title, recipePath(r.slug)]))
 ]
-const grid = await RecipeGrid.render({ recipes: cuisine.recipes, headingLevel: 2, eager: 3 })
+const grid = await RecipeGrid.render({ recipes: cuisine.recipes, headingLevel: 2, eager: 1 })
 ---
 <Layout title={cuisine.adjective + ' recepten'} description={description} path={path} schema={schema}>
   <main class="cuisine">

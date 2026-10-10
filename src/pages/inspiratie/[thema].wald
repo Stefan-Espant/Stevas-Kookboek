@@ -28,7 +28,7 @@ const schema = [
   collectionSchema(collection.seoTitle, description, path, collection.recipes.map(r => [r.title, recipePath(r.slug)]))
 ]
 const breadcrumbs = await Breadcrumbs.render({ items: crumbs })
-const grid = await RecipeGrid.render({ recipes: collection.recipes, headingLevel: 2, eager: 3 })
+const grid = await RecipeGrid.render({ recipes: collection.recipes, headingLevel: 2, eager: 1 })
 
 // Andere thema's als interne links onderaan.
 const others = collections.filter(c => c.slug !== collection.slug)
