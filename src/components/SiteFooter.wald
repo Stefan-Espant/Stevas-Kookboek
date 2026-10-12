@@ -37,7 +37,7 @@ const year = new Date().getFullYear()
     {new SafeHtml(pageLinks)}
   </nav>
   <div class="site-footer__social">{new SafeHtml(socialLinks)}</div>
-  <p class="site-footer__copyright">&copy; {year} {siteName}</p>
+  <p class="site-footer__copyright">&copy; {year} {siteName}<span class="site-footer__sep" aria-hidden="true">·</span><button type="button" class="site-footer__cookies" data-cookie-preferences hidden>Cookievoorkeuren</button></p>
 </footer>
 
 <style>
@@ -91,5 +91,23 @@ const year = new Date().getFullYear()
   margin: 0;
   font-size: var(--byz-text-xs);
   opacity: 0.7;
+}
+/* Cookievoorkeuren (CookieBanner.wald toont de knop alleen als de cookiebanner aan staat). */
+.site-footer__sep {
+  margin: 0 var(--byz-space-2);
+}
+.site-footer__sep:has(+ .site-footer__cookies[hidden]),
+.site-footer__cookies[hidden] {
+  display: none;
+}
+.site-footer__cookies {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
 }
 </style>
