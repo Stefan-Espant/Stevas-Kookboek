@@ -154,7 +154,7 @@ const footer = maintenance ? '' : await SiteFooter.render({
     {new SafeHtml(header)}
     {maintenance ? '' : pond}
     {new SafeHtml(footer)}
-    <CookieBanner enabled={!maintenance && (site?.cookieBannerEnabled ?? false)} text={site?.cookieBannerText ?? ''} analyticsId={maintenance ? '' : site?.analyticsId ?? ''} />
+    <CookieBanner enabled={!maintenance && (site?.cookieBannerEnabled ?? false)} text={site?.cookieBannerText ?? ''} analyticsId={maintenance ? '' : site?.analyticsId ?? ''} metaPixelId={maintenance ? '' : '1559510655945796'} />
   </body>
 </html>
 

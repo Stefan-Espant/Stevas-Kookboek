@@ -1,9 +1,11 @@
 ---
-type Props = { enabled: boolean, text: string, analyticsId: string }
-const { enabled, text, analyticsId } = $$props
+type Props = { enabled: boolean, text: string, analyticsId: string, metaPixelId?: string }
+const { enabled, text, analyticsId, metaPixelId = '' } = $$props
+const bannerEnabled = enabled || Boolean(metaPixelId)
+const bannerText = [text || 'We gebruiken cookies. Je kiest zelf welke cookies je toestaat.', metaPixelId ? 'Met jouw toestemming gebruiken we ook Meta (Facebook en Instagram) voor marketing.' : ''].filter(Boolean).join(' ')
 ---
-<div class="cms-cookie-banner" role="region" aria-label="Cookies" data-enabled={String(enabled)} data-analytics-id={analyticsId} hidden>
-  <p class="cms-cookie-banner__text">{text}</p>
+<div class="cms-cookie-banner" role="region" aria-label="Cookies" data-enabled={String(bannerEnabled)} data-analytics-id={analyticsId} data-meta-pixel-id={metaPixelId} hidden>
+  <p class="cms-cookie-banner__text">{bannerText}</p>
   <div class="cms-cookie-banner__actions">
     <button type="button" class="cms-cookie-banner__secondary" data-cookie-preferences>Voorkeuren</button>
     <button type="button" class="cms-cookie-banner__secondary" data-cookie-choice="none">Alleen noodzakelijk</button>
@@ -29,6 +31,13 @@ const { enabled, text, analyticsId } = $$props
         <small>Laat ons anoniem zien welke recepten en pagina's het meest bekeken worden, zodat we de site kunnen verbeteren.</small>
       </span>
     </label>
+    <label class="cms-cookie-dialog__option" hidden={!metaPixelId}>
+      <input type="checkbox" name="marketing" />
+      <span>
+        <strong>Marketing</strong>
+        <small>Meta (Facebook en Instagram) helpt ons advertentieresultaten te meten en relevante advertenties te tonen.</small>
+      </span>
+    </label>
     <div class="cms-cookie-dialog__actions">
       <button type="button" class="cms-cookie-banner__secondary" data-cookie-choice="none">Alleen noodzakelijk</button>
       <button type="button" class="cms-cookie-banner__primary" data-cookie-save>Opslaan</button>
@@ -36,104 +45,7 @@ const { enabled, text, analyticsId } = $$props
   </form>
 </dialog>
 
-<script>
-(function () {
-  var banner = document.querySelector('.cms-cookie-banner')
-  var dialog = document.querySelector('.cms-cookie-dialog')
-  if (!banner || !dialog) return
-
-  // Keuze in localStorage: { analytics: true|false, date }. De oude waarde "accepted" (alleen
-  // een akkoordknop) telt als toestemming voor statistieken.
-  var consentKey = 'centaur-cookie-consent'
-  var enabled = banner.dataset.enabled === 'true'
-  var analyticsId = banner.dataset.analyticsId || ''
-  var checkbox = dialog.querySelector('input[name="analytics"]')
-
-  function readConsent() {
-    try {
-      var raw = localStorage.getItem(consentKey)
-      if (!raw) return null
-      if (raw === 'accepted') return { analytics: true }
-      return JSON.parse(raw)
-    } catch (e) {
-      return null
-    }
-  }
-  function writeConsent(analytics) {
-    try {
-      localStorage.setItem(consentKey, JSON.stringify({ analytics: analytics, date: new Date().toISOString() }))
-    } catch (e) {}
-  }
-
-  function loadAnalytics(id) {
-    if (!id || document.querySelector('script[data-centaur-analytics="' + id + '"]')) return
-    var script = document.createElement('script')
-    script.async = true
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id)
-    script.dataset.centaurAnalytics = id
-    document.head.appendChild(script)
-
-    window.dataLayer = window.dataLayer || []
-    window.gtag = function () { window.dataLayer.push(arguments) }
-    window.gtag('js', new Date())
-    window.gtag('config', id)
-  }
-
-  // Toestemming ingetrokken: cookies van Google Analytics (_ga, _ga_…) weghalen en de pagina
-  // herladen, zodat het al geladen script niet verder meet.
-  function removeAnalytics() {
-    var loaded = !!document.querySelector('script[data-centaur-analytics]')
-    var domains = ['', location.hostname, '.' + location.hostname.split('.').slice(-2).join('.')]
-    document.cookie.split(';').forEach(function (cookie) {
-      var name = cookie.split('=')[0].trim()
-      if (!/^_ga/.test(name)) return
-      domains.forEach(function (domain) {
-        document.cookie = name + '=; Max-Age=0; path=/' + (domain ? '; domain=' + domain : '')
-      })
-    })
-    if (loaded) location.reload()
-  }
-
-  function apply(consent) {
-    if (!analyticsId) return
-    if (!enabled || (consent && consent.analytics)) loadAnalytics(analyticsId)
-  }
-
-  function choose(analytics) {
-    var before = readConsent()
-    writeConsent(analytics)
-    banner.hidden = true
-    if (dialog.open) dialog.close()
-    if (analytics) apply({ analytics: true })
-    else if (before && before.analytics) removeAnalytics()
-  }
-
-  function openPreferences() {
-    var consent = readConsent()
-    checkbox.checked = !!(consent && consent.analytics)
-    dialog.showModal()
-  }
-
-  document.addEventListener('click', function (event) {
-    var choice = event.target.closest('[data-cookie-choice]')
-    if (choice) return choose(choice.dataset.cookieChoice === 'all')
-    if (event.target.closest('[data-cookie-save]')) return choose(checkbox.checked)
-    if (event.target.closest('[data-cookie-preferences]')) {
-      event.preventDefault()
-      openPreferences()
-    }
-  })
-  // Tik naast het venster sluit het (zonder iets te wijzigen).
-  dialog.addEventListener('click', function (event) { if (event.target === dialog) dialog.close() })
-
-  // Zonder banner (uitgezet in Centaur) is er ook niets in te stellen: de footerlink verbergen.
-  document.querySelectorAll('.site-footer [data-cookie-preferences]').forEach(function (link) { link.hidden = !enabled })
-
-  var consent = readConsent()
-  banner.hidden = !(enabled && !consent)
-  apply(consent)
-})()
-</script>
+<script src="/cookie-consent.js" defer></script>
 
 <style>
 .cms-cookie-banner {
@@ -245,6 +157,9 @@ const { enabled, text, analyticsId } = $$props
   margin-top: 0.15rem;
   accent-color: var(--byz-color-accent);
   cursor: pointer;
+}
+.cms-cookie-dialog__option[hidden] {
+  display: none;
 }
 .cms-cookie-dialog__option input:disabled {
   cursor: not-allowed;

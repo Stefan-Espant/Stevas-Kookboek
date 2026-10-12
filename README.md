@@ -73,6 +73,8 @@ In Centaur kunnen Admins en Editors met **Conceptrecept maken / openen** de rece
 
 ## Site-instellingen & SEO
 
+- Meta-pixel `1559510655945796` wordt via `CookieBanner.wald` en `public/cookie-consent.js` geladen na expliciete toestemming voor **Marketing**. De cookiebanner blijft zichtbaar zolang een marketingkeuze ontbreekt, ook als het CMS de banner uitzet. Bestaande toestemming voor statistieken geldt niet voor marketing. Intrekken verwijdert `_fbp`/`_fbc`, trekt de Meta-toestemming in en herlaadt de pagina om het script te stoppen. `PageView` wordt eenmaal per pagina aangeroepen; een onvoorwaardelijke `noscript`-pixel is niet opgenomen.
+
 - Favicon en titel-suffix komen uit **Instellingen → Website** in het CMS. De kleuren komen uit het Figma-ontwerp (tokens in `src/layouts/Layout.wald`); de merkkleur uit het CMS wordt niet meer gebruikt.
 - Cookiebanner aan? Dan verschijnt de banner; het Analytics-script laadt pas na acceptatie.
 - Onderhoudsmodus aan? Dan toont elke pagina het onderhoudsscherm (na de volgende build — een statische site kan geen 503-status meer geven).
