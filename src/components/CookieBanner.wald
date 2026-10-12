@@ -2,19 +2,68 @@
 type Props = { enabled: boolean, text: string, analyticsId: string }
 const { enabled, text, analyticsId } = $$props
 ---
-<div class="cms-cookie-banner" role="status" aria-live="polite" data-enabled={String(enabled)} data-analytics-id={analyticsId} hidden>
-  <p>{text}</p>
-  <button type="button">Accepteren</button>
+<div class="cms-cookie-banner" role="region" aria-label="Cookies" data-enabled={String(enabled)} data-analytics-id={analyticsId} hidden>
+  <p class="cms-cookie-banner__text">{text}</p>
+  <div class="cms-cookie-banner__actions">
+    <button type="button" class="cms-cookie-banner__secondary" data-cookie-preferences>Voorkeuren</button>
+    <button type="button" class="cms-cookie-banner__secondary" data-cookie-choice="none">Alleen noodzakelijk</button>
+    <button type="button" class="cms-cookie-banner__primary" data-cookie-choice="all">Alles accepteren</button>
+  </div>
 </div>
+
+<dialog class="cms-cookie-dialog" aria-labelledby="cookie-voorkeuren-titel">
+  <form method="dialog" class="cms-cookie-dialog__form">
+    <h2 id="cookie-voorkeuren-titel" class="cms-cookie-dialog__title">Cookievoorkeuren</h2>
+    <p class="cms-cookie-dialog__intro">Kies welke cookies we mogen gebruiken. Je kunt dit later altijd wijzigen via "Cookievoorkeuren" onderaan de pagina.</p>
+    <label class="cms-cookie-dialog__option">
+      <input type="checkbox" checked disabled />
+      <span>
+        <strong>Noodzakelijk</strong>
+        <small>Nodig om de site te laten werken en je cookiekeuze te onthouden. Altijd aan.</small>
+      </span>
+    </label>
+    <label class="cms-cookie-dialog__option">
+      <input type="checkbox" name="analytics" />
+      <span>
+        <strong>Statistieken</strong>
+        <small>Laat ons anoniem zien welke recepten en pagina's het meest bekeken worden, zodat we de site kunnen verbeteren.</small>
+      </span>
+    </label>
+    <div class="cms-cookie-dialog__actions">
+      <button type="button" class="cms-cookie-banner__secondary" data-cookie-choice="none">Alleen noodzakelijk</button>
+      <button type="button" class="cms-cookie-banner__primary" data-cookie-save>Opslaan</button>
+    </div>
+  </form>
+</dialog>
 
 <script>
 (function () {
   var banner = document.querySelector('.cms-cookie-banner')
-  if (!banner) return
+  var dialog = document.querySelector('.cms-cookie-dialog')
+  if (!banner || !dialog) return
 
+  // Keuze in localStorage: { analytics: true|false, date }. De oude waarde "accepted" (alleen
+  // een akkoordknop) telt als toestemming voor statistieken.
   var consentKey = 'centaur-cookie-consent'
   var enabled = banner.dataset.enabled === 'true'
   var analyticsId = banner.dataset.analyticsId || ''
+  var checkbox = dialog.querySelector('input[name="analytics"]')
+
+  function readConsent() {
+    try {
+      var raw = localStorage.getItem(consentKey)
+      if (!raw) return null
+      if (raw === 'accepted') return { analytics: true }
+      return JSON.parse(raw)
+    } catch (e) {
+      return null
+    }
+  }
+  function writeConsent(analytics) {
+    try {
+      localStorage.setItem(consentKey, JSON.stringify({ analytics: analytics, date: new Date().toISOString() }))
+    } catch (e) {}
+  }
 
   function loadAnalytics(id) {
     if (!id || document.querySelector('script[data-centaur-analytics="' + id + '"]')) return
@@ -30,22 +79,59 @@ const { enabled, text, analyticsId } = $$props
     window.gtag('config', id)
   }
 
-  function hasConsent() {
-    return localStorage.getItem(consentKey) === 'accepted'
+  // Toestemming ingetrokken: cookies van Google Analytics (_ga, _ga_…) weghalen en de pagina
+  // herladen, zodat het al geladen script niet verder meet.
+  function removeAnalytics() {
+    var loaded = !!document.querySelector('script[data-centaur-analytics]')
+    var domains = ['', location.hostname, '.' + location.hostname.split('.').slice(-2).join('.')]
+    document.cookie.split(';').forEach(function (cookie) {
+      var name = cookie.split('=')[0].trim()
+      if (!/^_ga/.test(name)) return
+      domains.forEach(function (domain) {
+        document.cookie = name + '=; Max-Age=0; path=/' + (domain ? '; domain=' + domain : '')
+      })
+    })
+    if (loaded) location.reload()
   }
 
-  function maybeLoadAnalytics() {
-    if (analyticsId && (!enabled || hasConsent())) loadAnalytics(analyticsId)
+  function apply(consent) {
+    if (!analyticsId) return
+    if (!enabled || (consent && consent.analytics)) loadAnalytics(analyticsId)
   }
 
-  banner.querySelector('button').addEventListener('click', function () {
-    localStorage.setItem(consentKey, 'accepted')
+  function choose(analytics) {
+    var before = readConsent()
+    writeConsent(analytics)
     banner.hidden = true
-    maybeLoadAnalytics()
-  })
+    if (dialog.open) dialog.close()
+    if (analytics) apply({ analytics: true })
+    else if (before && before.analytics) removeAnalytics()
+  }
 
-  banner.hidden = !(enabled && !hasConsent())
-  maybeLoadAnalytics()
+  function openPreferences() {
+    var consent = readConsent()
+    checkbox.checked = !!(consent && consent.analytics)
+    dialog.showModal()
+  }
+
+  document.addEventListener('click', function (event) {
+    var choice = event.target.closest('[data-cookie-choice]')
+    if (choice) return choose(choice.dataset.cookieChoice === 'all')
+    if (event.target.closest('[data-cookie-save]')) return choose(checkbox.checked)
+    if (event.target.closest('[data-cookie-preferences]')) {
+      event.preventDefault()
+      openPreferences()
+    }
+  })
+  // Tik naast het venster sluit het (zonder iets te wijzigen).
+  dialog.addEventListener('click', function (event) { if (event.target === dialog) dialog.close() })
+
+  // Zonder banner (uitgezet in Centaur) is er ook niets in te stellen: de footerlink verbergen.
+  document.querySelectorAll('.site-footer [data-cookie-preferences]').forEach(function (link) { link.hidden = !enabled })
+
+  var consent = readConsent()
+  banner.hidden = !(enabled && !consent)
+  apply(consent)
 })()
 </script>
 
@@ -59,23 +145,118 @@ const { enabled, text, analyticsId } = $$props
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--byz-space-4);
+  gap: var(--byz-space-4) var(--byz-space-6);
   /* Boven de adresbalk/thuisbalk van iOS blijven (viewport-fit=cover in Layout.wald). */
-  padding: var(--byz-space-4) var(--byz-space-6) calc(var(--byz-space-4) + env(safe-area-inset-bottom));
+  padding: var(--byz-space-5) var(--steva-pagina-marge) calc(var(--byz-space-5) + env(safe-area-inset-bottom));
   background: var(--steva-bordeaux-donker);
+  box-shadow: 0 -8px 30px rgb(0 0 0 / 0.35), inset 0 1px 0 var(--byz-color-border);
   color: var(--byz-color-text-primary);
   z-index: var(--byz-z-overlay);
 }
 .cms-cookie-banner[hidden] {
   display: none;
 }
-.cms-cookie-banner button {
+.cms-cookie-banner__text {
+  flex: 1 1 22rem;
+  margin: 0;
+  max-width: 60ch;
+}
+.cms-cookie-banner__actions,
+.cms-cookie-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--byz-space-3);
+}
+/* Alle knoppen even groot en even goed te vinden: weigeren mag niet moeilijker zijn dan
+   accepteren. */
+.cms-cookie-banner__primary,
+.cms-cookie-banner__secondary {
+  flex: 1 1 auto;
+  min-height: 2.75rem;
+  padding: var(--byz-space-2) var(--byz-space-5);
+  border: 0;
+  border-radius: 0.5rem;
+  font: inherit;
+  font-weight: var(--byz-font-semibold);
+  cursor: pointer;
+}
+.cms-cookie-banner__primary {
   background: var(--byz-color-accent);
   box-shadow: inset 0 -4px 0 var(--steva-oranje-donker);
   color: var(--steva-bordeaux-donker);
-  border: none;
-  border-radius: 0.375rem;
-  padding: var(--byz-space-2) var(--byz-space-4);
+}
+.cms-cookie-banner__primary:hover {
+  background: var(--steva-oranje-donker);
+}
+.cms-cookie-banner__secondary {
+  background: rgb(255 255 255 / 0.06);
+  box-shadow: inset 0 0 0 1px var(--byz-color-border);
+  color: var(--byz-color-text-primary);
+}
+.cms-cookie-banner__secondary:hover {
+  box-shadow: inset 0 0 0 1px var(--byz-color-accent);
+}
+
+/* Voorkeurenvenster */
+/* margin: auto centreert het venster; de reset van Byzantium (* { margin: 0 }) haalt dat weg. */
+.cms-cookie-dialog {
+  margin: auto;
+  width: min(calc(100% - 2rem), 30rem);
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: 0;
+  border-radius: 1rem;
+  background: var(--steva-bordeaux-donker);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 0.5), inset 0 0 0 1px var(--byz-color-border);
+  color: var(--byz-color-text-primary);
+}
+.cms-cookie-dialog::backdrop {
+  background: rgb(20 3 0 / 0.6);
+}
+.cms-cookie-dialog__form {
+  display: grid;
+  gap: var(--byz-space-5);
+  padding: var(--byz-space-8) var(--byz-space-6) var(--byz-space-6);
+}
+.cms-cookie-dialog__title {
+  margin: 0;
+  font-size: var(--byz-text-xl);
+  font-weight: var(--byz-font-semibold);
+  text-transform: uppercase;
+}
+.cms-cookie-dialog__intro {
+  margin: 0;
+  color: var(--byz-color-text-secondary);
+  font-size: var(--byz-text-sm);
+}
+.cms-cookie-dialog__option {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--byz-space-3);
+  padding: var(--byz-space-4);
+  border-radius: 0.75rem;
+  background: rgb(255 255 255 / 0.04);
+  box-shadow: inset 0 0 0 1px var(--byz-color-border);
   cursor: pointer;
+}
+.cms-cookie-dialog__option input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.15rem;
+  accent-color: var(--byz-color-accent);
+  cursor: pointer;
+}
+.cms-cookie-dialog__option input:disabled {
+  cursor: not-allowed;
+}
+.cms-cookie-dialog__option strong {
+  display: block;
+  margin-bottom: var(--byz-space-1);
+}
+.cms-cookie-dialog__option small {
+  display: block;
+  color: var(--byz-color-text-muted);
+  font-size: var(--byz-text-sm);
+  line-height: 1.45;
 }
 </style>
