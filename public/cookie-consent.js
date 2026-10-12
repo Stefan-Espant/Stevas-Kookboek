@@ -10,6 +10,8 @@
   var metaPixelId = banner.dataset.metaPixelId || ''
   var analyticsCheckbox = dialog.querySelector('input[name="analytics"]')
   var marketingCheckbox = dialog.querySelector('input[name="marketing"]')
+  var marketingOption = marketingCheckbox.closest('label')
+  if (marketingOption) marketingOption.hidden = !metaPixelId
 
   function readConsent() {
     try {

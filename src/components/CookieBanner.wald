@@ -31,7 +31,7 @@ const bannerText = [text || 'We gebruiken cookies. Je kiest zelf welke cookies j
         <small>Laat ons anoniem zien welke recepten en pagina's het meest bekeken worden, zodat we de site kunnen verbeteren.</small>
       </span>
     </label>
-    <label class="cms-cookie-dialog__option" hidden={!metaPixelId}>
+    <label class="cms-cookie-dialog__option" hidden>
       <input type="checkbox" name="marketing" />
       <span>
         <strong>Marketing</strong>
