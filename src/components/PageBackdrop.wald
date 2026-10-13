@@ -1,0 +1,57 @@
+---
+// Decoratieve lagen bovenaan elke pagina: rode gloed met marmertextuur en opstijgende stoom.
+// Layout zet ze direct in <body>; op korte pagina's (data-full-height) kapt Layout ze af.
+---
+<div class="page-backdrop" aria-hidden="true"></div>
+<canvas class="page-steam" data-effect="stoom" aria-hidden="true"></canvas>
+
+<style>
+/* Rode gloed + marmertextuur bovenaan elke pagina (Figma: "Rectangle 2", "image 1" en
+   "Rectangle 3"). Figma legt de textuur met linear-burn op 25% over de gloed; CSS kent
+   geen linear-burn, multiply komt het dichtst in de buurt. De onderste 240px vloeien
+   over in de achtergrondkleur. */
+.page-backdrop {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 61.5rem;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(50% 50% at 50% 50%, var(--byz-color-surface), var(--byz-color-background)) center top / 100% 40rem no-repeat,
+    var(--byz-color-background);
+}
+.page-backdrop::before,
+.page-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.page-backdrop::before {
+  background: url("/images/hero-textuur.webp") center top / cover no-repeat;
+  opacity: 0.25;
+  mix-blend-mode: multiply;
+}
+.page-backdrop::after {
+  top: auto;
+  height: 15rem;
+  background: linear-gradient(to bottom, rgb(87 17 3 / 0.2), rgb(87 17 3 / 0.8));
+}
+
+/* Stoom die boven aan elke pagina opstijgt, achter de inhoud (shader in public/effects.js,
+   geladen door motion.js). Vervaagt erin zodra hij tekent; zonder WebGPU/WebGL2 of bij minder
+   beweging blijft hij leeg en zie je alleen de gloed hierboven. */
+.page-steam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 40rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 2s ease;
+}
+.page-steam.is-on {
+  opacity: 1;
+}
+</style>
