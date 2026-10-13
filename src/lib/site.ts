@@ -1,3 +1,5 @@
+import type { CentaurSiteSettings } from './cms'
+
 // Publieke basis-URL van de site: SITE_URL, of op Vercel het productiedomein van het project.
 export function siteUrl(): string {
   const url = process.env.SITE_URL
@@ -9,6 +11,38 @@ export function siteUrl(): string {
 // Centaur als relatief pad (/images/…). Zonder bekende site-URL blijft het pad relatief.
 export function absoluteUrl(url: string): string {
   return url.startsWith('/') ? `${siteUrl()}${url}` : url
+}
+
+// SEO-gegevens die een pagina aan Layout (en zo aan SiteHead) meegeeft.
+export type PageMeta = {
+  title?: string | null
+  /** true: titel zoals hij is, zonder " | Steva's Kookboek" (bv. de homepage). */
+  fullTitle?: boolean
+  description?: string | null
+  /** Pad van de pagina, bv. "/recepten" — voor canonical en og:url. */
+  path?: string
+  /** "article" voor recepten, anders "website". */
+  type?: 'website' | 'article'
+  ogTitle?: string | null
+  ogDescription?: string | null
+  ogImage?: string | null
+  ogImageAlt?: string | null
+  canonicalUrl?: string | null
+  /** Niet indexeren (bv. de 404-pagina). */
+  noindex?: boolean
+  /** Extra JSON-LD-objecten voor deze pagina (breadcrumbs, lijsten, …). */
+  schema?: Record<string, unknown>[]
+}
+
+// Sociale profielen voor de footer en `sameAs`. Instagram en Facebook hebben een reservewaarde
+// zolang ze niet in de Centaur-site-instellingen staan; een waarde daar gaat voor.
+export function socialProfiles(site: CentaurSiteSettings | null) {
+  return {
+    instagram: site?.instagram || 'https://www.instagram.com/stevaskookboek/',
+    facebook: site?.facebook || 'https://www.facebook.com/profile.php?id=61595536792024',
+    linkedIn: site?.linkedIn ?? '',
+    twitter: site?.twitter ?? ''
+  }
 }
 
 // JSON-LD-bouwstenen voor Layout's `schema`-prop.
