@@ -4,7 +4,9 @@ import { dirname, join } from 'node:path'
 import { parseEnv } from 'node:util'
 import { compile } from 'sass'
 import { defineAdapter, defineConfig, vercelAdapter } from '@waldjs/cli'
-import { getAllRecipes, recipePath } from './src/lib/recipes'
+import { getAllCuisineEntries, getAllRecipes, getCollections, recipePath } from './src/lib/recipes'
+import { getSiteSettings } from './src/lib/cms'
+import { buildLlmsTxt } from './src/lib/llms'
 import { siteUrl } from './src/lib/site'
 import { IMAGE_WIDTHS, mediaOrigin } from './src/lib/images'
 
@@ -50,7 +52,7 @@ if (existsSync('.env')) {
 }
 
 // vercelAdapter() + wat Nuxt/Nitro eerder runtime deed: een echte 404-pagina en
-// /sitemap.xml + /robots.txt. Die worden nu bij elke build opnieuw gegenereerd — een
+// /sitemap.xml + /robots.txt (+ /llms.txt voor AI-assistenten). Die worden nu bij elke build opnieuw gegenereerd — een
 // wijziging in Centaur triggert via de Vercel deploy hook een nieuwe build.
 function kookboekAdapter() {
   const vercel = vercelAdapter()
@@ -109,6 +111,14 @@ function kookboekAdapter() {
         '</urlset>',
         ''
       ].join('\n'))
+      writeFileSync(join(outDir, 'llms.txt'), buildLlmsTxt({
+        origin,
+        siteName: (await getSiteSettings())?.siteName || "Steva's Kookboek",
+        recipes,
+        cuisines: await getAllCuisineEntries(),
+        collections: await getCollections(),
+        built: new Set(paths)
+      }))
       writeFileSync(
         join(outDir, 'robots.txt'),
         `User-agent: *\nAllow: /\n${origin ? `Sitemap: ${origin}/sitemap.xml\n` : ''}`
