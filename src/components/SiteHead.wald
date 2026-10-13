@@ -75,7 +75,9 @@ const motionHead = `<script data-wald-no-hoist>document.documentElement.classLis
 
 // Vercel Web Analytics (cookieloos): inject() laadt /_vercel/insights/script.js, dat Vercel alleen
 // op de gedeployde site serveert. Niet op localhost, anders vult de console zich met 404's.
-const analyticsHead = `<script type="module" data-wald-no-hoist>if (!/^(localhost|127\\.0\\.0\\.1)$/.test(location.hostname)) import('/vendor/vercel-analytics.mjs').then(function (m) { m.inject() })</script>`
+// Het pad staat in een variabele: een vast pad in import() wil Vite in dev zelf verwerken, en
+// bestanden in public/ mag het niet importeren (foutscherm over de pagina).
+const analyticsHead = `<script type="module" data-wald-no-hoist>var src = '/vendor/vercel-analytics.mjs'; if (!/^(localhost|127\\.0\\.0\\.1)$/.test(location.hostname)) import(/* @vite-ignore */ src).then(function (m) { m.inject() })</script>`
 
 // Lettertypes zelf gehost (public/fonts, beide OFL, overgenomen van Google Fonts): geen
 // blokkerende stylesheet van een andere server meer. Fraunces is variabel (gewicht 400–600, opsz).
