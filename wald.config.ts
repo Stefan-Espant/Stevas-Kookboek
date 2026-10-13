@@ -111,6 +111,12 @@ function kookboekAdapter() {
         '</urlset>',
         ''
       ].join('\n'))
+      // Nieuwsbrief-inschrijving als serverless functie (Build Output API): /api/nieuwsbrief.
+      const newsletterFn = join(rootDir, '.vercel', 'output', 'functions', 'api', 'nieuwsbrief.func')
+      mkdirSync(newsletterFn, { recursive: true })
+      copyFileSync(join(rootDir, 'functions', 'nieuwsbrief.mjs'), join(newsletterFn, 'index.mjs'))
+      writeFileSync(join(newsletterFn, '.vc-config.json'), JSON.stringify({ runtime: 'nodejs22.x', handler: 'index.mjs', launcherType: 'Nodejs', shouldAddHelpers: true }, null, 2) + '\n')
+
       writeFileSync(join(outDir, 'llms.txt'), buildLlmsTxt({
         origin,
         siteName: (await getSiteSettings())?.siteName || "Steva's Kookboek",

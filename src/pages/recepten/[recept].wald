@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.wald'
 import RecipeView from '../../components/RecipeView.wald'
 import RecipeGrid from '../../components/RecipeGrid.wald'
 import Breadcrumbs from '../../components/Breadcrumbs.wald'
+import NewsletterSignup from '../../components/NewsletterSignup.wald'
 import { getAllRecipes, getRecipe, getRelatedRecipes, recipePath } from '../../lib/recipes'
 import { breadcrumbSchema } from '../../lib/site'
 type Props = { recept: string }
@@ -33,6 +34,7 @@ const relatedHtml = related.length
   <main class="recipe-page">
     <div class="recipe-page__crumbs">{new SafeHtml(breadcrumbs)}</div>
     {new SafeHtml(view)}
+    <NewsletterSignup />
     {new SafeHtml(relatedHtml)}
   </main>
 </Layout>
