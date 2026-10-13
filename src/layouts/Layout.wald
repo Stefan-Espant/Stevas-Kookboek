@@ -66,7 +66,10 @@ const headTags = [
 // JSON-LD blijft in <head> (data-wald-no-hoist); "<" escapen zodat CMS-tekst nooit een
 // </script> kan vormen. Organization op elke pagina, WebSite alleen op de homepage, plus wat
 // de pagina zelf meegeeft. Google accepteert geen SVG als logo, vandaar de PNG.
-const sameAs = site ? [site.instagram, site.linkedIn, site.facebook, site.twitter].filter(Boolean) : []
+// Reservewaarden zolang de links niet in de Centaur-site-instellingen staan; een waarde daar gaat voor.
+const instagram = site?.instagram || 'https://www.instagram.com/stevaskookboek/'
+const facebook = site?.facebook || 'https://www.facebook.com/profile.php?id=61595536792024'
+const sameAs = [instagram, site?.linkedIn, facebook, site?.twitter].filter(Boolean)
 const origin = siteUrl()
 const schema: Record<string, unknown>[] = [
   {
@@ -127,8 +130,8 @@ const footer = maintenance ? '' : await SiteFooter.render({
   siteName: site?.siteName ?? '',
   aboutHref,
   contactHref,
-  instagram: site?.instagram ?? '',
-  facebook: site?.facebook ?? '',
+  instagram,
+  facebook,
   linkedIn: site?.linkedIn ?? '',
   twitter: site?.twitter ?? ''
 })
