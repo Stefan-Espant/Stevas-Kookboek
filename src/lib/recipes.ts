@@ -22,6 +22,11 @@ export interface Step {
   text: string
 }
 
+export interface Question {
+  question: string
+  answerHtml: string
+}
+
 export interface Recipe {
   id: string
   slug: string
@@ -39,6 +44,10 @@ export interface Recipe {
   ingredients: Ingredient[]
   steps: Step[]
   tipsHtml: string
+  /** Bewaren, invriezen en opwarmen (richtext-veld "bewaren", optioneel). */
+  storageHtml: string
+  /** Veelgestelde vragen (repeater "vragen" met subvelden "vraag" en "antwoord", optioneel). */
+  questions: Question[]
   tags: string[]
   metaTitle: string
   metaDescription: string
@@ -126,6 +135,8 @@ function toRecipe(entry: CentaurEntry, cuisinesById: Map<string, Cuisine>): Reci
     ingredients,
     steps,
     tipsHtml: text(data.tips),
+    storageHtml: text(data.bewaren),
+    questions: rows(data.vragen).map(row => ({ question: text(row.vraag), answerHtml: text(row.antwoord) })).filter(q => q.question && q.answerHtml),
     tags,
     metaTitle: text(data.meta_titel),
     metaDescription: text(data.meta_omschrijving) || stripHtml(text(data.intro)),
