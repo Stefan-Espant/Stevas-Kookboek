@@ -39,6 +39,19 @@ const tagsHtml = tags.length
 const tipsHtml = recipe.tipsHtml
   ? renderTemplate`<section class="recipe__tips"><h2 class="recipe__heading">Tips &amp; variaties</h2>${new SafeHtml(recipe.tipsHtml)}</section>`
   : ''
+// Bewaren en veelgestelde vragen: optionele Centaur-velden ("bewaren", "vragen"). Juist dit zoeken
+// mensen na het koken nog op (invriezen, vervangen, vooraf maken), en AI-zoekmachines citeren het.
+const storageHtml = recipe.storageHtml
+  ? renderTemplate`<section class="recipe__tips recipe__storage"><h2 class="recipe__heading">Bewaren &amp; invriezen</h2>${new SafeHtml(recipe.storageHtml)}</section>`
+  : ''
+const faqHtml = recipe.questions.length
+  ? renderTemplate`<section class="recipe__tips recipe__faq" aria-labelledby="vragen"><h2 id="vragen" class="recipe__heading">Veelgestelde vragen</h2>${new SafeHtml(recipe.questions
+    .map(q => renderTemplate`<div class="recipe__faq-item"><h3>${q.question}</h3>${new SafeHtml(q.answerHtml)}</div>`).join(''))}</section>`
+  : ''
+// Zichtbare wijzigingsdatum: laat lezers (en Google) zien dat het recept bijgehouden wordt.
+const updatedHtml = recipe.updatedAt
+  ? renderTemplate`<span class="recipe__updated">Bijgewerkt op <time datetime="${recipe.updatedAt.slice(0, 10)}">${new Date(recipe.updatedAt).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Amsterdam' })}</time></span>`
+  : ''
 
 // Ingrediënten per groep. Elke regel heeft de hoeveelheid, eenheid en naam in een eigen element
 // met beide vormen (data-one/data-many), zodat de personen-rekentool hieronder alleen hoeft te
@@ -100,7 +113,15 @@ const jsonLd = {
   recipeIngredient: recipe.ingredients.map(ingredient => ingredientText(ingredient)),
   recipeInstructions: recipe.steps.map(step => ({ '@type': 'HowToStep', ...(step.heading ? { name: step.heading } : {}), text: step.text }))
 }
-const jsonLdHtml = `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>`
+const faqLd = recipe.questions.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: recipe.questions.map(q => ({ '@type': 'Question', name: q.question, acceptedAnswer: { '@type': 'Answer', text: stripHtml(q.answerHtml) } }))
+    }
+  : null
+const jsonLdHtml = [jsonLd, faqLd].filter(Boolean)
+  .map(data => `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`).join('')
 ---
 <article class="recipe">
   <header class="recipe__hero">
@@ -109,7 +130,7 @@ const jsonLdHtml = `<script type="application/ld+json">${JSON.stringify(jsonLd).
       <h1 class="recipe__title">{title}</h1>
       <div class="recipe__lead">{new SafeHtml(recipe.introHtml)}</div>
       <dl class="recipe__facts">{new SafeHtml(factsHtml)}</dl>
-      <p class="recipe__meta">{new SafeHtml(cuisineHtml)}</p>
+      <p class="recipe__meta">{new SafeHtml(cuisineHtml)}{new SafeHtml(updatedHtml)}</p>
     </div>
     <div class="recipe__media">{new SafeHtml(imageHtml)}</div>
   </header>
@@ -124,6 +145,8 @@ const jsonLdHtml = `<script type="application/ld+json">${JSON.stringify(jsonLd).
       <h2 id="bereiding" class="recipe__heading">Bereiding</h2>
       {new SafeHtml(stepsHtml)}
       {new SafeHtml(tipsHtml)}
+      {new SafeHtml(storageHtml)}
+      {new SafeHtml(faqHtml)}
       {new SafeHtml(tagsHtml)}
       <p class="recipe__print-row"><button type="button" class="recipe__print" hidden>Print dit recept</button></p>
     </section>
@@ -268,6 +291,13 @@ document.querySelectorAll('.recipe__scaler').forEach(function (scaler) {
 /* Link naar de keuken onder de kerngegevens (alleen als het recept een keuken heeft). */
 .recipe__meta {
   margin-top: var(--byz-space-5);
+
+  & .recipe__updated {
+    display: block;
+    margin-top: var(--byz-space-2);
+    color: var(--byz-color-text-muted);
+    font-size: var(--byz-text-sm);
+  }
 
   & .recipe__cuisine {
     color: var(--byz-color-text-secondary);
@@ -482,6 +512,18 @@ document.querySelectorAll('.recipe__scaler').forEach(function (scaler) {
   }
   & .recipe__tips ul {
     padding-left: var(--byz-space-5);
+  }
+  & .recipe__faq .recipe__heading {
+    margin-bottom: var(--byz-space-5);
+  }
+  & .recipe__faq-item + .recipe__faq-item {
+    margin-top: var(--byz-space-6);
+  }
+  & .recipe__faq-item h3 {
+    margin-bottom: var(--byz-space-2);
+    color: var(--byz-color-text-secondary);
+    font-size: var(--byz-text-lg);
+    font-weight: var(--byz-font-semibold);
   }
   & .recipe__tags {
     display: flex;
