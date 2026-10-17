@@ -21,7 +21,7 @@ const data = await Promise.all(dinners.map(async recipe => ({
 // "<" escapen: titels komen uit het CMS en mogen nooit een </script> kunnen vormen.
 const dataHtml = `<script type="application/json" id="rad-gerechten" data-wald-no-hoist>${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`
 const lead = `Geen idee wat je vanavond kookt? Draai aan het rad en laat ${dinners.length} hoofdgerechten uit keukens van over de hele wereld voor je kiezen.`
-const schema = [breadcrumbSchema([['Home', '/'], ['Wat eten we?', '/wat-eten-we']])]
+const schema = [breadcrumbSchema([['Home', '/'], ['Wat eten we vanavond?', '/wat-eten-we']])]
 ---
 <Layout title="Wat eten we vanavond? Draai aan het rad" description={lead} path="/wat-eten-we" schema={schema}>
   <main class="rad">
