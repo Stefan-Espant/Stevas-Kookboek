@@ -8,6 +8,8 @@
   var enabled = banner.dataset.enabled === 'true'
   var analyticsId = banner.dataset.analyticsId || ''
   var metaPixelId = banner.dataset.metaPixelId || ''
+  var capturlyAccount = banner.dataset.capturlyAccount || ''
+  var capturlySiteId = banner.dataset.capturlySiteId || ''
   var analyticsCheckbox = dialog.querySelector('input[name="analytics"]')
   var marketingCheckbox = dialog.querySelector('input[name="marketing"]')
   var marketingOption = marketingCheckbox.closest('label')
@@ -45,6 +47,23 @@
     document.head.appendChild(script)
   }
 
+  function loadCapturly() {
+    if (!capturlyAccount || !capturlySiteId || document.querySelector('script[data-capturly]')) return
+    window.trq = window.trq || function () { (window.trq.q = window.trq.q || []).push(arguments) }
+    window.trq('account', capturlyAccount)
+    window.trq('collectorUrl', 'https://collector.capturly.com/collect')
+    window._paq = window._paq || []
+    window._paq.push(['enableLinkTracking'])
+    window._paq.push(['setTrackerUrl', 'https://collector.capturly.com/track'])
+    window._paq.push(['setSiteId', capturlySiteId])
+    var script = document.createElement('script')
+    script.async = true
+    script.defer = true
+    script.src = 'https://capturly.com/capturly-track-js.js'
+    script.dataset.capturly = capturlySiteId
+    document.head.appendChild(script)
+  }
+
   function loadMetaPixel(id) {
     if (!/^\d{5,25}$/.test(id) || document.querySelector('script[data-meta-pixel]')) return
     // Dezelfde queue als de Meta-basiscode, pas aangemaakt na marketingtoestemming.
@@ -73,8 +92,13 @@
     var removeAnalytics = consent.analytics !== true
     var removeMarketing = consent.marketing !== true
     var analyticsLoaded = !!document.querySelector('script[data-centaur-analytics]')
+    var capturlyLoaded = !!document.querySelector('script[data-capturly]')
     var metaLoaded = !!document.querySelector('script[data-meta-pixel]')
     if (removeAnalytics && analyticsLoaded) window['ga-disable-' + analyticsId] = true
+    if (removeAnalytics && capturlyLoaded && window._paq) {
+      window._paq.push(['disableCookies'])
+      window._paq.push(['deleteCookies'])
+    }
     if (removeMarketing && window.fbq) window.fbq('consent', 'revoke')
 
     var domains = ['', location.hostname]
@@ -82,12 +106,12 @@
     for (var i = 0; i < parts.length - 1; i++) domains.push('.' + parts.slice(i).join('.'))
     document.cookie.split(';').forEach(function (cookie) {
       var name = cookie.split('=')[0].trim()
-      if (!((removeAnalytics && /^_ga/.test(name)) || (removeMarketing && /^_fb[pc]$/.test(name)))) return
+      if (!((removeAnalytics && /^(_ga|_tr_)/.test(name)) || (removeMarketing && /^_fb[pc]$/.test(name)))) return
       domains.forEach(function (domain) {
         document.cookie = name + '=; Max-Age=0; path=/' + (domain ? '; domain=' + domain : '')
       })
     })
-    if ((removeAnalytics && analyticsLoaded) || (removeMarketing && metaLoaded)) {
+    if ((removeAnalytics && (analyticsLoaded || capturlyLoaded)) || (removeMarketing && metaLoaded)) {
       location.reload()
       return true
     }
@@ -96,6 +120,7 @@
 
   function apply(consent) {
     if (!enabled || (consent && consent.analytics === true)) loadAnalytics(analyticsId)
+    if (consent && consent.analytics === true) loadCapturly()
     // Een oude statistiekenkeuze geeft nooit toestemming voor marketing.
     if (consent && consent.marketing === true) loadMetaPixel(metaPixelId)
   }

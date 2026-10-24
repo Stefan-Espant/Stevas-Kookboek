@@ -1,10 +1,10 @@
 ---
-type Props = { enabled: boolean, text: string, analyticsId: string, metaPixelId?: string }
-const { enabled, text, analyticsId, metaPixelId = '' } = $$props
-const bannerEnabled = enabled || Boolean(metaPixelId)
-const bannerText = [text || 'We gebruiken cookies. Je kiest zelf welke cookies je toestaat.', metaPixelId ? 'Met jouw toestemming gebruiken we ook Meta (Facebook en Instagram) voor marketing.' : ''].filter(Boolean).join(' ')
+type Props = { enabled: boolean, text: string, analyticsId: string, metaPixelId?: string, capturlyAccount?: string, capturlySiteId?: string }
+const { enabled, text, analyticsId, metaPixelId = '', capturlyAccount = '', capturlySiteId = '' } = $$props
+const bannerEnabled = enabled || Boolean(metaPixelId) || Boolean(capturlyAccount)
+const bannerText = [text || 'We gebruiken cookies. Je kiest zelf welke cookies je toestaat.', capturlyAccount ? 'Met jouw toestemming gebruiken we Capturly voor bezoekersstatistieken, heatmaps en sessieopnames.' : '', metaPixelId ? 'Met jouw toestemming gebruiken we ook Meta (Facebook en Instagram) voor marketing.' : ''].filter(Boolean).join(' ')
 ---
-<div class="cms-cookie-banner" role="region" aria-label="Cookies" data-enabled={String(bannerEnabled)} data-analytics-id={analyticsId} data-meta-pixel-id={metaPixelId} hidden>
+<div class="cms-cookie-banner" role="region" aria-label="Cookies" data-enabled={String(bannerEnabled)} data-analytics-id={analyticsId} data-meta-pixel-id={metaPixelId} data-capturly-account={capturlyAccount} data-capturly-site-id={capturlySiteId} hidden>
   <p class="cms-cookie-banner__text">{bannerText}</p>
   <div class="cms-cookie-banner__actions">
     <button type="button" class="cms-cookie-banner__secondary" data-cookie-preferences>Voorkeuren</button>
@@ -28,7 +28,7 @@ const bannerText = [text || 'We gebruiken cookies. Je kiest zelf welke cookies j
       <input type="checkbox" name="analytics" />
       <span>
         <strong>Statistieken</strong>
-        <small>Laat ons anoniem zien welke recepten en pagina's het meest bekeken worden, zodat we de site kunnen verbeteren.</small>
+        <small>{capturlyAccount ? 'Capturly meet paginabezoek en interacties met heatmaps en sessieopnames, zodat we de site kunnen verbeteren.' : "Laat ons anoniem zien welke recepten en pagina's het meest bekeken worden, zodat we de site kunnen verbeteren."}</small>
       </span>
     </label>
     <label class="cms-cookie-dialog__option" hidden>
