@@ -16,6 +16,8 @@ const site = await getSiteSettings()
 const { pond } = $$props
 const siteName = site?.siteName ?? ''
 const META_PIXEL_ID = '1559510655945796'
+const CAPTURLY_ACCOUNT = 't-6adcc774a9b7f185ef532e95'
+const CAPTURLY_SITE_ID = '7748'
 
 // Statisch gebouwd, dus onderhoudsmodus kan geen 503 meer teruggeven: de pagina toont
 // dan alleen het onderhoudsscherm (en gaat weer open bij de volgende build).
@@ -44,7 +46,7 @@ const footer = maintenance ? '' : await SiteFooter.render({ siteName, aboutHref,
     {new SafeHtml(header)}
     {maintenance ? '' : pond}
     {new SafeHtml(footer)}
-    <CookieBanner enabled={!maintenance && (site?.cookieBannerEnabled ?? false)} text={site?.cookieBannerText ?? ''} analyticsId={maintenance ? '' : site?.analyticsId ?? ''} metaPixelId={maintenance ? '' : META_PIXEL_ID} />
+    <CookieBanner enabled={!maintenance && (site?.cookieBannerEnabled ?? false)} text={site?.cookieBannerText ?? ''} analyticsId={maintenance ? '' : site?.analyticsId ?? ''} metaPixelId={maintenance ? '' : META_PIXEL_ID} capturlyAccount={maintenance ? '' : CAPTURLY_ACCOUNT} capturlySiteId={maintenance ? '' : CAPTURLY_SITE_ID} />
   </body>
 </html>
 

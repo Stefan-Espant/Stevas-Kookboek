@@ -73,6 +73,8 @@ In Centaur kunnen Admins en Editors met **Conceptrecept maken / openen** de rece
 
 ## Site-instellingen & SEO
 
+- Capturly (account `t-6adcc774a9b7f185ef532e95`, site `7748`) wordt op alle publieke pagina's geladen na toestemming voor **Statistieken**. De accountgegevens staan in `Layout.wald`; `public/cookie-consent.js` initialiseert de aangeleverde tracker eenmaal per pagina. Intrekken verwijdert `_tr_`-cookies en herlaadt de pagina om de tracker te stoppen. In onderhoudsmodus wordt Capturly niet geladen.
+
 - Meta-pixel `1559510655945796` wordt via `CookieBanner.wald` en `public/cookie-consent.js` geladen na expliciete toestemming voor **Marketing**. De cookiebanner blijft zichtbaar zolang een marketingkeuze ontbreekt, ook als het CMS de banner uitzet. Bestaande toestemming voor statistieken geldt niet voor marketing. Intrekken verwijdert `_fbp`/`_fbc`, trekt de Meta-toestemming in en herlaadt de pagina om het script te stoppen. `PageView` wordt eenmaal per pagina aangeroepen; een onvoorwaardelijke `noscript`-pixel is niet opgenomen.
 
 - Favicon en titel-suffix komen uit **Instellingen → Website** in het CMS. De kleuren komen uit het Figma-ontwerp (tokens in `src/layouts/Layout.wald`); de merkkleur uit het CMS wordt niet meer gebruikt.
