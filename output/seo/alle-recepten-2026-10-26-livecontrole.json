@@ -1,0 +1,1150 @@
+[
+  {
+    "slug": "appel-pannenkoeken",
+    "status": 200,
+    "title": "Appelring-pannenkoeken met kaneel | Steva's Kookboek",
+    "description": "Bak appelring-pannenkoeken met verse appel, kaneel en vanillebeslag. Goudbruin uit de koekenpan en lekker warm met poedersuiker als ontbijt of tussendoortje.",
+    "verifiedAt": "2026-10-26T18:18:23.491Z"
+  },
+  {
+    "slug": "pittige-spaghetti-met-kip",
+    "status": 200,
+    "title": "Pittige spaghetti met kip in romige saus | Steva's Kookboek",
+    "description": "Maak pittige spaghetti met kip, paprika en romige tomatensaus. Verse basilicum en chilivlokken geven smaak aan deze makkelijke pasta voor 4 personen.",
+    "verifiedAt": "2026-10-26T18:18:24.338Z"
+  },
+  {
+    "slug": "romige-linguine-knoflookgarnalen",
+    "status": 200,
+    "title": "Linguine met knoflookgarnalen en tomaat | Steva's Kookboek",
+    "description": "Maak romige linguine met knoflookgarnalen, verse tomaten en peterselie. Een pastagerecht voor 2 personen met kookroom en een vleugje chili.",
+    "verifiedAt": "2026-10-26T18:18:25.154Z"
+  },
+  {
+    "slug": "mac-and-cheese",
+    "status": 200,
+    "title": "Mac and cheese met broccoli en bloemkool | Steva's Kookboek",
+    "description": "Maak mac and cheese met volkoren macaroni, broccoli en bloemkool in romige kaassaus. Een makkelijk pastagerecht uit de pan met mosterd en knoflook.",
+    "verifiedAt": "2026-10-26T18:18:25.777Z"
+  },
+  {
+    "slug": "geroosterde-honingspruitjes-met-feta",
+    "status": 200,
+    "title": "Spruitjes met honing, feta en dadels | Steva's Kookboek",
+    "description": "Bak spruitjes met honing, komijn en rozemarijn in de koekenpan. Serveer met feta, dadels, pistachenoten en granaatappel voor een zoet-hartig bijgerecht.",
+    "verifiedAt": "2026-10-26T18:18:26.524Z"
+  },
+  {
+    "slug": "courgette-soep",
+    "status": 200,
+    "title": "Courgettesoep met Boursin: makkelijk recept | Steva's Kookboek",
+    "description": "Maak romige courgettesoep met Boursin knoflook en kruiden, sjalotten en tijm. Een makkelijk soeprecept met 2 courgettes en bouillon, voor 4 personen.",
+    "verifiedAt": "2026-10-26T18:18:27.168Z"
+  },
+  {
+    "slug": "carrot-cake",
+    "status": 200,
+    "title": "Carrot cake met roomkaas en walnoten | Steva's Kookboek",
+    "description": "Bak een smeuïge carrot cake met wortel, walnoten, kaneel en speculaaskruiden. Met frisse roomkaastopping, in een springvorm van 24 cm voor 10 porties.",
+    "verifiedAt": "2026-10-26T18:18:27.777Z"
+  },
+  {
+    "slug": "kip-in-de-hoed",
+    "status": 200,
+    "title": "Kip in de hoed met kersen en bladerdeeg | Steva's Kookboek",
+    "description": "Maak kip in de hoed: romige kip met kerrie, crème fraîche en zoetzure kersen onder knapperig bladerdeeg. Een verrassende ovenschotel voor 2 personen.",
+    "verifiedAt": "2026-10-26T18:18:28.533Z"
+  },
+  {
+    "slug": "pompoen-risotto",
+    "status": 200,
+    "title": "Pompoenrisotto met salie en Parmezaan | Steva's Kookboek",
+    "description": "Maak romige pompoenrisotto met geroosterde pompoen, salie en Parmezaanse kaas. Een herfstrecept voor 2 personen met witte wijn en groentebouillon.",
+    "verifiedAt": "2026-10-26T18:18:29.217Z"
+  },
+  {
+    "slug": "bananen-in-kokosmelk",
+    "status": 200,
+    "title": "Bananen in kokosmelk: Thais dessert | Steva's Kookboek",
+    "description": "Maak kluay buat chi: warme bananen in kokosmelk met palmsuiker en pandan. Een eenvoudig Thais dessert met een snuf zout en geroosterd sesamzaad.",
+    "verifiedAt": "2026-10-26T18:18:29.824Z"
+  },
+  {
+    "slug": "sachertorte",
+    "status": 200,
+    "title": "Sachertorte met abrikozenjam en chocolade | Steva's Kookboek",
+    "description": "Bak Sachertorte met pure chocolade, een laag abrikozenjam en glanzend chocoladeglazuur. Serveer deze Weense chocoladetaart met ongezoete slagroom.",
+    "verifiedAt": "2026-10-26T18:18:30.435Z"
+  },
+  {
+    "slug": "dorayaki",
+    "status": 200,
+    "title": "Dorayaki: Japanse pannenkoekjes met anko | Steva's Kookboek",
+    "description": "Bak dorayaki: luchtige Japanse honingpannenkoekjes met een vulling van anko, zoete rodebonenpasta. Een zelfgemaakte lekkernij voor bij de thee.",
+    "verifiedAt": "2026-10-26T18:18:31.046Z"
+  },
+  {
+    "slug": "mango-kulfi",
+    "status": 200,
+    "title": "Mango kulfi maken zonder ijsmachine | Steva's Kookboek",
+    "description": "Maak mango kulfi van mangopulp, gecondenseerde melk, room en kardemom. Dit Indiase ijs vries je zonder ijsmachine in en serveer je met pistachenoten.",
+    "verifiedAt": "2026-10-26T18:18:31.736Z"
+  },
+  {
+    "slug": "arroz-con-leche",
+    "status": 200,
+    "title": "Arroz con leche: rijstpudding met kaneel | Steva's Kookboek",
+    "description": "Maak arroz con leche met rondkorrelige rijst, volle melk, citroenschil en kaneel. Een romige Spaanse rijstpudding die je warm of koud kunt serveren.",
+    "verifiedAt": "2026-10-26T18:18:32.404Z"
+  },
+  {
+    "slug": "affogato",
+    "status": 200,
+    "title": "Affogato maken met espresso en vanille-ijs | Steva's Kookboek",
+    "description": "Maak affogato met vanille-ijs en hete espresso. Serveer dit eenvoudige Italiaanse dessert met een amaretti-koekje en naar wens een scheut amaretto.",
+    "verifiedAt": "2026-10-26T18:18:33.021Z"
+  },
+  {
+    "slug": "clafoutis-met-kersen",
+    "status": 200,
+    "title": "Clafoutis met kersen: Frans ovenrecept | Steva's Kookboek",
+    "description": "Bak clafoutis met kersen in een zacht beslag van ei, melk en room. Serveer dit Franse ovendessert lauwwarm met een laagje poedersuiker.",
+    "verifiedAt": "2026-10-26T18:18:33.640Z"
+  },
+  {
+    "slug": "mousse-au-chocolat",
+    "status": 200,
+    "title": "Mousse au chocolat van pure chocolade | Steva's Kookboek",
+    "description": "Maak luchtige mousse au chocolat met pure chocolade, eieren, boter en een beetje suiker. Een Frans dessert dat je vooraf laat opstijven in de koelkast.",
+    "verifiedAt": "2026-10-26T18:18:34.473Z"
+  },
+  {
+    "slug": "belgische-rijstpap",
+    "status": 200,
+    "title": "Belgische rijstpap met vanille en saffraan | Steva's Kookboek",
+    "description": "Kook Belgische rijstpap met volle melk, vanille en een vleugje saffraan. Serveer deze romige rijstpudding warm met bruine suiker of laat hem afkoelen.",
+    "verifiedAt": "2026-10-26T18:18:35.362Z"
+  },
+  {
+    "slug": "hangop-met-rood-fruit",
+    "status": 200,
+    "title": "Hangop maken met yoghurt en rood fruit | Steva's Kookboek",
+    "description": "Maak zelf hangop van yoghurt of karnemelk die een nacht uitlekt. Serveer dit frisse Hollandse toetje met vanille, rood fruit en verkruimeld beschuit.",
+    "verifiedAt": "2026-10-26T18:18:36.045Z"
+  },
+  {
+    "slug": "red-red",
+    "status": 200,
+    "title": "Red red recept: Ghanese bonenstoof | Steva's Kookboek",
+    "description": "Maak red red met zwartoogbonen, tomaat, gember en Madame Jeanette-peper. Serveer deze Ghanese bonenstoof met gebakken bakbanaan voor een complete maaltijd.",
+    "verifiedAt": "2026-10-26T18:18:36.697Z"
+  },
+  {
+    "slug": "melanzane-alla-parmigiana",
+    "status": 200,
+    "title": "Melanzane alla parmigiana met mozzarella | Steva's Kookboek",
+    "description": "Maak melanzane alla parmigiana met laagjes aubergine, tomatensaus, basilicum en mozzarella. Een Italiaanse ovenschotel met een goudbruine laag Parmezaan.",
+    "verifiedAt": "2026-10-26T18:18:37.598Z"
+  },
+  {
+    "slug": "griekse-kip-uit-de-oven-met-citroen",
+    "status": 200,
+    "title": "Griekse kip uit de oven met citroen | Steva's Kookboek",
+    "description": "Maak Griekse kip uit de oven met aardappelen, citroen, knoflook en oregano. Kip en aardappelen garen samen in één schaal met bouillon en olijfolie.",
+    "verifiedAt": "2026-10-26T18:18:38.362Z"
+  },
+  {
+    "slug": "zuurkoolovenschotel-met-spekjes",
+    "status": 200,
+    "title": "Zuurkoolovenschotel met spekjes en ananas | Steva's Kookboek",
+    "description": "Maak zuurkoolovenschotel met spekjes en ananas onder een laag aardappelpuree en geraspte kaas. Een hartige ovenschotel met een frisse, zoete tegenhanger.",
+    "verifiedAt": "2026-10-26T18:18:39.017Z"
+  },
+  {
+    "slug": "pastitsio",
+    "status": 200,
+    "title": "Pastitsio: Griekse pasta uit de oven | Steva's Kookboek",
+    "description": "Maak Griekse pastitsio met pasta, kruidige gehaktsaus, kaneel en piment. Bak de ovenschotel goudbruin onder een dikke laag zelfgemaakte béchamel.",
+    "verifiedAt": "2026-10-26T18:18:39.698Z"
+  },
+  {
+    "slug": "hachis-parmentier",
+    "status": 200,
+    "title": "Hachis parmentier met gehakt en puree | Steva's Kookboek",
+    "description": "Maak hachis parmentier met rundergehakt, wortel en tijm onder romige aardappelpuree. Een Franse ovenschotel, goudbruin gegratineerd met Gruyère.",
+    "verifiedAt": "2026-10-26T18:18:40.404Z"
+  },
+  {
+    "slug": "kelewele",
+    "status": 200,
+    "title": "Kelewele: pittige bakbanaan uit de airfryer | Steva's Kookboek",
+    "description": "Maak kelewele met rijpe bakbanaan, gember, knoflook en chili. Deze Ghanese snack bak je in de airfryer en serveer je met geroosterde pinda's.",
+    "verifiedAt": "2026-10-26T18:18:41.111Z"
+  },
+  {
+    "slug": "zalm-teriyaki-uit-de-airfryer",
+    "status": 200,
+    "title": "Zalm teriyaki uit de airfryer met rijst | Steva's Kookboek",
+    "description": "Maak zalm teriyaki uit de airfryer met zelfgemaakte saus van sojasaus, mirin en sake. Serveer met rijst, paksoi, sesamzaad en lente-ui.",
+    "verifiedAt": "2026-10-26T18:18:41.813Z"
+  },
+  {
+    "slug": "krokante-kikkererwten-uit-de-airfryer",
+    "status": 200,
+    "title": "Krokante kikkererwten uit de airfryer | Steva's Kookboek",
+    "description": "Bak krokante kikkererwten uit de airfryer met olijfolie, ras el hanout en gerookt paprikapoeder. Een kruidige borrelsnack van kikkererwten uit blik.",
+    "verifiedAt": "2026-10-26T18:18:42.428Z"
+  },
+  {
+    "slug": "tandoori-kip-uit-de-airfryer",
+    "status": 200,
+    "title": "Tandoori kip uit de airfryer met raita | Steva's Kookboek",
+    "description": "Maak tandoori kip uit de airfryer met een marinade van yoghurt, gember en specerijen. Serveer de gekruide kippendijen met frisse komkommerraita.",
+    "verifiedAt": "2026-10-26T18:18:43.064Z"
+  },
+  {
+    "slug": "bietenstamppot-met-geitenkaas",
+    "status": 200,
+    "title": "Bietenstamppot met geitenkaas en walnoten | Steva's Kookboek",
+    "description": "Maak bietenstamppot met aardappelen, rode bieten, appel en rode ui. Zachte geitenkaas en geroosterde walnoten geven deze kleurrijke stamppot extra smaak.",
+    "verifiedAt": "2026-10-26T18:18:43.737Z"
+  },
+  {
+    "slug": "kasespatzle",
+    "status": 200,
+    "title": "Käsespätzle met bergkaas en gebakken ui | Steva's Kookboek",
+    "description": "Maak zelf Käsespätzle van bloem en ei, met gesmolten bergkaas of Gruyère. Serveer deze Oostenrijkse deegspätzle met gebakken uien en bieslook.",
+    "verifiedAt": "2026-10-26T18:18:44.414Z"
+  },
+  {
+    "slug": "mujaddara",
+    "status": 200,
+    "title": "Mujaddara: linzen met rijst en gebakken ui | Steva's Kookboek",
+    "description": "Kook mujaddara met linzen, basmatirijst, komijn, kaneel en piment. Krokant gebakken uien maken dit Libanese rijstgerecht met peulvruchten af.",
+    "verifiedAt": "2026-10-26T18:18:45.059Z"
+  },
+  {
+    "slug": "orzo-met-spinazie-en-feta",
+    "status": 200,
+    "title": "Orzo met spinazie en feta uit één pan | Steva's Kookboek",
+    "description": "Maak romige orzo met spinazie en feta uit één pan. Citroen, dille en groentebouillon geven smaak aan dit pastagerecht, geïnspireerd op spanakorizo.",
+    "verifiedAt": "2026-10-26T18:18:45.706Z"
+  },
+  {
+    "slug": "burrito-bowl-met-zwarte-bonen",
+    "status": 200,
+    "title": "Burrito bowl met zwarte bonen en avocado | Steva's Kookboek",
+    "description": "Stel een burrito bowl samen met limoenrijst, gekruide zwarte bonen, maïs en avocado. Serveer met tomatensalsa, jalapeño en verse koriander.",
+    "verifiedAt": "2026-10-26T18:18:46.357Z"
+  },
+  {
+    "slug": "indiase-eiercurry",
+    "status": 200,
+    "title": "Indiase eiercurry: anda curry met tomaat | Steva's Kookboek",
+    "description": "Maak Indiase eiercurry met hardgekookte eieren in een kruidige tomatensaus. Komijn, gember, knoflook en garam masala geven deze anda curry zijn smaak.",
+    "verifiedAt": "2026-10-26T18:18:47.055Z"
+  },
+  {
+    "slug": "yakisoba-met-groenten",
+    "status": 200,
+    "title": "Yakisoba met groenten en zoet-hartige saus | Steva's Kookboek",
+    "description": "Bak yakisoba met noedels, spitskool, wortel en paddenstoelen. Meng met de zoet-hartige saus en werk af met lente-ui, sesamzaad en ingemaakte gember.",
+    "verifiedAt": "2026-10-26T18:18:47.671Z"
+  },
+  {
+    "slug": "rode-curry-met-pompoen-en-kikkererwten",
+    "status": 200,
+    "title": "Rode curry met pompoen en kikkererwten | Steva's Kookboek",
+    "description": "Maak Thaise rode curry met pompoen, kikkererwten en spinazie in kokosmelk. Serveer deze kruidige curry met jasmijnrijst, limoen en verse kruiden.",
+    "verifiedAt": "2026-10-26T18:18:48.307Z"
+  },
+  {
+    "slug": "cacio-e-pepe",
+    "status": 200,
+    "title": "Cacio e pepe met pecorino en zwarte peper | Steva's Kookboek",
+    "description": "Maak cacio e pepe met spaghetti of tonnarelli, Pecorino Romano en zwarte peper. Met pastakookvocht maak je een romige kaassaus zonder room.",
+    "verifiedAt": "2026-10-26T18:18:48.977Z"
+  },
+  {
+    "slug": "pasta-al-pesto-genovese",
+    "status": 200,
+    "title": "Pasta pesto Genovese met sperziebonen | Steva's Kookboek",
+    "description": "Maak pasta al pesto Genovese met verse basilicum, pijnboompitten en kaas. Met aardappel en sperziebonen, zoals in de Ligurische keuken.",
+    "verifiedAt": "2026-10-26T18:18:49.661Z"
+  },
+  {
+    "slug": "aardappelpartjes-uit-de-airfryer",
+    "status": 200,
+    "title": "Aardappelpartjes uit de airfryer met schil | Steva's Kookboek",
+    "description": "Bak krokante aardappelpartjes met schil in de airfryer. Paprikapoeder, knoflook en rozemarijn geven smaak aan dit makkelijke aardappelbijgerecht.",
+    "verifiedAt": "2026-10-26T18:18:50.270Z"
+  },
+  {
+    "slug": "elote",
+    "status": 200,
+    "title": "Elote: gegrilde maïs met limoen en kaas | Steva's Kookboek",
+    "description": "Maak Mexicaanse elote van gegrilde maïskolven met limoenmayonaise, zure room en kaas. Chilipoeder en koriander geven dit bijgerecht extra smaak.",
+    "verifiedAt": "2026-10-26T18:18:50.886Z"
+  },
+  {
+    "slug": "geroosterde-wortels-met-komijn-en-yoghurt",
+    "status": 200,
+    "title": "Geroosterde wortels met komijn en yoghurt | Steva's Kookboek",
+    "description": "Rooster wortels met komijn, kaneel en honing in de oven. Serveer op knoflookyoghurt met munt en pistachenoten als kruidig groentebijgerecht.",
+    "verifiedAt": "2026-10-26T18:18:51.598Z"
+  },
+  {
+    "slug": "belgische-frieten-uit-de-airfryer",
+    "status": 200,
+    "title": "Belgische frieten uit de airfryer maken | Steva's Kookboek",
+    "description": "Maak zelf Belgische frieten van kruimige aardappelen in de airfryer. Door ze in twee rondes te bakken worden ze goudbruin. Serveer met zout en mayonaise.",
+    "verifiedAt": "2026-10-26T18:18:52.293Z"
+  },
+  {
+    "slug": "fattoush",
+    "status": 200,
+    "title": "Fattoush: salade met krokant pitabrood | Steva's Kookboek",
+    "description": "Maak Libanese fattoush met tomaat, komkommer, radijs en verse kruiden. Krokant pitabrood en een dressing met citroen, sumak en granaatappelmelasse maken hem af.",
+    "verifiedAt": "2026-10-26T18:18:52.918Z"
+  },
+  {
+    "slug": "baba-ganoush",
+    "status": 200,
+    "title": "Baba ganoush: auberginedip met tahin | Steva's Kookboek",
+    "description": "Maak baba ganoush van geblakerde aubergine, tahin, knoflook en citroen. Een rokerige Libanese dip met olijfolie, lekker met platbrood of bij mezze.",
+    "verifiedAt": "2026-10-26T18:18:53.696Z"
+  },
+  {
+    "slug": "salade-met-warme-geitenkaas",
+    "status": 200,
+    "title": "Salade met warme geitenkaas en walnoten | Steva's Kookboek",
+    "description": "Maak salade met warme geitenkaas op toast, honing en tijm. Serveer met gemengde sla, walnoten en mosterdvinaigrette: salade de chèvre chaud.",
+    "verifiedAt": "2026-10-26T18:18:54.397Z"
+  },
+  {
+    "slug": "garnalenkroketten",
+    "status": 200,
+    "title": "Garnalenkroketten met Noordzeegarnalen | Steva's Kookboek",
+    "description": "Maak zelf Belgische garnalenkroketten met Noordzeegarnalen en romige ragout. Paneer en frituur ze goudbruin en serveer met peterselie en citroen.",
+    "verifiedAt": "2026-10-26T18:18:55.096Z"
+  },
+  {
+    "slug": "vitello-tonnato",
+    "status": 200,
+    "title": "Vitello tonnato met zelfgemaakte tonijnsaus | Steva's Kookboek",
+    "description": "Maak vitello tonnato van zacht gegaard kalfsvlees met romige tonijnsaus, ansjovis en kappertjes. Een koud Italiaans voorgerecht om vooraf te bereiden.",
+    "verifiedAt": "2026-10-26T18:18:55.791Z"
+  },
+  {
+    "slug": "carpaccio-met-rucola-en-parmezaan",
+    "status": 200,
+    "title": "Carpaccio met rucola en Parmezaan | Steva's Kookboek",
+    "description": "Serveer carpaccio van ossenhaas met rucola, Parmezaan en pijnboompitten. Olijfolie en citroen geven dit eenvoudige Italiaanse voorgerecht een frisse afwerking.",
+    "verifiedAt": "2026-10-26T18:18:56.475Z"
+  },
+  {
+    "slug": "pan-con-tomate",
+    "status": 200,
+    "title": "Pan con tomate: brood met tomaat | Steva's Kookboek",
+    "description": "Maak pan con tomate van geroosterd brood, rijpe tomaat, knoflook en olijfolie. Deze Catalaanse tapa serveer je met zeezout en eventueel serranoham.",
+    "verifiedAt": "2026-10-26T18:18:57.177Z"
+  },
+  {
+    "slug": "kaasstengels-van-bladerdeeg",
+    "status": 200,
+    "title": "Kaasstengels van bladerdeeg met oude kaas | Steva's Kookboek",
+    "description": "Bak zelf kaasstengels van bladerdeeg met oude kaas en paprikapoeder. Draai het deeg in repen en bak goudbruin in de oven, met zaadjes naar keuze.",
+    "verifiedAt": "2026-10-26T18:18:57.799Z"
+  },
+  {
+    "slug": "bitterballen-uit-de-airfryer",
+    "status": 200,
+    "title": "Bitterballen uit de airfryer: zelfgemaakt | Steva's Kookboek",
+    "description": "Maak zelf bitterballen met rundvleesragout en een gepaneerd korstje. Bak ze in de airfryer en serveer met mosterd. De ragout laat je vooraf opstijven.",
+    "verifiedAt": "2026-10-26T18:18:58.450Z"
+  },
+  {
+    "slug": "ful-medames",
+    "status": 200,
+    "title": "Ful medames met tuinbonen en citroen | Steva's Kookboek",
+    "description": "Maak ful medames van warme tuinbonen en kikkererwten met knoflook, komijn en citroen. Serveer met olijfolie, tomaat, peterselie en platbrood.",
+    "verifiedAt": "2026-10-26T18:18:59.116Z"
+  },
+  {
+    "slug": "bircher-muesli",
+    "status": 200,
+    "title": "Bircher muesli met appel en yoghurt | Steva's Kookboek",
+    "description": "Maak Bircher muesli door havermout een nacht te weken in melk en appelsap. Meng met geraspte appel, yoghurt en hazelnoten voor een fris ontbijt.",
+    "verifiedAt": "2026-10-26T18:18:59.758Z"
+  },
+  {
+    "slug": "tamagoyaki",
+    "status": 200,
+    "title": "Tamagoyaki: Japanse gerolde omelet | Steva's Kookboek",
+    "description": "Bak tamagoyaki: een Japanse gerolde omelet van ei, mirin en sojasaus. Licht zoet en hartig, in plakjes lekker als ontbijt of onderdeel van een bento.",
+    "verifiedAt": "2026-10-26T18:19:00.511Z"
+  },
+  {
+    "slug": "griekse-yoghurt-met-honing-en-walnoten",
+    "status": 200,
+    "title": "Griekse yoghurt met honing en walnoten | Steva's Kookboek",
+    "description": "Serveer Griekse yoghurt met honing, geroosterde walnoten en verse vijg. Een eenvoudig ontbijt of dessert met een vleugje kaneel.",
+    "verifiedAt": "2026-10-26T18:19:01.291Z"
+  },
+  {
+    "slug": "shakshuka",
+    "status": 200,
+    "title": "Shakshuka met eieren en tomatensaus | Steva's Kookboek",
+    "description": "Maak shakshuka met eieren die garen in een kruidige tomatensaus met paprika. Komijn, harissa en feta geven smaak aan dit ontbijt of hoofdgerecht.",
+    "verifiedAt": "2026-10-26T18:19:01.952Z"
+  },
+  {
+    "slug": "uitsmijter-met-ham-en-kaas",
+    "status": 200,
+    "title": "Uitsmijter met ham, kaas en spiegeleieren | Steva's Kookboek",
+    "description": "Bak een Hollandse uitsmijter met ham, kaas en spiegeleieren op brood. Serveer met bieslook, augurk en tomaat als stevig ontbijt of warme lunch.",
+    "verifiedAt": "2026-10-26T18:19:02.632Z"
+  },
+  {
+    "slug": "wentelteefjes",
+    "status": 200,
+    "title": "Wentelteefjes maken met kaneel | Steva's Kookboek",
+    "description": "Bak wentelteefjes van oud brood of brioche met ei, melk, kaneel en vanillesuiker. Goudbruin uit de pan, lekker met suiker, stroop of vers fruit.",
+    "verifiedAt": "2026-10-26T18:19:03.301Z"
+  },
+  {
+    "slug": "alplermagronen",
+    "status": 200,
+    "title": "Älplermagronen met bergkaas en appelmoes | Steva's Kookboek",
+    "description": "Maak Zwitserse Älplermagronen met pasta, aardappel en romige bergkaassaus. Gebakken uien en appelmoes horen bij dit stevige gerecht uit de Alpen.",
+    "verifiedAt": "2026-10-26T18:19:03.908Z"
+  },
+  {
+    "slug": "churros-met-chocoladesaus",
+    "status": 200,
+    "title": "Churros maken met warme chocoladesaus | Steva's Kookboek",
+    "description": "Maak zelf churros, frituur ze goudbruin en rol ze door kaneelsuiker. Serveer deze krokante deegstengels met warme chocoladesaus om in te dippen.",
+    "verifiedAt": "2026-10-26T18:19:04.546Z"
+  },
+  {
+    "slug": "huevos-rancheros",
+    "status": 200,
+    "title": "Huevos rancheros met bonen en tomatensalsa | Steva's Kookboek",
+    "description": "Maak huevos rancheros met gebakken eieren op tortilla's, zwarte bonen en pittige tomatensalsa. Met avocado en kaas voor een Mexicaans ontbijt.",
+    "verifiedAt": "2026-10-26T18:19:05.229Z"
+  },
+  {
+    "slug": "quesadillas-met-bonen-en-kaas",
+    "status": 200,
+    "title": "Quesadilla's met zwarte bonen en kaas | Steva's Kookboek",
+    "description": "Bak krokante quesadilla's met zwarte bonen, maïs, jalapeño en gesmolten kaas. Serveer de gevulde tortilla's met salsa en zure room als lunch of borrelhap.",
+    "verifiedAt": "2026-10-26T18:19:05.964Z"
+  },
+  {
+    "slug": "enchiladas-met-kip",
+    "status": 200,
+    "title": "Enchiladas met kip en zwarte bonen | Steva's Kookboek",
+    "description": "Maak enchiladas met kip en zwarte bonen in opgerolde tortilla's. Bak ze in de oven onder rode tomatensaus en kaas en serveer met zure room.",
+    "verifiedAt": "2026-10-26T18:19:06.616Z"
+  },
+  {
+    "slug": "chili-con-carne",
+    "status": 200,
+    "title": "Chili con carne met gehakt en kidneybonen | Steva's Kookboek",
+    "description": "Kook chili con carne met rundergehakt, kidneybonen, tomaat en komijn. Gerookt paprikapoeder en pure chocolade geven diepte aan deze kruidige stoof.",
+    "verifiedAt": "2026-10-26T18:19:07.231Z"
+  },
+  {
+    "slug": "guacamole",
+    "status": 200,
+    "title": "Guacamole maken met avocado en limoen | Steva's Kookboek",
+    "description": "Maak verse guacamole van rijpe avocado, limoen, ui en koriander. Met jalapeño en tomaat voor een frisse dip bij tortilla's, taco's of nacho's.",
+    "verifiedAt": "2026-10-26T18:19:07.851Z"
+  },
+  {
+    "slug": "tacos-met-carnitas",
+    "status": 200,
+    "title": "Taco's met carnitas en sinaasappel | Steva's Kookboek",
+    "description": "Maak taco's met carnitas van langzaam gegaarde varkensschouder met sinaasappel. Bak het vlees krokant en serveer met ui, koriander, limoen en salsa.",
+    "verifiedAt": "2026-10-26T18:19:08.536Z"
+  },
+  {
+    "slug": "okonomiyaki",
+    "status": 200,
+    "title": "Okonomiyaki: Japanse pannenkoek met kool | Steva's Kookboek",
+    "description": "Bak Japanse okonomiyaki met kool, lente-ui en spek. Serveer de hartige pannenkoek met okonomisaus, Japanse mayonaise en toppings naar keuze.",
+    "verifiedAt": "2026-10-26T18:19:09.193Z"
+  },
+  {
+    "slug": "shoyu-ramen-met-zacht-ei",
+    "status": 200,
+    "title": "Shoyu ramen met kip en zacht ei | Steva's Kookboek",
+    "description": "Maak shoyu ramen met heldere bouillon, sojasaus, verse noedels en gebakken kip. Serveer met een gemarineerd zacht ei, lente-ui, nori en taugé.",
+    "verifiedAt": "2026-10-26T18:19:09.857Z"
+  },
+  {
+    "slug": "gyoza",
+    "status": 200,
+    "title": "Gyoza maken met varkensgehakt en kool | Steva's Kookboek",
+    "description": "Vul Japanse gyoza met varkensgehakt, kool, gember en knoflook. Bak en stoom de dumplings en serveer met een dipsaus van sojasaus, rijstazijn en chili-olie.",
+    "verifiedAt": "2026-10-26T18:19:10.490Z"
+  },
+  {
+    "slug": "misosoep-met-tofu-en-wakame",
+    "status": 200,
+    "title": "Misosoep met tofu, wakame en dashi | Steva's Kookboek",
+    "description": "Maak Japanse misosoep van zelfgemaakte dashi met kombu en katsuobushi. Voeg miso, zijden tofu, wakame en lente-ui toe voor een hartige soep.",
+    "verifiedAt": "2026-10-26T18:19:11.152Z"
+  },
+  {
+    "slug": "kip-teriyaki",
+    "status": 200,
+    "title": "Kip teriyaki met zelfgemaakte saus | Steva's Kookboek",
+    "description": "Bak kip teriyaki van kippendijfilet met een saus van sojasaus, mirin en sake. Serveer met sesamzaad, lente-ui, witte rijst en gestoomde broccoli.",
+    "verifiedAt": "2026-10-26T18:19:11.767Z"
+  },
+  {
+    "slug": "mango-sticky-rice",
+    "status": 200,
+    "title": "Mango sticky rice met kokosmelk | Steva's Kookboek",
+    "description": "Maak mango sticky rice van Thaise kleefrijst, kokosmelk en rijpe mango. Serveer dit dessert met een licht gezouten kokossaus en geroosterde sesamzaadjes.",
+    "verifiedAt": "2026-10-26T18:19:12.388Z"
+  },
+  {
+    "slug": "pad-krapow",
+    "status": 200,
+    "title": "Pad krapow: Thaise basilicumkip met ei | Steva's Kookboek",
+    "description": "Wok pad krapow met fijngesneden kip, knoflook, chili en Thaise basilicum. Serveer deze kruidige Thaise maaltijd met jasmijnrijst en een gebakken ei.",
+    "verifiedAt": "2026-10-26T18:19:13.121Z"
+  },
+  {
+    "slug": "massaman-curry-met-rundvlees",
+    "status": 200,
+    "title": "Massaman curry met rundvlees en pinda's | Steva's Kookboek",
+    "description": "Maak massaman curry met rundvlees, aardappel en pinda's in kokosmelk. Kaneel, kardemom en tamarinde geven smaak aan deze Thaise stoofcurry.",
+    "verifiedAt": "2026-10-26T18:19:13.796Z"
+  },
+  {
+    "slug": "tom-yum-goong",
+    "status": 200,
+    "title": "Tom yum goong: Thaise soep met garnalen | Steva's Kookboek",
+    "description": "Kook tom yum goong met garnalen, champignons en citroengras. Galanga, limoen, chili en vissaus geven deze heldere Thaise soep zijn frisse, pittige smaak.",
+    "verifiedAt": "2026-10-26T18:19:14.461Z"
+  },
+  {
+    "slug": "tom-kha-kai",
+    "status": 200,
+    "title": "Tom kha kai: Thaise kokossoep met kip | Steva's Kookboek",
+    "description": "Maak tom kha kai met kip, kokosmelk en champignons. Galanga, citroengras, limoenblad en limoensap geven deze Thaise soep een frisse, kruidige smaak.",
+    "verifiedAt": "2026-10-26T18:19:15.212Z"
+  },
+  {
+    "slug": "groene-curry-met-kip",
+    "status": 200,
+    "title": "Thaise groene curry met kip en kokosmelk | Steva's Kookboek",
+    "description": "Maak Thaise groene curry met kip, aubergine en sperziebonen in kokosmelk. Met limoenblad en Thaise basilicum, lekker met jasmijnrijst.",
+    "verifiedAt": "2026-10-26T18:19:15.903Z"
+  },
+  {
+    "slug": "pad-thai-met-garnalen",
+    "status": 200,
+    "title": "Pad thai met garnalen en tamarindesaus | Steva's Kookboek",
+    "description": "Wok pad thai met garnalen, rijstnoedels, ei en taugé. Tamarinde, vissaus en palmsuiker vormen de saus. Werk af met pinda's, limoen en lente-ui.",
+    "verifiedAt": "2026-10-26T18:19:16.545Z"
+  },
+  {
+    "slug": "falafel",
+    "status": 200,
+    "title": "Falafel maken van gedroogde kikkererwten | Steva's Kookboek",
+    "description": "Maak krokante falafel van geweekte kikkererwten, peterselie, koriander en specerijen. Serveer deze zelfgemaakte balletjes in pita met tahinsaus en salade.",
+    "verifiedAt": "2026-10-26T18:19:17.288Z"
+  },
+  {
+    "slug": "tabouleh",
+    "status": 200,
+    "title": "Tabouleh met peterselie, munt en bulgur | Steva's Kookboek",
+    "description": "Maak Libanese tabouleh met veel peterselie, munt, tomaat en fijne bulgur. Citroen en olijfolie geven deze kruidensalade een frisse dressing.",
+    "verifiedAt": "2026-10-26T18:19:17.993Z"
+  },
+  {
+    "slug": "mango-lassi",
+    "status": 200,
+    "title": "Mango lassi maken met yoghurt en kardemom | Steva's Kookboek",
+    "description": "Mix mango lassi van rijpe mango, volle yoghurt, melk en kardemom. Een romige Indiase yoghurtdrank, lekker koud bij een kruidige curry.",
+    "verifiedAt": "2026-10-26T18:19:18.692Z"
+  },
+  {
+    "slug": "naan-uit-de-pan",
+    "status": 200,
+    "title": "Naan uit de pan met knoflookboter | Steva's Kookboek",
+    "description": "Bak zelf naan van gistdeeg met yoghurt in de koekenpan. Bestrijk het zachte Indiase brood met knoflookboter en koriander en serveer bij curry of dal.",
+    "verifiedAt": "2026-10-26T18:19:19.386Z"
+  },
+  {
+    "slug": "aloo-gobi",
+    "status": 200,
+    "title": "Aloo gobi: curry met bloemkool en aardappel | Steva's Kookboek",
+    "description": "Maak aloo gobi met aardappel, bloemkool, tomaat en Indiase specerijen. Komijn, kurkuma en gember geven smaak aan deze droge curry, lekker met rijst of naan.",
+    "verifiedAt": "2026-10-26T18:19:20.087Z"
+  },
+  {
+    "slug": "rogan-josh",
+    "status": 200,
+    "title": "Rogan josh: lamscurry met yoghurt | Steva's Kookboek",
+    "description": "Maak rogan josh van lamsschouder met yoghurt, Kashmiri-chili, kardemom en kaneel. Een kruidige curry uit Kasjmir die langzaam gaart tot het vlees zacht is.",
+    "verifiedAt": "2026-10-26T18:19:20.708Z"
+  },
+  {
+    "slug": "palak-paneer",
+    "status": 200,
+    "title": "Palak paneer: Indiase kaas met spinazie | Steva's Kookboek",
+    "description": "Maak palak paneer met blokjes paneer in een romige spinaziesaus. Gember, knoflook, komijn en garam masala geven smaak aan deze Indiase curry.",
+    "verifiedAt": "2026-10-26T18:19:21.358Z"
+  },
+  {
+    "slug": "dal-tadka",
+    "status": 200,
+    "title": "Dal tadka met linzen, knoflook en komijn | Steva's Kookboek",
+    "description": "Kook dal tadka met linzen, kurkuma en tomaat. Giet er een hete tadka van ghee of olie, komijn, mosterdzaad, knoflook en chili over voor extra smaak.",
+    "verifiedAt": "2026-10-26T18:19:22.007Z"
+  },
+  {
+    "slug": "chana-masala",
+    "status": 200,
+    "title": "Chana masala: Indiase kikkererwtencurry | Steva's Kookboek",
+    "description": "Maak chana masala met kikkererwten, tomaat, ui en gember. Komijn, koriander en garam masala geven deze Indiase curry smaak. Lekker met rijst of naan.",
+    "verifiedAt": "2026-10-26T18:19:22.728Z"
+  },
+  {
+    "slug": "butter-chicken",
+    "status": 200,
+    "title": "Butter chicken met romige tomatensaus | Steva's Kookboek",
+    "description": "Maak butter chicken met in yoghurt gemarineerde kip en een romige saus van tomaat, boter en specerijen. Serveer deze Indiase curry met rijst of naan.",
+    "verifiedAt": "2026-10-26T18:19:23.384Z"
+  },
+  {
+    "slug": "gebakken-plantain-dodo",
+    "status": 200,
+    "title": "Gebakken bakbanaan: plantain dodo | Steva's Kookboek",
+    "description": "Bak rijpe bakbanaan goudbruin tot de randen karamelliseren. Voor deze West-Afrikaanse plantain dodo heb je alleen bakbanaan, olie en een snuf zout nodig.",
+    "verifiedAt": "2026-10-26T18:19:24.101Z"
+  },
+  {
+    "slug": "suya",
+    "status": 200,
+    "title": "Suya: gegrild rundvlees met pindakruiden | Steva's Kookboek",
+    "description": "Maak Nigeriaanse suya van dun gesneden rundvlees met pittige pindakruiden. Grill het vlees en serveer met rauwe rode ui en tomaat als snack of maaltijd.",
+    "verifiedAt": "2026-10-26T18:19:24.794Z"
+  },
+  {
+    "slug": "kip-yassa",
+    "status": 200,
+    "title": "Kip yassa met citroen, mosterd en ui | Steva's Kookboek",
+    "description": "Maak Senegalese kip yassa met een marinade van citroen, mosterd en knoflook. Stoof de kip met zachte uien en groene olijven en serveer met rijst.",
+    "verifiedAt": "2026-10-26T18:19:25.453Z"
+  },
+  {
+    "slug": "jollof-rijst",
+    "status": 200,
+    "title": "Jollof-rijst met tomaat en paprika | Steva's Kookboek",
+    "description": "Kook West-Afrikaanse jollof-rijst in een kruidige saus van tomaat, paprika en peper. Met kippenbouillon, tijm en laurier voor een smaakvol rijstgerecht.",
+    "verifiedAt": "2026-10-26T18:19:26.077Z"
+  },
+  {
+    "slug": "kefta-tajine-met-ei",
+    "status": 200,
+    "title": "Kefta-tajine met ei en tomatensaus | Steva's Kookboek",
+    "description": "Maak Marokkaanse kefta-tajine met gekruide gehaktballetjes in tomatensaus. Laat de eieren in de saus garen en serveer met brood om te dippen.",
+    "verifiedAt": "2026-10-26T18:19:26.739Z"
+  },
+  {
+    "slug": "zaalouk",
+    "status": 200,
+    "title": "Zaalouk: aubergine met tomaat en komijn | Steva's Kookboek",
+    "description": "Maak Marokkaanse zaalouk met zacht gegaarde aubergine, tomaat, knoflook en komijn. Serveer deze lauwwarme groentesalade met brood of als onderdeel van mezze.",
+    "verifiedAt": "2026-10-26T18:19:27.400Z"
+  },
+  {
+    "slug": "couscous-met-zeven-groenten",
+    "status": 200,
+    "title": "Couscous met groenten en kikkererwten | Steva's Kookboek",
+    "description": "Maak Marokkaanse couscous met wortel, pompoen, courgette, kool en kikkererwten. Een groenterijke maaltijd met ras el hanout, koriander en harissa.",
+    "verifiedAt": "2026-10-26T18:19:28.007Z"
+  },
+  {
+    "slug": "harira",
+    "status": 200,
+    "title": "Harira: soep met linzen en kikkererwten | Steva's Kookboek",
+    "description": "Maak Marokkaanse harira met lamsvlees, tomaat, linzen en kikkererwten. Vermicelli, verse kruiden en citroen maken deze kruidige maaltijdsoep af.",
+    "verifiedAt": "2026-10-26T18:19:28.666Z"
+  },
+  {
+    "slug": "lamstajine-met-abrikozen",
+    "status": 200,
+    "title": "Lamstajine met abrikozen en amandelen | Steva's Kookboek",
+    "description": "Stoof lamstajine met gedroogde abrikozen, honing, kaneel en ras el hanout. Serveer dit Marokkaanse gerecht met geroosterde amandelen en koriander.",
+    "verifiedAt": "2026-10-26T18:19:29.347Z"
+  },
+  {
+    "slug": "kiptajine-met-citroen-en-olijven",
+    "status": 200,
+    "title": "Kiptajine met zoutcitroen en olijven | Steva's Kookboek",
+    "description": "Maak Marokkaanse kiptajine met zoutcitroen, groene olijven, gember en saffraan. De kip gaart zachtjes in kruidige bouillon. Lekker met couscous.",
+    "verifiedAt": "2026-10-26T18:19:30.042Z"
+  },
+  {
+    "slug": "hummus",
+    "status": 200,
+    "title": "Hummus maken met kikkererwten en tahin | Steva's Kookboek",
+    "description": "Maak romige hummus van kikkererwten, tahin, citroen en knoflook. Serveer deze zelfgemaakte dip met olijfolie, paprikapoeder en platbrood bij de borrel.",
+    "verifiedAt": "2026-10-26T18:19:30.679Z"
+  },
+  {
+    "slug": "tafelspitz",
+    "status": 200,
+    "title": "Tafelspitz met appel en mierikswortel | Steva's Kookboek",
+    "description": "Laat rundvlees zachtjes garen in bouillon met wortel, prei en knolselderij. Serveer deze Weense tafelspitz met frisse appelmierikswortel.",
+    "verifiedAt": "2026-10-26T18:19:31.442Z"
+  },
+  {
+    "slug": "apfelstrudel",
+    "status": 200,
+    "title": "Apfelstrudel van filodeeg met appel | Steva's Kookboek",
+    "description": "Bak Oostenrijkse apfelstrudel van filodeeg met appel, rozijnen, kaneel en geroosterd paneermeel. Serveer de krokante strudel lauwwarm met vanillesaus.",
+    "verifiedAt": "2026-10-26T18:19:32.254Z"
+  },
+  {
+    "slug": "weense-goulash",
+    "status": 200,
+    "title": "Weense goulash met rundvlees en paprika | Steva's Kookboek",
+    "description": "Stoof Weense goulash met rundvlees, veel uien en zoet paprikapoeder. Karwij, marjolein en knoflook geven smaak aan de rijke saus van deze Saftgulasch.",
+    "verifiedAt": "2026-10-26T18:19:33.020Z"
+  },
+  {
+    "slug": "stifado",
+    "status": 200,
+    "title": "Stifado: Griekse runderstoof met sjalotten | Steva's Kookboek",
+    "description": "Maak Griekse stifado van rundvlees, sjalotten, rode wijn en tomaat. Kaneel, kruidnagel en laurier geven deze langzaam gegaarde stoof zijn kruidige smaak.",
+    "verifiedAt": "2026-10-26T18:19:33.835Z"
+  },
+  {
+    "slug": "gemista",
+    "status": 200,
+    "title": "Gemista: tomaten en paprika met rijst | Steva's Kookboek",
+    "description": "Vul tomaten en paprika's met rijst, peterselie en munt. Bak deze Griekse gemista samen met aardappelpartjes in de oven tot de groenten zacht zijn.",
+    "verifiedAt": "2026-10-26T18:19:34.473Z"
+  },
+  {
+    "slug": "griekse-boerensalade",
+    "status": 200,
+    "title": "Griekse boerensalade met feta en olijven | Steva's Kookboek",
+    "description": "Maak Griekse boerensalade met tomaat, komkommer, paprika, rode ui en olijven. Feta, oregano en olijfolie maken deze horiatiki zonder sla af.",
+    "verifiedAt": "2026-10-26T18:19:35.124Z"
+  },
+  {
+    "slug": "spanakopita",
+    "status": 200,
+    "title": "Spanakopita met spinazie en feta | Steva's Kookboek",
+    "description": "Bak Griekse spanakopita met krokant filodeeg en een vulling van spinazie, feta, lente-ui en dille. Lekker als hartige taart, lunch of borrelhap.",
+    "verifiedAt": "2026-10-26T18:19:35.801Z"
+  },
+  {
+    "slug": "souvlaki-met-tzatziki",
+    "status": 200,
+    "title": "Souvlaki met zelfgemaakte tzatziki | Steva's Kookboek",
+    "description": "Grill Griekse souvlaki van varkensvlees met citroen, knoflook en oregano. Serveer de spiesjes met zelfgemaakte tzatziki, warme pita en tomaat.",
+    "verifiedAt": "2026-10-26T18:19:36.561Z"
+  },
+  {
+    "slug": "moussaka",
+    "status": 200,
+    "title": "Moussaka met aubergine en lamsgehakt | Steva's Kookboek",
+    "description": "Maak Griekse moussaka met aubergine, aardappel en lamsgehakt in kruidige tomatensaus. Bak de ovenschotel onder romige béchamel met een laagje kaas.",
+    "verifiedAt": "2026-10-26T18:19:37.213Z"
+  },
+  {
+    "slug": "zurcher-geschnetzeltes",
+    "status": 200,
+    "title": "Zürcher Geschnetzeltes met champignons | Steva's Kookboek",
+    "description": "Bak Zürcher Geschnetzeltes van kalfsvlees met champignons in een romige wittewijnsaus. Serveer deze Zwitserse klassieker met rösti en peterselie.",
+    "verifiedAt": "2026-10-26T18:19:37.940Z"
+  },
+  {
+    "slug": "rosti",
+    "status": 200,
+    "title": "Rösti maken van geraspte aardappel | Steva's Kookboek",
+    "description": "Bak zelf rösti van geraspte aardappelen met boter en een beetje olie. Een goudbruin Zwitsers aardappelgerecht, lekker als bijgerecht of met een ei.",
+    "verifiedAt": "2026-10-26T18:19:38.578Z"
+  },
+  {
+    "slug": "crema-catalana",
+    "status": 200,
+    "title": "Crema catalana met citroen en kaneel | Steva's Kookboek",
+    "description": "Maak crema catalana van melk, eidooiers, citroenschil en kaneel. Laat de Catalaanse crème afkoelen en brand vlak voor serveren een krokant suikerlaagje.",
+    "verifiedAt": "2026-10-26T18:19:39.310Z"
+  },
+  {
+    "slug": "albondigas-in-tomatensaus",
+    "status": 200,
+    "title": "Albóndigas: gehaktballetjes in tomatensaus | Steva's Kookboek",
+    "description": "Maak Spaanse albóndigas van half-om-half gehakt met knoflook en peterselie. Stoof de balletjes in tomatensaus met gerookt paprikapoeder en witte wijn.",
+    "verifiedAt": "2026-10-26T18:19:40.056Z"
+  },
+  {
+    "slug": "gambas-al-ajillo",
+    "status": 200,
+    "title": "Gambas al ajillo met knoflook en peper | Steva's Kookboek",
+    "description": "Bak gambas al ajillo in olijfolie met knoflook en gedroogde rode peper. Serveer de Spaanse garnalentapa met peterselie en brood om de olie op te dippen.",
+    "verifiedAt": "2026-10-26T18:19:40.687Z"
+  },
+  {
+    "slug": "patatas-bravas",
+    "status": 200,
+    "title": "Patatas bravas uit de oven met bravasaus | Steva's Kookboek",
+    "description": "Bak patatas bravas van aardappelblokjes uit de oven. Serveer met pittige tomatensaus, gerookt paprikapoeder en knoflookmayonaise als Spaanse tapa.",
+    "verifiedAt": "2026-10-26T18:19:41.401Z"
+  },
+  {
+    "slug": "gazpacho",
+    "status": 200,
+    "title": "Gazpacho: koude Spaanse tomatensoep | Steva's Kookboek",
+    "description": "Mix Andalusische gazpacho van rijpe tomaat, komkommer, paprika, brood en olijfolie. Sherryazijn geeft deze koude Spaanse soep een frisse smaak.",
+    "verifiedAt": "2026-10-26T18:19:42.078Z"
+  },
+  {
+    "slug": "tortilla-espanola",
+    "status": 200,
+    "title": "Tortilla española met aardappel en ui | Steva's Kookboek",
+    "description": "Bak tortilla española met zacht gegaarde aardappel, ui en eieren. Serveer deze dikke Spaanse aardappelomelet warm of koud, als tapa of maaltijd.",
+    "verifiedAt": "2026-10-26T18:19:42.737Z"
+  },
+  {
+    "slug": "paella-met-kip-en-zeevruchten",
+    "status": 200,
+    "title": "Paella met kip en zeevruchten | Steva's Kookboek",
+    "description": "Maak Spaanse paella met kip, garnalen, mosselen, inktvis en saffraan. De rijst gaart in bouillon met tomaat en paprika, met een krokant korstje onderin.",
+    "verifiedAt": "2026-10-26T18:19:43.364Z"
+  },
+  {
+    "slug": "bruschetta-met-tomaat-en-basilicum",
+    "status": 200,
+    "title": "Bruschetta met tomaat en basilicum | Steva's Kookboek",
+    "description": "Rooster brood voor bruschetta met tomaat, knoflook en basilicum. Olijfolie en een beetje balsamico geven smaak aan dit eenvoudige Italiaanse voorgerecht.",
+    "verifiedAt": "2026-10-26T18:19:44.024Z"
+  },
+  {
+    "slug": "panna-cotta-met-frambozen",
+    "status": 200,
+    "title": "Panna cotta met vanille en frambozen | Steva's Kookboek",
+    "description": "Maak panna cotta met room, melk en vanille en laat opstijven in de koelkast. Serveer dit Italiaanse dessert met een frisse saus van frambozen en citroen.",
+    "verifiedAt": "2026-10-26T18:19:44.903Z"
+  },
+  {
+    "slug": "saltimbocca-alla-romana",
+    "status": 200,
+    "title": "Saltimbocca met kalfsvlees en salie | Steva's Kookboek",
+    "description": "Bak saltimbocca alla romana van dun kalfsvlees met prosciutto en salie. Blus af met witte wijn voor de saus van dit klassieke Romeinse vleesgerecht.",
+    "verifiedAt": "2026-10-26T18:19:45.596Z"
+  },
+  {
+    "slug": "pasta-alla-norma",
+    "status": 200,
+    "title": "Pasta alla norma met aubergine en ricotta | Steva's Kookboek",
+    "description": "Maak Siciliaanse pasta alla norma met gebakken aubergine, tomatensaus en basilicum. Serveer met ricotta salata of pecorino voor een hartige afwerking.",
+    "verifiedAt": "2026-10-26T18:19:46.309Z"
+  },
+  {
+    "slug": "tiramisu",
+    "status": 200,
+    "title": "Tiramisu maken met mascarpone en koffie | Steva's Kookboek",
+    "description": "Maak klassieke tiramisu met mascarpone, eieren, lange vingers en sterke koffie. Met cacao en amaretto of marsala, zonder oven en vooraf te bereiden.",
+    "verifiedAt": "2026-10-26T18:19:46.989Z"
+  },
+  {
+    "slug": "osso-buco",
+    "status": 200,
+    "title": "Osso buco met kalfsschenkel en gremolata | Steva's Kookboek",
+    "description": "Stoof osso buco van kalfsschenkel met groenten en witte wijn. Gremolata van citroen, knoflook en peterselie geeft dit Milanese gerecht een frisse afwerking.",
+    "verifiedAt": "2026-10-26T18:19:47.780Z"
+  },
+  {
+    "slug": "minestrone",
+    "status": 200,
+    "title": "Minestrone met groenten, bonen en pasta | Steva's Kookboek",
+    "description": "Kook minestrone met courgette, wortel, witte bonen, pasta en bladgroenten. Een gevulde Italiaanse soep met tomaat, groentebouillon, Parmezaan en pesto.",
+    "verifiedAt": "2026-10-26T18:19:48.511Z"
+  },
+  {
+    "slug": "pizza-margherita",
+    "status": 200,
+    "title": "Pizza margherita met zelfgemaakt deeg | Steva's Kookboek",
+    "description": "Maak pizza margherita met zelfgemaakt gistdeeg, tomaat, mozzarella en basilicum. Laat het deeg rustig rijzen en bak de pizza heet voor een krokante rand.",
+    "verifiedAt": "2026-10-26T18:19:49.124Z"
+  },
+  {
+    "slug": "spaghetti-aglio-olio-e-peperoncino",
+    "status": 200,
+    "title": "Spaghetti aglio, olio e peperoncino recept | Steva's Kookboek",
+    "description": "Maak spaghetti aglio, olio e peperoncino met knoflook, olijfolie en rode peper. Meng met pastakookvocht en peterselie voor een eenvoudige Italiaanse pasta.",
+    "verifiedAt": "2026-10-26T18:19:49.790Z"
+  },
+  {
+    "slug": "risotto-met-paddenstoelen",
+    "status": 200,
+    "title": "Risotto met paddenstoelen en Parmezaan | Steva's Kookboek",
+    "description": "Maak romige risotto met gemengde paddenstoelen, gedroogd eekhoorntjesbrood en witte wijn. Roer er Parmezaan en boter door en werk af met peterselie.",
+    "verifiedAt": "2026-10-26T18:19:50.841Z"
+  },
+  {
+    "slug": "lasagne-bolognese",
+    "status": 200,
+    "title": "Lasagne bolognese met ragù en béchamel | Steva's Kookboek",
+    "description": "Maak lasagne bolognese met langzaam gegaarde gehaktragù, lasagnebladen en zelfgemaakte béchamel. Bak goudbruin in de oven met geraspte Parmezaanse kaas.",
+    "verifiedAt": "2026-10-26T18:19:51.725Z"
+  },
+  {
+    "slug": "tarte-tatin",
+    "status": 200,
+    "title": "Tarte tatin met appel en bladerdeeg | Steva's Kookboek",
+    "description": "Bak tarte tatin met appels in boterkaramel onder krokant bladerdeeg. Keer de Franse appeltaart om en serveer lauwwarm met crème fraîche of vanille-ijs.",
+    "verifiedAt": "2026-10-26T18:19:52.411Z"
+  },
+  {
+    "slug": "salade-nicoise",
+    "status": 200,
+    "title": "Salade niçoise met tonijn, ei en krieltjes | Steva's Kookboek",
+    "description": "Maak salade niçoise met tonijn, ei, krieltjes, sperziebonen en olijven. Ansjovis en een mosterdvinaigrette geven deze maaltijdsalade extra smaak.",
+    "verifiedAt": "2026-10-26T18:19:53.114Z"
+  },
+  {
+    "slug": "gratin-dauphinois",
+    "status": 200,
+    "title": "Gratin dauphinois met room en knoflook | Steva's Kookboek",
+    "description": "Maak gratin dauphinois van dunne aardappelplakjes in room en melk met knoflook en nootmuskaat. Laat dit Franse aardappelgerecht zacht garen in de oven.",
+    "verifiedAt": "2026-10-26T18:19:53.800Z"
+  },
+  {
+    "slug": "creme-brulee",
+    "status": 200,
+    "title": "Crème brûlée met vanille en suikerlaagje | Steva's Kookboek",
+    "description": "Maak crème brûlée met room, vanille en eidooiers. Laat het dessert afkoelen en brand vlak voor serveren een dun, krokant laagje suiker op de crème.",
+    "verifiedAt": "2026-10-26T18:19:54.544Z"
+  },
+  {
+    "slug": "croque-monsieur",
+    "status": 200,
+    "title": "Croque monsieur met ham en béchamel | Steva's Kookboek",
+    "description": "Maak croque monsieur met ham, Gruyère en romige béchamel. Gratineer deze Franse tosti goudbruin en voeg voor een croque madame een gebakken ei toe.",
+    "verifiedAt": "2026-10-26T18:19:55.199Z"
+  },
+  {
+    "slug": "ratatouille",
+    "status": 200,
+    "title": "Ratatouille met aubergine en courgette | Steva's Kookboek",
+    "description": "Stoof Provençaalse ratatouille van aubergine, courgette, paprika en tomaat. Knoflook, tijm en basilicum geven smaak. Lekker met brood of rijst.",
+    "verifiedAt": "2026-10-26T18:19:55.870Z"
+  },
+  {
+    "slug": "quiche-lorraine",
+    "status": 200,
+    "title": "Quiche lorraine met spekjes en room | Steva's Kookboek",
+    "description": "Bak quiche lorraine met zelfgemaakt kruimeldeeg, spekjes en een romige vulling van ei, crème fraîche en Gruyère. Serveer de hartige taart warm of koud.",
+    "verifiedAt": "2026-10-26T18:19:56.495Z"
+  },
+  {
+    "slug": "franse-uiensoep",
+    "status": 200,
+    "title": "Franse uiensoep met gegratineerde kaas | Steva's Kookboek",
+    "description": "Kook Franse uiensoep van langzaam gekarameliseerde uien, witte wijn en runderbouillon. Serveer met een gegratineerde snee stokbrood met Gruyère.",
+    "verifiedAt": "2026-10-26T18:19:57.313Z"
+  },
+  {
+    "slug": "coq-au-vin",
+    "status": 200,
+    "title": "Coq au vin: kip gestoofd in rode wijn | Steva's Kookboek",
+    "description": "Maak coq au vin met kippendijen, rode wijn, spek, champignons en zilveruitjes. Een Franse stoofschotel met tijm en laurier, lekker met aardappelen.",
+    "verifiedAt": "2026-10-26T18:19:58.180Z"
+  },
+  {
+    "slug": "boeuf-bourguignon",
+    "status": 200,
+    "title": "Boeuf bourguignon met rode wijn en spek | Steva's Kookboek",
+    "description": "Stoof boeuf bourguignon van rundvlees in rode wijn met spek, wortel en kruiden. Voeg champignons en zilveruitjes toe voor deze Franse klassieker.",
+    "verifiedAt": "2026-10-26T18:19:58.881Z"
+  },
+  {
+    "slug": "kaiserschmarrn",
+    "status": 200,
+    "title": "Kaiserschmarrn met rozijnen en appelmoes | Steva's Kookboek",
+    "description": "Bak Kaiserschmarrn: een luchtige Oostenrijkse pannenkoek die je in stukken scheurt. Met rozijnen, boter en poedersuiker, lekker met appelmoes.",
+    "verifiedAt": "2026-10-26T18:19:59.511Z"
+  },
+  {
+    "slug": "tomaat-garnaal",
+    "status": 200,
+    "title": "Tomaat-garnaal met Noordzeegarnalen | Steva's Kookboek",
+    "description": "Vul tomaten met Noordzeegarnalen, mayonaise, citroensap en peterselie. Serveer deze Belgische tomaat-garnaal op sla als fris voorgerecht.",
+    "verifiedAt": "2026-10-26T18:20:00.129Z"
+  },
+  {
+    "slug": "vol-au-vent-met-kip-en-champignons",
+    "status": 200,
+    "title": "Vol-au-vent met kip en champignons | Steva's Kookboek",
+    "description": "Maak Belgische vol-au-vent met kip, champignons en kalfsballetjes in romige saus. Serveer in een krokant bladerdeegbakje of met frieten.",
+    "verifiedAt": "2026-10-26T18:20:00.799Z"
+  },
+  {
+    "slug": "stoemp-met-prei-en-spek",
+    "status": 200,
+    "title": "Stoemp met prei, spek en braadworst | Steva's Kookboek",
+    "description": "Maak Brusselse stoemp van aardappelen en prei met krokante spekjes. Serveer de grove stamppot met een gebakken braadworst en een vleugje nootmuskaat.",
+    "verifiedAt": "2026-10-26T18:20:01.494Z"
+  },
+  {
+    "slug": "luikse-wafels",
+    "status": 200,
+    "title": "Luikse wafels maken met parelsuiker | Steva's Kookboek",
+    "description": "Bak Luikse wafels van boterig gistdeeg met parelsuiker. In het wafelijzer karamelliseert de suiker tot knapperige stukjes. Lekker warm uit het ijzer.",
+    "verifiedAt": "2026-10-26T18:20:02.124Z"
+  },
+  {
+    "slug": "witloof-met-ham-en-kaassaus",
+    "status": 200,
+    "title": "Witloof met ham en kaassaus uit de oven | Steva's Kookboek",
+    "description": "Maak witloof met ham en kaassaus: gestoofde stronkjes witloof in ham, gegratineerd onder romige kaas. Een Belgische ovenschotel, lekker met aardappelpuree.",
+    "verifiedAt": "2026-10-26T18:20:02.742Z"
+  },
+  {
+    "slug": "gentse-waterzooi-van-kip",
+    "status": 200,
+    "title": "Gentse waterzooi met kip en groenten | Steva's Kookboek",
+    "description": "Maak Gentse waterzooi met kip, prei, wortel, selderij en aardappel. Room en eidooier binden de bouillon tot een zachte, romige Belgische maaltijd.",
+    "verifiedAt": "2026-10-26T18:20:03.421Z"
+  },
+  {
+    "slug": "vlaams-stoofvlees-met-trappist",
+    "status": 200,
+    "title": "Vlaams stoofvlees met donker trappistenbier | Steva's Kookboek",
+    "description": "Stoof Vlaams rundvlees in donker trappistenbier met ui, tijm en laurier. Een boterham met mosterd bindt de saus. Serveer dit stoofvlees met frieten.",
+    "verifiedAt": "2026-10-26T18:20:04.110Z"
+  },
+  {
+    "slug": "oliebollen",
+    "status": 200,
+    "title": "Oliebollen bakken met rozijnen en appel | Steva's Kookboek",
+    "description": "Bak zelf oliebollen van gistbeslag met krenten, rozijnen en appel. Laat het beslag rijzen, frituur goudbruin en serveer met poedersuiker.",
+    "verifiedAt": "2026-10-26T18:20:04.737Z"
+  },
+  {
+    "slug": "kapucijners-met-spek-en-zilveruitjes",
+    "status": 200,
+    "title": "Kapucijners met spek en zilveruitjes | Steva's Kookboek",
+    "description": "Maak kapucijners met krokant spek, gebakken ui en aardappelen. Serveer met zilveruitjes, augurk, appelstroop en mosterd als Hollandse blauwe hap.",
+    "verifiedAt": "2026-10-26T18:20:05.348Z"
+  },
+  {
+    "slug": "hollandse-pannenkoeken",
+    "status": 200,
+    "title": "Hollandse pannenkoeken: basisrecept | Steva's Kookboek",
+    "description": "Bak dunne Hollandse pannenkoeken met een eenvoudig beslag van bloem, melk en ei. Serveer met stroop of poedersuiker, of kies je eigen hartige beleg.",
+    "verifiedAt": "2026-10-26T18:20:06.042Z"
+  },
+  {
+    "slug": "andijviestamppot-met-spekjes",
+    "status": 200,
+    "title": "Andijviestamppot met spekjes en kaas | Steva's Kookboek",
+    "description": "Maak andijviestamppot met aardappelpuree, rauwe andijvie, krokante spekjes en blokjes kaas. Een Hollandse stamppot met boter, melk en nootmuskaat.",
+    "verifiedAt": "2026-10-26T18:20:06.721Z"
+  },
+  {
+    "slug": "draadjesvlees",
+    "status": 200,
+    "title": "Draadjesvlees van riblappen of sukade | Steva's Kookboek",
+    "description": "Stoof draadjesvlees van riblappen of sukade met ui, laurier, kruidnagel en azijn. Laat het rundvlees zachtjes sudderen tot het in draadjes uiteenvalt.",
+    "verifiedAt": "2026-10-26T18:20:07.371Z"
+  },
+  {
+    "slug": "bruine-bonensoep",
+    "status": 200,
+    "title": "Bruine bonensoep met spek en groenten | Steva's Kookboek",
+    "description": "Kook bruine bonensoep met spek, prei, wortel en ui. Kerrie en tomatenpuree geven smaak aan deze stevige Hollandse maaltijdsoep van bruine bonen uit pot.",
+    "verifiedAt": "2026-10-26T18:20:08.006Z"
+  },
+  {
+    "slug": "hollandse-appeltaart",
+    "status": 200,
+    "title": "Hollandse appeltaart met kaneel en rozijnen | Steva's Kookboek",
+    "description": "Bak Hollandse appeltaart met zure appels, kaneel en rozijnen in een boterige bodem. Werk af met een rooster van deeg voor een klassieke hoge taart.",
+    "verifiedAt": "2026-10-26T18:20:08.667Z"
+  },
+  {
+    "slug": "poffertjes",
+    "status": 200,
+    "title": "Poffertjes maken met boekweitmeel | Steva's Kookboek",
+    "description": "Bak zelf poffertjes met gistbeslag van tarwe- en boekweitmeel. Laat het beslag rijzen en serveer de luchtige poffertjes warm met boter en poedersuiker.",
+    "verifiedAt": "2026-10-26T18:20:09.345Z"
+  },
+  {
+    "slug": "hachee",
+    "status": 200,
+    "title": "Hachee recept: stoofvlees met uien | Steva's Kookboek",
+    "description": "Maak ouderwetse hachee van runderstoofvlees, veel uien, laurier en kruidnagel. Azijn en stroop geven de langzaam gegaarde saus zijn zoetzure smaak.",
+    "verifiedAt": "2026-10-26T18:20:09.966Z"
+  },
+  {
+    "slug": "hutspot-met-klapstuk",
+    "status": 200,
+    "title": "Hutspot met klapstuk, wortel en ui | Steva's Kookboek",
+    "description": "Kook hutspot van aardappelen, winterpeen en ui met langzaam gegaard klapstuk. Een Hollandse stamppot met zacht rundvlees en een klontje boter.",
+    "verifiedAt": "2026-10-26T18:20:10.781Z"
+  },
+  {
+    "slug": "erwtensoep-snert",
+    "status": 200,
+    "title": "Erwtensoep met rookworst: snert recept | Steva's Kookboek",
+    "description": "Kook ouderwetse erwtensoep met spliterwten, varkensvlees, knolselderij en prei. Voeg rookworst toe voor een stevige pan Hollandse snert.",
+    "verifiedAt": "2026-10-26T18:20:11.577Z"
+  },
+  {
+    "slug": "boerenkoolstamppot-met-rookworst",
+    "status": 200,
+    "title": "Boerenkoolstamppot met rookworst en spek | Steva's Kookboek",
+    "description": "Maak boerenkoolstamppot met romige aardappelpuree, rookworst en spekjes. Warme melk, boter en mosterd geven deze Hollandse stamppot extra smaak.",
+    "verifiedAt": "2026-10-26T18:20:12.184Z"
+  },
+  {
+    "slug": "west-afrikaanse-pindasoep",
+    "status": 200,
+    "title": "West-Afrikaanse pindasoep met zoete aardappel | Steva's Kookboek",
+    "description": "Kook West-Afrikaanse pindasoep met pindakaas, zoete aardappel, tomaat en gember. Een romige maaltijdsoep met rode peper, naar keuze met of zonder kip.",
+    "verifiedAt": "2026-10-26T18:20:12.866Z"
+  },
+  {
+    "slug": "oostenrijkse-wienerschnitzel",
+    "status": 200,
+    "title": "Wiener Schnitzel met aardappelsalade | Steva's Kookboek",
+    "description": "Paneer dun kalfsvlees en bak goudbruin voor Wiener Schnitzel. Serveer met citroen en lauwwarme Weense aardappelsalade met azijn, mosterd en bieslook.",
+    "verifiedAt": "2026-10-26T18:20:13.575Z"
+  },
+  {
+    "slug": "traditionele-kaasfondue",
+    "status": 200,
+    "title": "Kaasfondue met Gruyère en Vacherin | Steva's Kookboek",
+    "description": "Maak Zwitserse kaasfondue met Gruyère, Vacherin en witte wijn. Knoflook en kirsch geven smaak aan deze moitié-moitié, met brood om te dippen.",
+    "verifiedAt": "2026-10-26T18:20:14.208Z"
+  },
+  {
+    "slug": "linguine-carbonara",
+    "status": 200,
+    "title": "Linguine carbonara met guanciale | Steva's Kookboek",
+    "description": "Maak linguine carbonara met guanciale, ei, pecorino en Parmezaan. Pastakookvocht vormt de romige saus, zonder room. Werk af met zwarte peper.",
+    "verifiedAt": "2026-10-26T18:20:14.877Z"
+  },
+  {
+    "slug": "romige-mosselen-in-witbier-met-peterselie",
+    "status": 200,
+    "title": "Mosselen in witbier met room en peterselie | Steva's Kookboek",
+    "description": "Kook mosselen in Belgisch witbier met sjalot, prei, wortel en selderij. Room en verse peterselie maken het mosselvocht af. Serveer met brood.",
+    "verifiedAt": "2026-10-26T18:20:15.491Z"
+  }
+]

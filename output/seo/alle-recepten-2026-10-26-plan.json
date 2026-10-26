@@ -1,0 +1,822 @@
+[
+  {
+    "slug": "appel-pannenkoeken",
+    "meta_titel": "Appelring-pannenkoeken met kaneel",
+    "meta_omschrijving": "Bak appelring-pannenkoeken met verse appel, kaneel en vanillebeslag. Goudbruin uit de koekenpan en lekker warm met poedersuiker als ontbijt of tussendoortje."
+  },
+  {
+    "slug": "pittige-spaghetti-met-kip",
+    "meta_titel": "Pittige spaghetti met kip in romige saus",
+    "meta_omschrijving": "Maak pittige spaghetti met kip, paprika en romige tomatensaus. Verse basilicum en chilivlokken geven smaak aan deze makkelijke pasta voor 4 personen."
+  },
+  {
+    "slug": "romige-linguine-knoflookgarnalen",
+    "meta_titel": "Linguine met knoflookgarnalen en tomaat",
+    "meta_omschrijving": "Maak romige linguine met knoflookgarnalen, verse tomaten en peterselie. Een pastagerecht voor 2 personen met kookroom en een vleugje chili."
+  },
+  {
+    "slug": "mac-and-cheese",
+    "meta_titel": "Mac and cheese met broccoli en bloemkool",
+    "meta_omschrijving": "Maak mac and cheese met volkoren macaroni, broccoli en bloemkool in romige kaassaus. Een makkelijk pastagerecht uit de pan met mosterd en knoflook."
+  },
+  {
+    "slug": "geroosterde-honingspruitjes-met-feta",
+    "meta_titel": "Spruitjes met honing, feta en dadels",
+    "meta_omschrijving": "Bak spruitjes met honing, komijn en rozemarijn in de koekenpan. Serveer met feta, dadels, pistachenoten en granaatappel voor een zoet-hartig bijgerecht."
+  },
+  {
+    "slug": "courgette-soep",
+    "meta_titel": "Courgettesoep met Boursin: makkelijk recept",
+    "meta_omschrijving": "Maak romige courgettesoep met Boursin knoflook en kruiden, sjalotten en tijm. Een makkelijk soeprecept met 2 courgettes en bouillon, voor 4 personen."
+  },
+  {
+    "slug": "carrot-cake",
+    "meta_titel": "Carrot cake met roomkaas en walnoten",
+    "meta_omschrijving": "Bak een smeuïge carrot cake met wortel, walnoten, kaneel en speculaaskruiden. Met frisse roomkaastopping, in een springvorm van 24 cm voor 10 porties."
+  },
+  {
+    "slug": "kip-in-de-hoed",
+    "meta_titel": "Kip in de hoed met kersen en bladerdeeg",
+    "meta_omschrijving": "Maak kip in de hoed: romige kip met kerrie, crème fraîche en zoetzure kersen onder knapperig bladerdeeg. Een verrassende ovenschotel voor 2 personen."
+  },
+  {
+    "slug": "pompoen-risotto",
+    "meta_titel": "Pompoenrisotto met salie en Parmezaan",
+    "meta_omschrijving": "Maak romige pompoenrisotto met geroosterde pompoen, salie en Parmezaanse kaas. Een herfstrecept voor 2 personen met witte wijn en groentebouillon."
+  },
+  {
+    "slug": "bananen-in-kokosmelk",
+    "meta_titel": "Bananen in kokosmelk: Thais dessert",
+    "meta_omschrijving": "Maak kluay buat chi: warme bananen in kokosmelk met palmsuiker en pandan. Een eenvoudig Thais dessert met een snuf zout en geroosterd sesamzaad."
+  },
+  {
+    "slug": "sachertorte",
+    "meta_titel": "Sachertorte met abrikozenjam en chocolade",
+    "meta_omschrijving": "Bak Sachertorte met pure chocolade, een laag abrikozenjam en glanzend chocoladeglazuur. Serveer deze Weense chocoladetaart met ongezoete slagroom."
+  },
+  {
+    "slug": "dorayaki",
+    "meta_titel": "Dorayaki: Japanse pannenkoekjes met anko",
+    "meta_omschrijving": "Bak dorayaki: luchtige Japanse honingpannenkoekjes met een vulling van anko, zoete rodebonenpasta. Een zelfgemaakte lekkernij voor bij de thee."
+  },
+  {
+    "slug": "mango-kulfi",
+    "meta_titel": "Mango kulfi maken zonder ijsmachine",
+    "meta_omschrijving": "Maak mango kulfi van mangopulp, gecondenseerde melk, room en kardemom. Dit Indiase ijs vries je zonder ijsmachine in en serveer je met pistachenoten."
+  },
+  {
+    "slug": "arroz-con-leche",
+    "meta_titel": "Arroz con leche: rijstpudding met kaneel",
+    "meta_omschrijving": "Maak arroz con leche met rondkorrelige rijst, volle melk, citroenschil en kaneel. Een romige Spaanse rijstpudding die je warm of koud kunt serveren."
+  },
+  {
+    "slug": "affogato",
+    "meta_titel": "Affogato maken met espresso en vanille-ijs",
+    "meta_omschrijving": "Maak affogato met vanille-ijs en hete espresso. Serveer dit eenvoudige Italiaanse dessert met een amaretti-koekje en naar wens een scheut amaretto."
+  },
+  {
+    "slug": "clafoutis-met-kersen",
+    "meta_titel": "Clafoutis met kersen: Frans ovenrecept",
+    "meta_omschrijving": "Bak clafoutis met kersen in een zacht beslag van ei, melk en room. Serveer dit Franse ovendessert lauwwarm met een laagje poedersuiker."
+  },
+  {
+    "slug": "mousse-au-chocolat",
+    "meta_titel": "Mousse au chocolat van pure chocolade",
+    "meta_omschrijving": "Maak luchtige mousse au chocolat met pure chocolade, eieren, boter en een beetje suiker. Een Frans dessert dat je vooraf laat opstijven in de koelkast."
+  },
+  {
+    "slug": "belgische-rijstpap",
+    "meta_titel": "Belgische rijstpap met vanille en saffraan",
+    "meta_omschrijving": "Kook Belgische rijstpap met volle melk, vanille en een vleugje saffraan. Serveer deze romige rijstpudding warm met bruine suiker of laat hem afkoelen."
+  },
+  {
+    "slug": "hangop-met-rood-fruit",
+    "meta_titel": "Hangop maken met yoghurt en rood fruit",
+    "meta_omschrijving": "Maak zelf hangop van yoghurt of karnemelk die een nacht uitlekt. Serveer dit frisse Hollandse toetje met vanille, rood fruit en verkruimeld beschuit."
+  },
+  {
+    "slug": "red-red",
+    "meta_titel": "Red red recept: Ghanese bonenstoof",
+    "meta_omschrijving": "Maak red red met zwartoogbonen, tomaat, gember en Madame Jeanette-peper. Serveer deze Ghanese bonenstoof met gebakken bakbanaan voor een complete maaltijd."
+  },
+  {
+    "slug": "melanzane-alla-parmigiana",
+    "meta_titel": "Melanzane alla parmigiana met mozzarella",
+    "meta_omschrijving": "Maak melanzane alla parmigiana met laagjes aubergine, tomatensaus, basilicum en mozzarella. Een Italiaanse ovenschotel met een goudbruine laag Parmezaan."
+  },
+  {
+    "slug": "griekse-kip-uit-de-oven-met-citroen",
+    "meta_titel": "Griekse kip uit de oven met citroen",
+    "meta_omschrijving": "Maak Griekse kip uit de oven met aardappelen, citroen, knoflook en oregano. Kip en aardappelen garen samen in één schaal met bouillon en olijfolie."
+  },
+  {
+    "slug": "zuurkoolovenschotel-met-spekjes",
+    "meta_titel": "Zuurkoolovenschotel met spekjes en ananas",
+    "meta_omschrijving": "Maak zuurkoolovenschotel met spekjes en ananas onder een laag aardappelpuree en geraspte kaas. Een hartige ovenschotel met een frisse, zoete tegenhanger."
+  },
+  {
+    "slug": "pastitsio",
+    "meta_titel": "Pastitsio: Griekse pasta uit de oven",
+    "meta_omschrijving": "Maak Griekse pastitsio met pasta, kruidige gehaktsaus, kaneel en piment. Bak de ovenschotel goudbruin onder een dikke laag zelfgemaakte béchamel."
+  },
+  {
+    "slug": "hachis-parmentier",
+    "meta_titel": "Hachis parmentier met gehakt en puree",
+    "meta_omschrijving": "Maak hachis parmentier met rundergehakt, wortel en tijm onder romige aardappelpuree. Een Franse ovenschotel, goudbruin gegratineerd met Gruyère."
+  },
+  {
+    "slug": "kelewele",
+    "meta_titel": "Kelewele: pittige bakbanaan uit de airfryer",
+    "meta_omschrijving": "Maak kelewele met rijpe bakbanaan, gember, knoflook en chili. Deze Ghanese snack bak je in de airfryer en serveer je met geroosterde pinda's."
+  },
+  {
+    "slug": "zalm-teriyaki-uit-de-airfryer",
+    "meta_titel": "Zalm teriyaki uit de airfryer met rijst",
+    "meta_omschrijving": "Maak zalm teriyaki uit de airfryer met zelfgemaakte saus van sojasaus, mirin en sake. Serveer met rijst, paksoi, sesamzaad en lente-ui."
+  },
+  {
+    "slug": "krokante-kikkererwten-uit-de-airfryer",
+    "meta_titel": "Krokante kikkererwten uit de airfryer",
+    "meta_omschrijving": "Bak krokante kikkererwten uit de airfryer met olijfolie, ras el hanout en gerookt paprikapoeder. Een kruidige borrelsnack van kikkererwten uit blik."
+  },
+  {
+    "slug": "tandoori-kip-uit-de-airfryer",
+    "meta_titel": "Tandoori kip uit de airfryer met raita",
+    "meta_omschrijving": "Maak tandoori kip uit de airfryer met een marinade van yoghurt, gember en specerijen. Serveer de gekruide kippendijen met frisse komkommerraita."
+  },
+  {
+    "slug": "bietenstamppot-met-geitenkaas",
+    "meta_titel": "Bietenstamppot met geitenkaas en walnoten",
+    "meta_omschrijving": "Maak bietenstamppot met aardappelen, rode bieten, appel en rode ui. Zachte geitenkaas en geroosterde walnoten geven deze kleurrijke stamppot extra smaak."
+  },
+  {
+    "slug": "kasespatzle",
+    "meta_titel": "Käsespätzle met bergkaas en gebakken ui",
+    "meta_omschrijving": "Maak zelf Käsespätzle van bloem en ei, met gesmolten bergkaas of Gruyère. Serveer deze Oostenrijkse deegspätzle met gebakken uien en bieslook."
+  },
+  {
+    "slug": "mujaddara",
+    "meta_titel": "Mujaddara: linzen met rijst en gebakken ui",
+    "meta_omschrijving": "Kook mujaddara met linzen, basmatirijst, komijn, kaneel en piment. Krokant gebakken uien maken dit Libanese rijstgerecht met peulvruchten af."
+  },
+  {
+    "slug": "orzo-met-spinazie-en-feta",
+    "meta_titel": "Orzo met spinazie en feta uit één pan",
+    "meta_omschrijving": "Maak romige orzo met spinazie en feta uit één pan. Citroen, dille en groentebouillon geven smaak aan dit pastagerecht, geïnspireerd op spanakorizo."
+  },
+  {
+    "slug": "burrito-bowl-met-zwarte-bonen",
+    "meta_titel": "Burrito bowl met zwarte bonen en avocado",
+    "meta_omschrijving": "Stel een burrito bowl samen met limoenrijst, gekruide zwarte bonen, maïs en avocado. Serveer met tomatensalsa, jalapeño en verse koriander."
+  },
+  {
+    "slug": "indiase-eiercurry",
+    "meta_titel": "Indiase eiercurry: anda curry met tomaat",
+    "meta_omschrijving": "Maak Indiase eiercurry met hardgekookte eieren in een kruidige tomatensaus. Komijn, gember, knoflook en garam masala geven deze anda curry zijn smaak."
+  },
+  {
+    "slug": "yakisoba-met-groenten",
+    "meta_titel": "Yakisoba met groenten en zoet-hartige saus",
+    "meta_omschrijving": "Bak yakisoba met noedels, spitskool, wortel en paddenstoelen. Meng met de zoet-hartige saus en werk af met lente-ui, sesamzaad en ingemaakte gember."
+  },
+  {
+    "slug": "rode-curry-met-pompoen-en-kikkererwten",
+    "meta_titel": "Rode curry met pompoen en kikkererwten",
+    "meta_omschrijving": "Maak Thaise rode curry met pompoen, kikkererwten en spinazie in kokosmelk. Serveer deze kruidige curry met jasmijnrijst, limoen en verse kruiden."
+  },
+  {
+    "slug": "cacio-e-pepe",
+    "meta_titel": "Cacio e pepe met pecorino en zwarte peper",
+    "meta_omschrijving": "Maak cacio e pepe met spaghetti of tonnarelli, Pecorino Romano en zwarte peper. Met pastakookvocht maak je een romige kaassaus zonder room."
+  },
+  {
+    "slug": "pasta-al-pesto-genovese",
+    "meta_titel": "Pasta pesto Genovese met sperziebonen",
+    "meta_omschrijving": "Maak pasta al pesto Genovese met verse basilicum, pijnboompitten en kaas. Met aardappel en sperziebonen, zoals in de Ligurische keuken."
+  },
+  {
+    "slug": "aardappelpartjes-uit-de-airfryer",
+    "meta_titel": "Aardappelpartjes uit de airfryer met schil",
+    "meta_omschrijving": "Bak krokante aardappelpartjes met schil in de airfryer. Paprikapoeder, knoflook en rozemarijn geven smaak aan dit makkelijke aardappelbijgerecht."
+  },
+  {
+    "slug": "elote",
+    "meta_titel": "Elote: gegrilde maïs met limoen en kaas",
+    "meta_omschrijving": "Maak Mexicaanse elote van gegrilde maïskolven met limoenmayonaise, zure room en kaas. Chilipoeder en koriander geven dit bijgerecht extra smaak."
+  },
+  {
+    "slug": "geroosterde-wortels-met-komijn-en-yoghurt",
+    "meta_titel": "Geroosterde wortels met komijn en yoghurt",
+    "meta_omschrijving": "Rooster wortels met komijn, kaneel en honing in de oven. Serveer op knoflookyoghurt met munt en pistachenoten als kruidig groentebijgerecht."
+  },
+  {
+    "slug": "belgische-frieten-uit-de-airfryer",
+    "meta_titel": "Belgische frieten uit de airfryer maken",
+    "meta_omschrijving": "Maak zelf Belgische frieten van kruimige aardappelen in de airfryer. Door ze in twee rondes te bakken worden ze goudbruin. Serveer met zout en mayonaise."
+  },
+  {
+    "slug": "fattoush",
+    "meta_titel": "Fattoush: salade met krokant pitabrood",
+    "meta_omschrijving": "Maak Libanese fattoush met tomaat, komkommer, radijs en verse kruiden. Krokant pitabrood en een dressing met citroen, sumak en granaatappelmelasse maken hem af."
+  },
+  {
+    "slug": "baba-ganoush",
+    "meta_titel": "Baba ganoush: auberginedip met tahin",
+    "meta_omschrijving": "Maak baba ganoush van geblakerde aubergine, tahin, knoflook en citroen. Een rokerige Libanese dip met olijfolie, lekker met platbrood of bij mezze."
+  },
+  {
+    "slug": "salade-met-warme-geitenkaas",
+    "meta_titel": "Salade met warme geitenkaas en walnoten",
+    "meta_omschrijving": "Maak salade met warme geitenkaas op toast, honing en tijm. Serveer met gemengde sla, walnoten en mosterdvinaigrette: salade de chèvre chaud."
+  },
+  {
+    "slug": "garnalenkroketten",
+    "meta_titel": "Garnalenkroketten met Noordzeegarnalen",
+    "meta_omschrijving": "Maak zelf Belgische garnalenkroketten met Noordzeegarnalen en romige ragout. Paneer en frituur ze goudbruin en serveer met peterselie en citroen."
+  },
+  {
+    "slug": "vitello-tonnato",
+    "meta_titel": "Vitello tonnato met zelfgemaakte tonijnsaus",
+    "meta_omschrijving": "Maak vitello tonnato van zacht gegaard kalfsvlees met romige tonijnsaus, ansjovis en kappertjes. Een koud Italiaans voorgerecht om vooraf te bereiden."
+  },
+  {
+    "slug": "carpaccio-met-rucola-en-parmezaan",
+    "meta_titel": "Carpaccio met rucola en Parmezaan",
+    "meta_omschrijving": "Serveer carpaccio van ossenhaas met rucola, Parmezaan en pijnboompitten. Olijfolie en citroen geven dit eenvoudige Italiaanse voorgerecht een frisse afwerking."
+  },
+  {
+    "slug": "pan-con-tomate",
+    "meta_titel": "Pan con tomate: brood met tomaat",
+    "meta_omschrijving": "Maak pan con tomate van geroosterd brood, rijpe tomaat, knoflook en olijfolie. Deze Catalaanse tapa serveer je met zeezout en eventueel serranoham."
+  },
+  {
+    "slug": "kaasstengels-van-bladerdeeg",
+    "meta_titel": "Kaasstengels van bladerdeeg met oude kaas",
+    "meta_omschrijving": "Bak zelf kaasstengels van bladerdeeg met oude kaas en paprikapoeder. Draai het deeg in repen en bak goudbruin in de oven, met zaadjes naar keuze."
+  },
+  {
+    "slug": "bitterballen-uit-de-airfryer",
+    "meta_titel": "Bitterballen uit de airfryer: zelfgemaakt",
+    "meta_omschrijving": "Maak zelf bitterballen met rundvleesragout en een gepaneerd korstje. Bak ze in de airfryer en serveer met mosterd. De ragout laat je vooraf opstijven."
+  },
+  {
+    "slug": "ful-medames",
+    "meta_titel": "Ful medames met tuinbonen en citroen",
+    "meta_omschrijving": "Maak ful medames van warme tuinbonen en kikkererwten met knoflook, komijn en citroen. Serveer met olijfolie, tomaat, peterselie en platbrood."
+  },
+  {
+    "slug": "bircher-muesli",
+    "meta_titel": "Bircher muesli met appel en yoghurt",
+    "meta_omschrijving": "Maak Bircher muesli door havermout een nacht te weken in melk en appelsap. Meng met geraspte appel, yoghurt en hazelnoten voor een fris ontbijt."
+  },
+  {
+    "slug": "tamagoyaki",
+    "meta_titel": "Tamagoyaki: Japanse gerolde omelet",
+    "meta_omschrijving": "Bak tamagoyaki: een Japanse gerolde omelet van ei, mirin en sojasaus. Licht zoet en hartig, in plakjes lekker als ontbijt of onderdeel van een bento."
+  },
+  {
+    "slug": "griekse-yoghurt-met-honing-en-walnoten",
+    "meta_titel": "Griekse yoghurt met honing en walnoten",
+    "meta_omschrijving": "Serveer Griekse yoghurt met honing, geroosterde walnoten en verse vijg. Een eenvoudig ontbijt of dessert met een vleugje kaneel."
+  },
+  {
+    "slug": "shakshuka",
+    "meta_titel": "Shakshuka met eieren en tomatensaus",
+    "meta_omschrijving": "Maak shakshuka met eieren die garen in een kruidige tomatensaus met paprika. Komijn, harissa en feta geven smaak aan dit ontbijt of hoofdgerecht."
+  },
+  {
+    "slug": "uitsmijter-met-ham-en-kaas",
+    "meta_titel": "Uitsmijter met ham, kaas en spiegeleieren",
+    "meta_omschrijving": "Bak een Hollandse uitsmijter met ham, kaas en spiegeleieren op brood. Serveer met bieslook, augurk en tomaat als stevig ontbijt of warme lunch."
+  },
+  {
+    "slug": "wentelteefjes",
+    "meta_titel": "Wentelteefjes maken met kaneel",
+    "meta_omschrijving": "Bak wentelteefjes van oud brood of brioche met ei, melk, kaneel en vanillesuiker. Goudbruin uit de pan, lekker met suiker, stroop of vers fruit."
+  },
+  {
+    "slug": "alplermagronen",
+    "meta_titel": "Älplermagronen met bergkaas en appelmoes",
+    "meta_omschrijving": "Maak Zwitserse Älplermagronen met pasta, aardappel en romige bergkaassaus. Gebakken uien en appelmoes horen bij dit stevige gerecht uit de Alpen."
+  },
+  {
+    "slug": "churros-met-chocoladesaus",
+    "meta_titel": "Churros maken met warme chocoladesaus",
+    "meta_omschrijving": "Maak zelf churros, frituur ze goudbruin en rol ze door kaneelsuiker. Serveer deze krokante deegstengels met warme chocoladesaus om in te dippen."
+  },
+  {
+    "slug": "huevos-rancheros",
+    "meta_titel": "Huevos rancheros met bonen en tomatensalsa",
+    "meta_omschrijving": "Maak huevos rancheros met gebakken eieren op tortilla's, zwarte bonen en pittige tomatensalsa. Met avocado en kaas voor een Mexicaans ontbijt."
+  },
+  {
+    "slug": "quesadillas-met-bonen-en-kaas",
+    "meta_titel": "Quesadilla's met zwarte bonen en kaas",
+    "meta_omschrijving": "Bak krokante quesadilla's met zwarte bonen, maïs, jalapeño en gesmolten kaas. Serveer de gevulde tortilla's met salsa en zure room als lunch of borrelhap."
+  },
+  {
+    "slug": "enchiladas-met-kip",
+    "meta_titel": "Enchiladas met kip en zwarte bonen",
+    "meta_omschrijving": "Maak enchiladas met kip en zwarte bonen in opgerolde tortilla's. Bak ze in de oven onder rode tomatensaus en kaas en serveer met zure room."
+  },
+  {
+    "slug": "chili-con-carne",
+    "meta_titel": "Chili con carne met gehakt en kidneybonen",
+    "meta_omschrijving": "Kook chili con carne met rundergehakt, kidneybonen, tomaat en komijn. Gerookt paprikapoeder en pure chocolade geven diepte aan deze kruidige stoof."
+  },
+  {
+    "slug": "guacamole",
+    "meta_titel": "Guacamole maken met avocado en limoen",
+    "meta_omschrijving": "Maak verse guacamole van rijpe avocado, limoen, ui en koriander. Met jalapeño en tomaat voor een frisse dip bij tortilla's, taco's of nacho's."
+  },
+  {
+    "slug": "tacos-met-carnitas",
+    "meta_titel": "Taco's met carnitas en sinaasappel",
+    "meta_omschrijving": "Maak taco's met carnitas van langzaam gegaarde varkensschouder met sinaasappel. Bak het vlees krokant en serveer met ui, koriander, limoen en salsa."
+  },
+  {
+    "slug": "okonomiyaki",
+    "meta_titel": "Okonomiyaki: Japanse pannenkoek met kool",
+    "meta_omschrijving": "Bak Japanse okonomiyaki met kool, lente-ui en spek. Serveer de hartige pannenkoek met okonomisaus, Japanse mayonaise en toppings naar keuze."
+  },
+  {
+    "slug": "shoyu-ramen-met-zacht-ei",
+    "meta_titel": "Shoyu ramen met kip en zacht ei",
+    "meta_omschrijving": "Maak shoyu ramen met heldere bouillon, sojasaus, verse noedels en gebakken kip. Serveer met een gemarineerd zacht ei, lente-ui, nori en taugé."
+  },
+  {
+    "slug": "gyoza",
+    "meta_titel": "Gyoza maken met varkensgehakt en kool",
+    "meta_omschrijving": "Vul Japanse gyoza met varkensgehakt, kool, gember en knoflook. Bak en stoom de dumplings en serveer met een dipsaus van sojasaus, rijstazijn en chili-olie."
+  },
+  {
+    "slug": "misosoep-met-tofu-en-wakame",
+    "meta_titel": "Misosoep met tofu, wakame en dashi",
+    "meta_omschrijving": "Maak Japanse misosoep van zelfgemaakte dashi met kombu en katsuobushi. Voeg miso, zijden tofu, wakame en lente-ui toe voor een hartige soep."
+  },
+  {
+    "slug": "kip-teriyaki",
+    "meta_titel": "Kip teriyaki met zelfgemaakte saus",
+    "meta_omschrijving": "Bak kip teriyaki van kippendijfilet met een saus van sojasaus, mirin en sake. Serveer met sesamzaad, lente-ui, witte rijst en gestoomde broccoli."
+  },
+  {
+    "slug": "mango-sticky-rice",
+    "meta_titel": "Mango sticky rice met kokosmelk",
+    "meta_omschrijving": "Maak mango sticky rice van Thaise kleefrijst, kokosmelk en rijpe mango. Serveer dit dessert met een licht gezouten kokossaus en geroosterde sesamzaadjes."
+  },
+  {
+    "slug": "pad-krapow",
+    "meta_titel": "Pad krapow: Thaise basilicumkip met ei",
+    "meta_omschrijving": "Wok pad krapow met fijngesneden kip, knoflook, chili en Thaise basilicum. Serveer deze kruidige Thaise maaltijd met jasmijnrijst en een gebakken ei."
+  },
+  {
+    "slug": "massaman-curry-met-rundvlees",
+    "meta_titel": "Massaman curry met rundvlees en pinda's",
+    "meta_omschrijving": "Maak massaman curry met rundvlees, aardappel en pinda's in kokosmelk. Kaneel, kardemom en tamarinde geven smaak aan deze Thaise stoofcurry."
+  },
+  {
+    "slug": "tom-yum-goong",
+    "meta_titel": "Tom yum goong: Thaise soep met garnalen",
+    "meta_omschrijving": "Kook tom yum goong met garnalen, champignons en citroengras. Galanga, limoen, chili en vissaus geven deze heldere Thaise soep zijn frisse, pittige smaak."
+  },
+  {
+    "slug": "tom-kha-kai",
+    "meta_titel": "Tom kha kai: Thaise kokossoep met kip",
+    "meta_omschrijving": "Maak tom kha kai met kip, kokosmelk en champignons. Galanga, citroengras, limoenblad en limoensap geven deze Thaise soep een frisse, kruidige smaak."
+  },
+  {
+    "slug": "groene-curry-met-kip",
+    "meta_titel": "Thaise groene curry met kip en kokosmelk",
+    "meta_omschrijving": "Maak Thaise groene curry met kip, aubergine en sperziebonen in kokosmelk. Met limoenblad en Thaise basilicum, lekker met jasmijnrijst."
+  },
+  {
+    "slug": "pad-thai-met-garnalen",
+    "meta_titel": "Pad thai met garnalen en tamarindesaus",
+    "meta_omschrijving": "Wok pad thai met garnalen, rijstnoedels, ei en taugé. Tamarinde, vissaus en palmsuiker vormen de saus. Werk af met pinda's, limoen en lente-ui."
+  },
+  {
+    "slug": "falafel",
+    "meta_titel": "Falafel maken van gedroogde kikkererwten",
+    "meta_omschrijving": "Maak krokante falafel van geweekte kikkererwten, peterselie, koriander en specerijen. Serveer deze zelfgemaakte balletjes in pita met tahinsaus en salade."
+  },
+  {
+    "slug": "tabouleh",
+    "meta_titel": "Tabouleh met peterselie, munt en bulgur",
+    "meta_omschrijving": "Maak Libanese tabouleh met veel peterselie, munt, tomaat en fijne bulgur. Citroen en olijfolie geven deze kruidensalade een frisse dressing."
+  },
+  {
+    "slug": "mango-lassi",
+    "meta_titel": "Mango lassi maken met yoghurt en kardemom",
+    "meta_omschrijving": "Mix mango lassi van rijpe mango, volle yoghurt, melk en kardemom. Een romige Indiase yoghurtdrank, lekker koud bij een kruidige curry."
+  },
+  {
+    "slug": "naan-uit-de-pan",
+    "meta_titel": "Naan uit de pan met knoflookboter",
+    "meta_omschrijving": "Bak zelf naan van gistdeeg met yoghurt in de koekenpan. Bestrijk het zachte Indiase brood met knoflookboter en koriander en serveer bij curry of dal."
+  },
+  {
+    "slug": "aloo-gobi",
+    "meta_titel": "Aloo gobi: curry met bloemkool en aardappel",
+    "meta_omschrijving": "Maak aloo gobi met aardappel, bloemkool, tomaat en Indiase specerijen. Komijn, kurkuma en gember geven smaak aan deze droge curry, lekker met rijst of naan."
+  },
+  {
+    "slug": "rogan-josh",
+    "meta_titel": "Rogan josh: lamscurry met yoghurt",
+    "meta_omschrijving": "Maak rogan josh van lamsschouder met yoghurt, Kashmiri-chili, kardemom en kaneel. Een kruidige curry uit Kasjmir die langzaam gaart tot het vlees zacht is."
+  },
+  {
+    "slug": "palak-paneer",
+    "meta_titel": "Palak paneer: Indiase kaas met spinazie",
+    "meta_omschrijving": "Maak palak paneer met blokjes paneer in een romige spinaziesaus. Gember, knoflook, komijn en garam masala geven smaak aan deze Indiase curry."
+  },
+  {
+    "slug": "dal-tadka",
+    "meta_titel": "Dal tadka met linzen, knoflook en komijn",
+    "meta_omschrijving": "Kook dal tadka met linzen, kurkuma en tomaat. Giet er een hete tadka van ghee of olie, komijn, mosterdzaad, knoflook en chili over voor extra smaak."
+  },
+  {
+    "slug": "chana-masala",
+    "meta_titel": "Chana masala: Indiase kikkererwtencurry",
+    "meta_omschrijving": "Maak chana masala met kikkererwten, tomaat, ui en gember. Komijn, koriander en garam masala geven deze Indiase curry smaak. Lekker met rijst of naan."
+  },
+  {
+    "slug": "butter-chicken",
+    "meta_titel": "Butter chicken met romige tomatensaus",
+    "meta_omschrijving": "Maak butter chicken met in yoghurt gemarineerde kip en een romige saus van tomaat, boter en specerijen. Serveer deze Indiase curry met rijst of naan."
+  },
+  {
+    "slug": "gebakken-plantain-dodo",
+    "meta_titel": "Gebakken bakbanaan: plantain dodo",
+    "meta_omschrijving": "Bak rijpe bakbanaan goudbruin tot de randen karamelliseren. Voor deze West-Afrikaanse plantain dodo heb je alleen bakbanaan, olie en een snuf zout nodig."
+  },
+  {
+    "slug": "suya",
+    "meta_titel": "Suya: gegrild rundvlees met pindakruiden",
+    "meta_omschrijving": "Maak Nigeriaanse suya van dun gesneden rundvlees met pittige pindakruiden. Grill het vlees en serveer met rauwe rode ui en tomaat als snack of maaltijd."
+  },
+  {
+    "slug": "kip-yassa",
+    "meta_titel": "Kip yassa met citroen, mosterd en ui",
+    "meta_omschrijving": "Maak Senegalese kip yassa met een marinade van citroen, mosterd en knoflook. Stoof de kip met zachte uien en groene olijven en serveer met rijst."
+  },
+  {
+    "slug": "jollof-rijst",
+    "meta_titel": "Jollof-rijst met tomaat en paprika",
+    "meta_omschrijving": "Kook West-Afrikaanse jollof-rijst in een kruidige saus van tomaat, paprika en peper. Met kippenbouillon, tijm en laurier voor een smaakvol rijstgerecht."
+  },
+  {
+    "slug": "kefta-tajine-met-ei",
+    "meta_titel": "Kefta-tajine met ei en tomatensaus",
+    "meta_omschrijving": "Maak Marokkaanse kefta-tajine met gekruide gehaktballetjes in tomatensaus. Laat de eieren in de saus garen en serveer met brood om te dippen."
+  },
+  {
+    "slug": "zaalouk",
+    "meta_titel": "Zaalouk: aubergine met tomaat en komijn",
+    "meta_omschrijving": "Maak Marokkaanse zaalouk met zacht gegaarde aubergine, tomaat, knoflook en komijn. Serveer deze lauwwarme groentesalade met brood of als onderdeel van mezze."
+  },
+  {
+    "slug": "couscous-met-zeven-groenten",
+    "meta_titel": "Couscous met groenten en kikkererwten",
+    "meta_omschrijving": "Maak Marokkaanse couscous met wortel, pompoen, courgette, kool en kikkererwten. Een groenterijke maaltijd met ras el hanout, koriander en harissa."
+  },
+  {
+    "slug": "harira",
+    "meta_titel": "Harira: soep met linzen en kikkererwten",
+    "meta_omschrijving": "Maak Marokkaanse harira met lamsvlees, tomaat, linzen en kikkererwten. Vermicelli, verse kruiden en citroen maken deze kruidige maaltijdsoep af."
+  },
+  {
+    "slug": "lamstajine-met-abrikozen",
+    "meta_titel": "Lamstajine met abrikozen en amandelen",
+    "meta_omschrijving": "Stoof lamstajine met gedroogde abrikozen, honing, kaneel en ras el hanout. Serveer dit Marokkaanse gerecht met geroosterde amandelen en koriander."
+  },
+  {
+    "slug": "kiptajine-met-citroen-en-olijven",
+    "meta_titel": "Kiptajine met zoutcitroen en olijven",
+    "meta_omschrijving": "Maak Marokkaanse kiptajine met zoutcitroen, groene olijven, gember en saffraan. De kip gaart zachtjes in kruidige bouillon. Lekker met couscous."
+  },
+  {
+    "slug": "hummus",
+    "meta_titel": "Hummus maken met kikkererwten en tahin",
+    "meta_omschrijving": "Maak romige hummus van kikkererwten, tahin, citroen en knoflook. Serveer deze zelfgemaakte dip met olijfolie, paprikapoeder en platbrood bij de borrel."
+  },
+  {
+    "slug": "tafelspitz",
+    "meta_titel": "Tafelspitz met appel en mierikswortel",
+    "meta_omschrijving": "Laat rundvlees zachtjes garen in bouillon met wortel, prei en knolselderij. Serveer deze Weense tafelspitz met frisse appelmierikswortel."
+  },
+  {
+    "slug": "apfelstrudel",
+    "meta_titel": "Apfelstrudel van filodeeg met appel",
+    "meta_omschrijving": "Bak Oostenrijkse apfelstrudel van filodeeg met appel, rozijnen, kaneel en geroosterd paneermeel. Serveer de krokante strudel lauwwarm met vanillesaus."
+  },
+  {
+    "slug": "weense-goulash",
+    "meta_titel": "Weense goulash met rundvlees en paprika",
+    "meta_omschrijving": "Stoof Weense goulash met rundvlees, veel uien en zoet paprikapoeder. Karwij, marjolein en knoflook geven smaak aan de rijke saus van deze Saftgulasch."
+  },
+  {
+    "slug": "stifado",
+    "meta_titel": "Stifado: Griekse runderstoof met sjalotten",
+    "meta_omschrijving": "Maak Griekse stifado van rundvlees, sjalotten, rode wijn en tomaat. Kaneel, kruidnagel en laurier geven deze langzaam gegaarde stoof zijn kruidige smaak."
+  },
+  {
+    "slug": "gemista",
+    "meta_titel": "Gemista: tomaten en paprika met rijst",
+    "meta_omschrijving": "Vul tomaten en paprika's met rijst, peterselie en munt. Bak deze Griekse gemista samen met aardappelpartjes in de oven tot de groenten zacht zijn."
+  },
+  {
+    "slug": "griekse-boerensalade",
+    "meta_titel": "Griekse boerensalade met feta en olijven",
+    "meta_omschrijving": "Maak Griekse boerensalade met tomaat, komkommer, paprika, rode ui en olijven. Feta, oregano en olijfolie maken deze horiatiki zonder sla af."
+  },
+  {
+    "slug": "spanakopita",
+    "meta_titel": "Spanakopita met spinazie en feta",
+    "meta_omschrijving": "Bak Griekse spanakopita met krokant filodeeg en een vulling van spinazie, feta, lente-ui en dille. Lekker als hartige taart, lunch of borrelhap."
+  },
+  {
+    "slug": "souvlaki-met-tzatziki",
+    "meta_titel": "Souvlaki met zelfgemaakte tzatziki",
+    "meta_omschrijving": "Grill Griekse souvlaki van varkensvlees met citroen, knoflook en oregano. Serveer de spiesjes met zelfgemaakte tzatziki, warme pita en tomaat."
+  },
+  {
+    "slug": "moussaka",
+    "meta_titel": "Moussaka met aubergine en lamsgehakt",
+    "meta_omschrijving": "Maak Griekse moussaka met aubergine, aardappel en lamsgehakt in kruidige tomatensaus. Bak de ovenschotel onder romige béchamel met een laagje kaas."
+  },
+  {
+    "slug": "zurcher-geschnetzeltes",
+    "meta_titel": "Zürcher Geschnetzeltes met champignons",
+    "meta_omschrijving": "Bak Zürcher Geschnetzeltes van kalfsvlees met champignons in een romige wittewijnsaus. Serveer deze Zwitserse klassieker met rösti en peterselie."
+  },
+  {
+    "slug": "rosti",
+    "meta_titel": "Rösti maken van geraspte aardappel",
+    "meta_omschrijving": "Bak zelf rösti van geraspte aardappelen met boter en een beetje olie. Een goudbruin Zwitsers aardappelgerecht, lekker als bijgerecht of met een ei."
+  },
+  {
+    "slug": "crema-catalana",
+    "meta_titel": "Crema catalana met citroen en kaneel",
+    "meta_omschrijving": "Maak crema catalana van melk, eidooiers, citroenschil en kaneel. Laat de Catalaanse crème afkoelen en brand vlak voor serveren een krokant suikerlaagje."
+  },
+  {
+    "slug": "albondigas-in-tomatensaus",
+    "meta_titel": "Albóndigas: gehaktballetjes in tomatensaus",
+    "meta_omschrijving": "Maak Spaanse albóndigas van half-om-half gehakt met knoflook en peterselie. Stoof de balletjes in tomatensaus met gerookt paprikapoeder en witte wijn."
+  },
+  {
+    "slug": "gambas-al-ajillo",
+    "meta_titel": "Gambas al ajillo met knoflook en peper",
+    "meta_omschrijving": "Bak gambas al ajillo in olijfolie met knoflook en gedroogde rode peper. Serveer de Spaanse garnalentapa met peterselie en brood om de olie op te dippen."
+  },
+  {
+    "slug": "patatas-bravas",
+    "meta_titel": "Patatas bravas uit de oven met bravasaus",
+    "meta_omschrijving": "Bak patatas bravas van aardappelblokjes uit de oven. Serveer met pittige tomatensaus, gerookt paprikapoeder en knoflookmayonaise als Spaanse tapa."
+  },
+  {
+    "slug": "gazpacho",
+    "meta_titel": "Gazpacho: koude Spaanse tomatensoep",
+    "meta_omschrijving": "Mix Andalusische gazpacho van rijpe tomaat, komkommer, paprika, brood en olijfolie. Sherryazijn geeft deze koude Spaanse soep een frisse smaak."
+  },
+  {
+    "slug": "tortilla-espanola",
+    "meta_titel": "Tortilla española met aardappel en ui",
+    "meta_omschrijving": "Bak tortilla española met zacht gegaarde aardappel, ui en eieren. Serveer deze dikke Spaanse aardappelomelet warm of koud, als tapa of maaltijd."
+  },
+  {
+    "slug": "paella-met-kip-en-zeevruchten",
+    "meta_titel": "Paella met kip en zeevruchten",
+    "meta_omschrijving": "Maak Spaanse paella met kip, garnalen, mosselen, inktvis en saffraan. De rijst gaart in bouillon met tomaat en paprika, met een krokant korstje onderin."
+  },
+  {
+    "slug": "bruschetta-met-tomaat-en-basilicum",
+    "meta_titel": "Bruschetta met tomaat en basilicum",
+    "meta_omschrijving": "Rooster brood voor bruschetta met tomaat, knoflook en basilicum. Olijfolie en een beetje balsamico geven smaak aan dit eenvoudige Italiaanse voorgerecht."
+  },
+  {
+    "slug": "panna-cotta-met-frambozen",
+    "meta_titel": "Panna cotta met vanille en frambozen",
+    "meta_omschrijving": "Maak panna cotta met room, melk en vanille en laat opstijven in de koelkast. Serveer dit Italiaanse dessert met een frisse saus van frambozen en citroen."
+  },
+  {
+    "slug": "saltimbocca-alla-romana",
+    "meta_titel": "Saltimbocca met kalfsvlees en salie",
+    "meta_omschrijving": "Bak saltimbocca alla romana van dun kalfsvlees met prosciutto en salie. Blus af met witte wijn voor de saus van dit klassieke Romeinse vleesgerecht."
+  },
+  {
+    "slug": "pasta-alla-norma",
+    "meta_titel": "Pasta alla norma met aubergine en ricotta",
+    "meta_omschrijving": "Maak Siciliaanse pasta alla norma met gebakken aubergine, tomatensaus en basilicum. Serveer met ricotta salata of pecorino voor een hartige afwerking."
+  },
+  {
+    "slug": "tiramisu",
+    "meta_titel": "Tiramisu maken met mascarpone en koffie",
+    "meta_omschrijving": "Maak klassieke tiramisu met mascarpone, eieren, lange vingers en sterke koffie. Met cacao en amaretto of marsala, zonder oven en vooraf te bereiden."
+  },
+  {
+    "slug": "osso-buco",
+    "meta_titel": "Osso buco met kalfsschenkel en gremolata",
+    "meta_omschrijving": "Stoof osso buco van kalfsschenkel met groenten en witte wijn. Gremolata van citroen, knoflook en peterselie geeft dit Milanese gerecht een frisse afwerking."
+  },
+  {
+    "slug": "minestrone",
+    "meta_titel": "Minestrone met groenten, bonen en pasta",
+    "meta_omschrijving": "Kook minestrone met courgette, wortel, witte bonen, pasta en bladgroenten. Een gevulde Italiaanse soep met tomaat, groentebouillon, Parmezaan en pesto."
+  },
+  {
+    "slug": "pizza-margherita",
+    "meta_titel": "Pizza margherita met zelfgemaakt deeg",
+    "meta_omschrijving": "Maak pizza margherita met zelfgemaakt gistdeeg, tomaat, mozzarella en basilicum. Laat het deeg rustig rijzen en bak de pizza heet voor een krokante rand."
+  },
+  {
+    "slug": "spaghetti-aglio-olio-e-peperoncino",
+    "meta_titel": "Spaghetti aglio, olio e peperoncino recept",
+    "meta_omschrijving": "Maak spaghetti aglio, olio e peperoncino met knoflook, olijfolie en rode peper. Meng met pastakookvocht en peterselie voor een eenvoudige Italiaanse pasta."
+  },
+  {
+    "slug": "risotto-met-paddenstoelen",
+    "meta_titel": "Risotto met paddenstoelen en Parmezaan",
+    "meta_omschrijving": "Maak romige risotto met gemengde paddenstoelen, gedroogd eekhoorntjesbrood en witte wijn. Roer er Parmezaan en boter door en werk af met peterselie."
+  },
+  {
+    "slug": "lasagne-bolognese",
+    "meta_titel": "Lasagne bolognese met ragù en béchamel",
+    "meta_omschrijving": "Maak lasagne bolognese met langzaam gegaarde gehaktragù, lasagnebladen en zelfgemaakte béchamel. Bak goudbruin in de oven met geraspte Parmezaanse kaas."
+  },
+  {
+    "slug": "tarte-tatin",
+    "meta_titel": "Tarte tatin met appel en bladerdeeg",
+    "meta_omschrijving": "Bak tarte tatin met appels in boterkaramel onder krokant bladerdeeg. Keer de Franse appeltaart om en serveer lauwwarm met crème fraîche of vanille-ijs."
+  },
+  {
+    "slug": "salade-nicoise",
+    "meta_titel": "Salade niçoise met tonijn, ei en krieltjes",
+    "meta_omschrijving": "Maak salade niçoise met tonijn, ei, krieltjes, sperziebonen en olijven. Ansjovis en een mosterdvinaigrette geven deze maaltijdsalade extra smaak."
+  },
+  {
+    "slug": "gratin-dauphinois",
+    "meta_titel": "Gratin dauphinois met room en knoflook",
+    "meta_omschrijving": "Maak gratin dauphinois van dunne aardappelplakjes in room en melk met knoflook en nootmuskaat. Laat dit Franse aardappelgerecht zacht garen in de oven."
+  },
+  {
+    "slug": "creme-brulee",
+    "meta_titel": "Crème brûlée met vanille en suikerlaagje",
+    "meta_omschrijving": "Maak crème brûlée met room, vanille en eidooiers. Laat het dessert afkoelen en brand vlak voor serveren een dun, krokant laagje suiker op de crème."
+  },
+  {
+    "slug": "croque-monsieur",
+    "meta_titel": "Croque monsieur met ham en béchamel",
+    "meta_omschrijving": "Maak croque monsieur met ham, Gruyère en romige béchamel. Gratineer deze Franse tosti goudbruin en voeg voor een croque madame een gebakken ei toe."
+  },
+  {
+    "slug": "ratatouille",
+    "meta_titel": "Ratatouille met aubergine en courgette",
+    "meta_omschrijving": "Stoof Provençaalse ratatouille van aubergine, courgette, paprika en tomaat. Knoflook, tijm en basilicum geven smaak. Lekker met brood of rijst."
+  },
+  {
+    "slug": "quiche-lorraine",
+    "meta_titel": "Quiche lorraine met spekjes en room",
+    "meta_omschrijving": "Bak quiche lorraine met zelfgemaakt kruimeldeeg, spekjes en een romige vulling van ei, crème fraîche en Gruyère. Serveer de hartige taart warm of koud."
+  },
+  {
+    "slug": "franse-uiensoep",
+    "meta_titel": "Franse uiensoep met gegratineerde kaas",
+    "meta_omschrijving": "Kook Franse uiensoep van langzaam gekarameliseerde uien, witte wijn en runderbouillon. Serveer met een gegratineerde snee stokbrood met Gruyère."
+  },
+  {
+    "slug": "coq-au-vin",
+    "meta_titel": "Coq au vin: kip gestoofd in rode wijn",
+    "meta_omschrijving": "Maak coq au vin met kippendijen, rode wijn, spek, champignons en zilveruitjes. Een Franse stoofschotel met tijm en laurier, lekker met aardappelen."
+  },
+  {
+    "slug": "boeuf-bourguignon",
+    "meta_titel": "Boeuf bourguignon met rode wijn en spek",
+    "meta_omschrijving": "Stoof boeuf bourguignon van rundvlees in rode wijn met spek, wortel en kruiden. Voeg champignons en zilveruitjes toe voor deze Franse klassieker."
+  },
+  {
+    "slug": "kaiserschmarrn",
+    "meta_titel": "Kaiserschmarrn met rozijnen en appelmoes",
+    "meta_omschrijving": "Bak Kaiserschmarrn: een luchtige Oostenrijkse pannenkoek die je in stukken scheurt. Met rozijnen, boter en poedersuiker, lekker met appelmoes."
+  },
+  {
+    "slug": "tomaat-garnaal",
+    "meta_titel": "Tomaat-garnaal met Noordzeegarnalen",
+    "meta_omschrijving": "Vul tomaten met Noordzeegarnalen, mayonaise, citroensap en peterselie. Serveer deze Belgische tomaat-garnaal op sla als fris voorgerecht."
+  },
+  {
+    "slug": "vol-au-vent-met-kip-en-champignons",
+    "meta_titel": "Vol-au-vent met kip en champignons",
+    "meta_omschrijving": "Maak Belgische vol-au-vent met kip, champignons en kalfsballetjes in romige saus. Serveer in een krokant bladerdeegbakje of met frieten."
+  },
+  {
+    "slug": "stoemp-met-prei-en-spek",
+    "meta_titel": "Stoemp met prei, spek en braadworst",
+    "meta_omschrijving": "Maak Brusselse stoemp van aardappelen en prei met krokante spekjes. Serveer de grove stamppot met een gebakken braadworst en een vleugje nootmuskaat."
+  },
+  {
+    "slug": "luikse-wafels",
+    "meta_titel": "Luikse wafels maken met parelsuiker",
+    "meta_omschrijving": "Bak Luikse wafels van boterig gistdeeg met parelsuiker. In het wafelijzer karamelliseert de suiker tot knapperige stukjes. Lekker warm uit het ijzer."
+  },
+  {
+    "slug": "witloof-met-ham-en-kaassaus",
+    "meta_titel": "Witloof met ham en kaassaus uit de oven",
+    "meta_omschrijving": "Maak witloof met ham en kaassaus: gestoofde stronkjes witloof in ham, gegratineerd onder romige kaas. Een Belgische ovenschotel, lekker met aardappelpuree."
+  },
+  {
+    "slug": "gentse-waterzooi-van-kip",
+    "meta_titel": "Gentse waterzooi met kip en groenten",
+    "meta_omschrijving": "Maak Gentse waterzooi met kip, prei, wortel, selderij en aardappel. Room en eidooier binden de bouillon tot een zachte, romige Belgische maaltijd."
+  },
+  {
+    "slug": "vlaams-stoofvlees-met-trappist",
+    "meta_titel": "Vlaams stoofvlees met donker trappistenbier",
+    "meta_omschrijving": "Stoof Vlaams rundvlees in donker trappistenbier met ui, tijm en laurier. Een boterham met mosterd bindt de saus. Serveer dit stoofvlees met frieten."
+  },
+  {
+    "slug": "oliebollen",
+    "meta_titel": "Oliebollen bakken met rozijnen en appel",
+    "meta_omschrijving": "Bak zelf oliebollen van gistbeslag met krenten, rozijnen en appel. Laat het beslag rijzen, frituur goudbruin en serveer met poedersuiker."
+  },
+  {
+    "slug": "kapucijners-met-spek-en-zilveruitjes",
+    "meta_titel": "Kapucijners met spek en zilveruitjes",
+    "meta_omschrijving": "Maak kapucijners met krokant spek, gebakken ui en aardappelen. Serveer met zilveruitjes, augurk, appelstroop en mosterd als Hollandse blauwe hap."
+  },
+  {
+    "slug": "hollandse-pannenkoeken",
+    "meta_titel": "Hollandse pannenkoeken: basisrecept",
+    "meta_omschrijving": "Bak dunne Hollandse pannenkoeken met een eenvoudig beslag van bloem, melk en ei. Serveer met stroop of poedersuiker, of kies je eigen hartige beleg."
+  },
+  {
+    "slug": "andijviestamppot-met-spekjes",
+    "meta_titel": "Andijviestamppot met spekjes en kaas",
+    "meta_omschrijving": "Maak andijviestamppot met aardappelpuree, rauwe andijvie, krokante spekjes en blokjes kaas. Een Hollandse stamppot met boter, melk en nootmuskaat."
+  },
+  {
+    "slug": "draadjesvlees",
+    "meta_titel": "Draadjesvlees van riblappen of sukade",
+    "meta_omschrijving": "Stoof draadjesvlees van riblappen of sukade met ui, laurier, kruidnagel en azijn. Laat het rundvlees zachtjes sudderen tot het in draadjes uiteenvalt."
+  },
+  {
+    "slug": "bruine-bonensoep",
+    "meta_titel": "Bruine bonensoep met spek en groenten",
+    "meta_omschrijving": "Kook bruine bonensoep met spek, prei, wortel en ui. Kerrie en tomatenpuree geven smaak aan deze stevige Hollandse maaltijdsoep van bruine bonen uit pot."
+  },
+  {
+    "slug": "hollandse-appeltaart",
+    "meta_titel": "Hollandse appeltaart met kaneel en rozijnen",
+    "meta_omschrijving": "Bak Hollandse appeltaart met zure appels, kaneel en rozijnen in een boterige bodem. Werk af met een rooster van deeg voor een klassieke hoge taart."
+  },
+  {
+    "slug": "poffertjes",
+    "meta_titel": "Poffertjes maken met boekweitmeel",
+    "meta_omschrijving": "Bak zelf poffertjes met gistbeslag van tarwe- en boekweitmeel. Laat het beslag rijzen en serveer de luchtige poffertjes warm met boter en poedersuiker."
+  },
+  {
+    "slug": "hachee",
+    "meta_titel": "Hachee recept: stoofvlees met uien",
+    "meta_omschrijving": "Maak ouderwetse hachee van runderstoofvlees, veel uien, laurier en kruidnagel. Azijn en stroop geven de langzaam gegaarde saus zijn zoetzure smaak."
+  },
+  {
+    "slug": "hutspot-met-klapstuk",
+    "meta_titel": "Hutspot met klapstuk, wortel en ui",
+    "meta_omschrijving": "Kook hutspot van aardappelen, winterpeen en ui met langzaam gegaard klapstuk. Een Hollandse stamppot met zacht rundvlees en een klontje boter."
+  },
+  {
+    "slug": "erwtensoep-snert",
+    "meta_titel": "Erwtensoep met rookworst: snert recept",
+    "meta_omschrijving": "Kook ouderwetse erwtensoep met spliterwten, varkensvlees, knolselderij en prei. Voeg rookworst toe voor een stevige pan Hollandse snert."
+  },
+  {
+    "slug": "boerenkoolstamppot-met-rookworst",
+    "meta_titel": "Boerenkoolstamppot met rookworst en spek",
+    "meta_omschrijving": "Maak boerenkoolstamppot met romige aardappelpuree, rookworst en spekjes. Warme melk, boter en mosterd geven deze Hollandse stamppot extra smaak."
+  },
+  {
+    "slug": "west-afrikaanse-pindasoep",
+    "meta_titel": "West-Afrikaanse pindasoep met zoete aardappel",
+    "meta_omschrijving": "Kook West-Afrikaanse pindasoep met pindakaas, zoete aardappel, tomaat en gember. Een romige maaltijdsoep met rode peper, naar keuze met of zonder kip."
+  },
+  {
+    "slug": "oostenrijkse-wienerschnitzel",
+    "meta_titel": "Wiener Schnitzel met aardappelsalade",
+    "meta_omschrijving": "Paneer dun kalfsvlees en bak goudbruin voor Wiener Schnitzel. Serveer met citroen en lauwwarme Weense aardappelsalade met azijn, mosterd en bieslook."
+  },
+  {
+    "slug": "traditionele-kaasfondue",
+    "meta_titel": "Kaasfondue met Gruyère en Vacherin",
+    "meta_omschrijving": "Maak Zwitserse kaasfondue met Gruyère, Vacherin en witte wijn. Knoflook en kirsch geven smaak aan deze moitié-moitié, met brood om te dippen."
+  },
+  {
+    "slug": "linguine-carbonara",
+    "meta_titel": "Linguine carbonara met guanciale",
+    "meta_omschrijving": "Maak linguine carbonara met guanciale, ei, pecorino en Parmezaan. Pastakookvocht vormt de romige saus, zonder room. Werk af met zwarte peper."
+  },
+  {
+    "slug": "romige-mosselen-in-witbier-met-peterselie",
+    "meta_titel": "Mosselen in witbier met room en peterselie",
+    "meta_omschrijving": "Kook mosselen in Belgisch witbier met sjalot, prei, wortel en selderij. Room en verse peterselie maken het mosselvocht af. Serveer met brood."
+  }
+]
