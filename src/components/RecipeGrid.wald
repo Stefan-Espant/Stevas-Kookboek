@@ -17,7 +17,8 @@ const rowColumns = (max: number): number[] => {
 const tabletColumns = balanced ? rowColumns(2) : []
 const desktopColumns = balanced ? rowColumns(3) : []
 const cellLayout = (index: number) => balanced
-  ? renderTemplate` style="--balanced-tablet:${tabletColumns[index]};--balanced-desktop:${desktopColumns[index]}"`
+  // GSAP wist inline stijlen na de reveal. Data-attributen blijven wel behouden.
+  ? renderTemplate` data-balanced-tablet="${tabletColumns[index]}" data-balanced-desktop="${desktopColumns[index]}"`
   : ''
 const sizesFor = (index: number) => balanced
   ? `(min-width: 1024px) ${100 / desktopColumns[index]}vw, (min-width: 640px) ${100 / tabletColumns[index]}vw, 92vw`
@@ -38,14 +39,13 @@ const cells = await Promise.all(recipes.map(async (recipe, index) =>
 
 <style>
 .recipe-grid--balanced {
-  --balanced-gap: var(--byz-space-6);
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--balanced-gap);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--byz-space-6);
 
   & > div {
     min-width: 0;
-    flex: 0 0 100%;
+    grid-column: span 12;
   }
   & > div .recipe-card {
     height: 100%;
@@ -76,14 +76,17 @@ const cells = await Promise.all(recipes.map(async (recipe, index) =>
     word-break: normal;
     text-wrap: pretty;
   }
-  @media (min-width: 640px) {
-    & > div {
-      --balanced-columns: var(--balanced-tablet);
-      flex-basis: calc((100% - (var(--balanced-columns) - 1) * var(--balanced-gap)) / var(--balanced-columns));
-    }
+}
+@media (min-width: 640px) {
+  .recipe-grid--balanced {
+    & > div[data-balanced-tablet="2"] { grid-column: span 6; }
   }
-  @media (min-width: 1024px) {
-    & > div { --balanced-columns: var(--balanced-desktop); }
+}
+@media (min-width: 1024px) {
+  .recipe-grid--balanced {
+    & > div[data-balanced-desktop="1"] { grid-column: span 12; }
+    & > div[data-balanced-desktop="2"] { grid-column: span 6; }
+    & > div[data-balanced-desktop="3"] { grid-column: span 4; }
   }
 }
 /* Figma: 40px tussen de kaarten; de gap-schaal van Byzantium stopt bij xl (2rem). */
