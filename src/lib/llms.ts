@@ -27,8 +27,8 @@ const label = (text: string) => clean(text).replace(/[[\]]/g, '')
 
 function recipeLine(recipe: Recipe, origin: string): string {
   const details = [
-    recipe.totalTime ? `${recipe.totalTime} min` : '',
-    recipe.servings ? `${recipe.servings} ${recipe.servings === 1 ? 'persoon' : 'personen'}` : '',
+    recipe.totalTime ? `${recipe.totalTime} min${recipe.timeNote ? ` (${recipe.timeNote})` : ''}` : '',
+    recipe.servings ? `${recipe.servings} ${recipe.servings === 1 ? (recipe.servingsUnit === 'personen' ? 'persoon' : 'stuk') : recipe.servingsUnit}` : '',
     recipe.course,
     recipe.difficulty
   ].filter(Boolean).join(', ')

@@ -6,13 +6,17 @@ import { srcsetFor } from '../lib/images'
 type Props = { recipe: Recipe }
 const { recipe } = $$props
 const { title, image, imageAlt, prepTime, cookTime, servings, difficulty, tags } = recipe
+const yieldUnit = recipe.servingsUnit
+const yieldLabel = yieldUnit === 'personen' ? 'Personen' : yieldUnit === 'stukken' ? 'Stukken' : 'Stuks'
+const singularYield = yieldUnit === 'personen' ? 'persoon' : 'stuk'
 const stripHtml = (html: string) => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
 
 const facts = [
   prepTime ? ['Voorbereiding', `${prepTime} min`] : null,
   cookTime ? ['Bereiding', `${cookTime} min`] : null,
-  prepTime && cookTime ? ['Totaal', `${prepTime + cookTime} min`] : null,
-  servings ? ['Personen', String(servings)] : null,
+  prepTime && cookTime ? [recipe.timeNote ? 'Actieve tijd' : 'Totaal', `${prepTime + cookTime} min`] : null,
+  recipe.timeNote ? ['Extra tijd', recipe.timeNote] : null,
+  servings ? [yieldLabel, String(servings)] : null,
   difficulty ? ['Niveau', difficulty] : null
 ].filter((fact): fact is string[] => fact !== null)
 
@@ -27,7 +31,7 @@ const imageHtml = image
   : '<div class="recipe__image recipe__image--placeholder" role="img" aria-label="Nog geen foto"><img src="/logo-steva.svg" alt=""></div>'
 const factsHtml = facts
   // data-fact="personen": de rekentool werkt dit getal mee bij (ook belangrijk voor de print).
-  .map(([label, value]) => renderTemplate`<div class="recipe__fact" data-fact="${label.toLowerCase()}"><dt>${label}</dt><dd>${value}</dd></div>`)
+  .map(([label, value]) => renderTemplate`<div class="recipe__fact" data-fact="${label === yieldLabel ? 'personen' : label.toLowerCase()}"><dt>${label}</dt><dd>${value}</dd></div>`)
   .join('')
 const cuisineHtml = recipe.cuisine
   ? renderTemplate`<a class="recipe__cuisine" href="/keukens/${recipe.cuisine.slug}">${recipe.cuisine.adjective} keuken</a>`
@@ -82,11 +86,11 @@ const stepsHtml = `<ol>${recipe.steps.map(step => renderTemplate`<li>${new SafeH
 // Verborgen tot het script draait: zonder JavaScript zie je gewoon het recept zoals het is.
 const scalerHtml = servings
   ? renderTemplate`<div class="recipe__scaler" data-servings="${servings}" hidden>
-      <span class="recipe__scaler-label" id="personen-label">Aantal personen</span>
+      <span class="recipe__scaler-label" id="personen-label">Aantal ${yieldUnit}</span>
       <div class="recipe__scaler-controls" role="group" aria-labelledby="personen-label">
-        <button type="button" data-step="-1" aria-label="Eén persoon minder">−</button>
+        <button type="button" data-step="-1" aria-label="Eén ${singularYield} minder">−</button>
         <output aria-live="polite">${servings}</output>
-        <button type="button" data-step="1" aria-label="Eén persoon meer">+</button>
+        <button type="button" data-step="1" aria-label="Eén ${singularYield} meer">+</button>
       </div>
     </div>`
   : ''
@@ -105,8 +109,8 @@ const jsonLd = {
   inLanguage: 'nl',
   ...(prepTime ? { prepTime: minutes(prepTime) } : {}),
   ...(cookTime ? { cookTime: minutes(cookTime) } : {}),
-  ...(prepTime && cookTime ? { totalTime: minutes(prepTime + cookTime) } : {}),
-  ...(servings ? { recipeYield: `${servings} personen` } : {}),
+  ...(recipe.totalTime && !recipe.timeNote ? { totalTime: minutes(recipe.totalTime) } : {}),
+  ...(servings ? { recipeYield: `${servings} ${servings === 1 ? singularYield : yieldUnit}` } : {}),
   ...(recipe.cuisine ? { recipeCuisine: recipe.cuisine.name } : {}),
   ...(recipe.course ? { recipeCategory: recipe.course } : {}),
   ...(tags.length ? { keywords: tags.join(', ') } : {}),
