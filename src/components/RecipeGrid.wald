@@ -3,8 +3,24 @@ import RecipeCard from './RecipeCard.wald'
 import type { RecipeSummary } from '../lib/recipes'
 /** eager: zoveel kaarten bovenaan de pagina laden hun foto meteen (de eerste met voorrang) en
  *  schuiven niet binnen: onzichtbaar tot GSAP start zou het grootste element (LCP) vertragen. */
-type Props = { recipes: RecipeSummary[], headingLevel?: 2 | 3, eager?: number }
-const { recipes, headingLevel = 3, eager = 0 } = $$props
+type Props = { recipes: RecipeSummary[], headingLevel?: 2 | 3, eager?: number, balanced?: boolean }
+const { recipes, headingLevel = 3, eager = 0, balanced = false } = $$props
+// Verdeel de kaarten gelijkmatig over de rijen: tien kaarten worden op een breed
+// scherm 5 + 5, op een kleiner scherm 3 + 3 + 2 + 2 en op een tablet 2 per rij.
+const rowColumns = (max: number): number[] => {
+  if (!recipes.length) return []
+  const rows = Math.ceil(recipes.length / max)
+  const base = Math.floor(recipes.length / rows)
+  const extra = recipes.length % rows
+  return Array.from({ length: rows }, (_, i) => Array(base + (i < extra ? 1 : 0)).fill(base + (i < extra ? 1 : 0))).flat()
+}
+const tabletColumns = balanced ? rowColumns(2) : []
+const desktopColumns = balanced ? rowColumns(3) : []
+const wideColumns = balanced ? rowColumns(5) : []
+const cellLayout = (index: number) => balanced
+  ? renderTemplate` style="--balanced-tablet:${tabletColumns[index]};--balanced-desktop:${desktopColumns[index]};--balanced-wide:${wideColumns[index]}"`
+  : ''
+const sizes = balanced ? '(min-width: 1280px) 19vw, (min-width: 1024px) 32vw, (min-width: 640px) 48vw, 92vw' : undefined
 // Byzantium 12-kolomsgrid: 12 kolommen op mobiel, 6 vanaf sm, 4 vanaf lg. data-cuisine,
 // data-course, data-time, data-level en data-diet worden gebruikt door de filters op /recepten,
 // data-search door /zoeken.
@@ -14,15 +30,47 @@ const dietOf = (tags: string[]) => {
 }
 const priorityOf = (index: number) => index === 0 && eager > 0 ? 'high' : index < eager ? 'eager' : undefined
 const cells = await Promise.all(recipes.map(async (recipe, index) =>
-  renderTemplate`<div class="byz-col-span-12 byz-col-span-sm-6 byz-col-span-lg-4"${new SafeHtml(index < eager ? '' : ' data-reveal="card"')} data-cuisine="${recipe.cuisine?.slug ?? ''}" data-course="${recipe.course}" data-time="${recipe.totalTime}" data-level="${recipe.difficulty}" data-diet="${dietOf(recipe.tags)}" data-search="${recipe.searchText}">${new SafeHtml(await RecipeCard.render({ recipe, headingLevel, priority: priorityOf(index) }))}</div>`
+  renderTemplate`<div class="byz-col-span-12 byz-col-span-sm-6 byz-col-span-lg-4"${new SafeHtml(cellLayout(index))}${new SafeHtml(index < eager ? '' : ' data-reveal="card"')} data-cuisine="${recipe.cuisine?.slug ?? ''}" data-course="${recipe.course}" data-time="${recipe.totalTime}" data-level="${recipe.difficulty}" data-diet="${dietOf(recipe.tags)}" data-search="${recipe.searchText}">${new SafeHtml(await RecipeCard.render({ recipe, headingLevel, sizes, priority: priorityOf(index) }))}</div>`
 ))
 ---
-<div class="recipe-grid byz-grid byz-grid--12 byz-gap-lg">{new SafeHtml(cells.join(''))}</div>
+<div class={balanced ? 'recipe-grid recipe-grid--balanced byz-grid byz-grid--12 byz-gap-lg' : 'recipe-grid byz-grid byz-grid--12 byz-gap-lg'}>{new SafeHtml(cells.join(''))}</div>
 
 <style>
+.recipe-grid--balanced {
+  --balanced-gap: var(--byz-space-6);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--balanced-gap);
+
+  & > div {
+    min-width: 0;
+    flex: 0 0 100%;
+  }
+  & > div .recipe-card .recipe-card__text {
+    padding: 0 var(--byz-space-5) var(--byz-space-5);
+  }
+  & > div .recipe-card .recipe-card__title {
+    font-size: clamp(1.25rem, 2vw, 1.65rem);
+  }
+  @media (min-width: 640px) {
+    & > div {
+      --balanced-columns: var(--balanced-tablet);
+      flex-basis: calc((100% - (var(--balanced-columns) - 1) * var(--balanced-gap)) / var(--balanced-columns));
+    }
+  }
+  @media (min-width: 1024px) {
+    & > div { --balanced-columns: var(--balanced-desktop); }
+  }
+  @media (min-width: 1280px) {
+    & > div { --balanced-columns: var(--balanced-wide); }
+    & > div .recipe-card .recipe-card__title {
+      font-size: clamp(1rem, 1.35vw, 1.25rem);
+    }
+  }
+}
 /* Figma: 40px tussen de kaarten; de gap-schaal van Byzantium stopt bij xl (2rem). */
 @media (min-width: 1024px) {
-  .recipe-grid {
+  .recipe-grid:not(.recipe-grid--balanced) {
     gap: var(--byz-space-10);
   }
 }
