@@ -104,13 +104,15 @@
 
   // Shader-achtergronden (stoom, zie Layout.wald): public/effects.js alleen laden als de pagina een
   // <canvas data-effect> heeft. Los van GSAP; effects.js regelt zelf "minder beweging".
-  // Seizoenseffect (vallende bladeren op /inspiratie/herfst): public/leaves.js, met GSAP.
+  // Seizoenseffect: vallende bladeren op /inspiratie/herfst (public/leaves.js) of vleermuizen op
+  // /inspiratie/halloween (public/halloween.js), met GSAP.
   // Beide pas na "load" en als de browser vrij is: de shader-start en het opbouwen van de
   // bladeren houden anders de hoofdthread bezig terwijl de pagina nog moet verschijnen.
   function loadEffects() {
     var scripts = []
     if (document.querySelector('canvas[data-effect]')) scripts.push('/effects.js')
-    if (document.querySelector('[data-season-effect]:not([data-season-effect=""])') && window.gsap) scripts.push('/leaves.js')
+    var season = document.querySelector('[data-season-effect]:not([data-season-effect=""])')
+    if (season && window.gsap) scripts.push(season.dataset.seasonEffect === 'halloween' ? '/halloween.js' : '/leaves.js')
     scripts.forEach(function (src) {
       var script = document.createElement('script')
       script.src = src
