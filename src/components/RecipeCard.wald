@@ -12,7 +12,7 @@ const srcset = srcsetFor(recipe.image)
 const heading = new SafeHtml(headingLevel === 2 ? 'h2' : 'h3')
 const titleHtml = renderTemplate`<${heading} class="recipe-card__title">${recipe.title}</${heading}>`
 // Keuken en totale tijd onder de titel: genoeg om te kiezen zonder de kaart te openen.
-const meta = [recipe.cuisine?.name, recipe.totalTime ? `${recipe.totalTime} min` : ''].filter(Boolean).join(' · ')
+const meta = [recipe.cuisine?.name, recipe.totalTime ? `${recipe.totalTime} min${recipe.timeNote ? ' + wachttijd' : ''}` : ''].filter(Boolean).join(' · ')
 const metaHtml = meta ? renderTemplate`<p class="recipe-card__meta">${meta}</p>` : ''
 // Zonder foto in Centaur: marmertextuur uit het ontwerp met het logo.
 const image = recipe.image

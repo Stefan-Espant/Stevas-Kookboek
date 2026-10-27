@@ -66,8 +66,16 @@ const seasonSections = await Promise.all(SEASONS.map(async season => {
 }))
 const seasonScript = `<script data-wald-no-hoist>(function(){var m=String(new Date().getMonth()+1);document.querySelectorAll('[data-season-months]').forEach(function(s){s.hidden=s.dataset.seasonMonths.split(',').indexOf(m)<0})})()</script>`
 
+// Alleen gepubliceerd Halloween-aanbod tonen; in oktober extra uitlichten op de homepage.
+// De bestaande maandselectie houdt deze sectie ook na een statische build actueel.
+const halloween = collections.find(collection => collection.slug === 'halloween')
+const halloweenSection = halloween
+  ? sectionHtml('halloween-recepten', 'Griezelig lekker: Halloween', [collectionPath(halloween.slug), 'Alle Halloweenrecepten'], await RecipeGrid.render({ recipes: halloween.recipes.slice(0, 3) }), true, ` data-season-months="10"${new Date().getMonth() === 9 ? '' : ' hidden'}`)
+  : ''
+
 const usedImages = new Set<string>()
 const sections = [
+  halloweenSection,
   seasonSections.join('') + seasonScript,
   sectionHtml('nieuwste-recepten', 'De nieuwste recepten', recipes.length ? ['/recepten', 'Alle recepten'] : null, recipeList),
   cuisines.length ? sectionHtml('keukens', 'Kook de wereld rond', ['/keukens', 'Alle keukens'], await tileGrid(cuisines.slice(0, 3).map(cuisine => cuisineTile(cuisine, new Set())))) : '',

@@ -41,6 +41,8 @@ export interface Recipe {
   cookTime: number
   totalTime: number
   servings: number
+  servingsUnit: 'personen' | 'stuks' | 'stukken'
+  timeNote: string
   ingredients: Ingredient[]
   steps: Step[]
   tipsHtml: string
@@ -132,6 +134,8 @@ function toRecipe(entry: CentaurEntry, cuisinesById: Map<string, Cuisine>): Reci
     cookTime,
     totalTime: prepTime + cookTime,
     servings: num(data.personen),
+    servingsUnit: data.portie_eenheid === 'stuks' || data.portie_eenheid === 'stukken' ? data.portie_eenheid : 'personen',
+    timeNote: text(data.tijd_toelichting),
     ingredients,
     steps,
     tipsHtml: text(data.tips),
@@ -325,6 +329,13 @@ export async function getCollections(): Promise<Collection[]> {
       seoTitle: 'Recepten om samen te eten',
       description: 'Gerechten om midden op tafel te zetten, met vrienden of familie eromheen.',
       recipes: tagged('gezellig', 'feest', 'fondue', 'delen', 'barbecue')
+    },
+    {
+      slug: 'halloween',
+      title: 'Halloweenrecepten',
+      seoTitle: 'Halloweenrecepten om samen te maken',
+      description: 'Maak van Halloween een griezelig lekker feest met recepten om samen te koken, te bakken en te delen.',
+      recipes: tagged('halloween')
     }
   ]
   // Seizoenen achteraan: de homepage toont het seizoen van vandaag zelf (zie index.wald).

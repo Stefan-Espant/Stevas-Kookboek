@@ -1,0 +1,930 @@
+[
+  {
+    "sourceImage": "01-pompoensoep.png",
+    "data": {
+      "titel": "Romige pompoensoep met spinnenweb van room",
+      "slug": "halloween-pompoensoep-met-spinnenweb",
+      "intro": "<p>Deze romige Halloween-pompoensoep maak je met pompoen, aardappel, kerrie en groentebouillon. Met een spiraal van room en een prikker maak je in elke kom een spinnenweb.</p>",
+      "afbeelding_alt": "Romige pompoensoep met een spinnenweb van room",
+      "gang": "Soep",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 0,
+      "bereidingstijd": 40,
+      "personen": 4,
+      "portie_eenheid": "personen",
+      "tijd_toelichting": "",
+      "ingredienten": [
+        {
+          "groep": "",
+          "hoeveelheid": 800,
+          "eenheid": "g",
+          "ingredient": "pompoenblokjes",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "",
+          "ingredient": "ui",
+          "ingredient_meervoud": "",
+          "toelichting": "gesnipperd"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "teen",
+          "ingredient": "knoflook",
+          "ingredient_meervoud": "",
+          "toelichting": "fijngehakt"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "",
+          "ingredient": "aardappel",
+          "ingredient_meervoud": "",
+          "toelichting": "in blokjes"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 750,
+          "eenheid": "ml",
+          "ingredient": "groentebouillon",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "tl",
+          "ingredient": "kerriepoeder",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 100,
+          "eenheid": "ml",
+          "ingredient": "kookroom",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "el",
+          "ingredient": "olijfolie",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": null,
+          "eenheid": "",
+          "ingredient": "Peper en zout",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "",
+          "stap": "Verhit de olie in een soeppan en fruit de ui 3 minuten. Voeg de knoflook en kerrie toe."
+        },
+        {
+          "kop": "",
+          "stap": "Doe de pompoen, aardappel en bouillon erbij. Breng aan de kook en laat 25 minuten zacht koken."
+        },
+        {
+          "kop": "",
+          "stap": "Pureer de soep glad en breng op smaak met peper en zout."
+        },
+        {
+          "kop": "",
+          "stap": "Schep de soep in kommen. Spuit met de room een spiraal op elke kom en trek met een prikker lijntjes van het midden naar buiten voor een spinnenweb."
+        }
+      ],
+      "tags": "Halloween, herfst, feest",
+      "meta_titel": "Pompoensoep met spinnenweb van room",
+      "meta_omschrijving": "Romige pompoensoep met kerrie en een spinnenweb van room. Een makkelijke Halloweensoep met pompoen, aardappel en groentebouillon voor 4 personen.",
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/ab60fab2812b4c92adf0ed5bd5f9f689.webp"
+    }
+  },
+  {
+    "sourceImage": "02-gevulde-paprikas.png",
+    "data": {
+      "titel": "Gevulde paprika’s als Halloweenpompoenen",
+      "slug": "halloween-gevulde-paprikas",
+      "intro": "<p>Oranje paprika’s worden Halloweenpompoenen als je er voorzichtig gezichtjes in snijdt. De vulling van rijst, gehakt, tomaat en kaas maakt er een complete ovenmaaltijd van.</p>",
+      "afbeelding_alt": "Oranje paprika’s met pompoengezichtjes, gevuld met rijst en gehakt",
+      "gang": "Hoofdgerecht",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 0,
+      "bereidingstijd": 50,
+      "personen": 4,
+      "portie_eenheid": "personen",
+      "tijd_toelichting": "",
+      "ingredienten": [
+        {
+          "groep": "",
+          "hoeveelheid": 4,
+          "eenheid": "",
+          "ingredient": "oranje paprika",
+          "ingredient_meervoud": "oranje paprika’s",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 150,
+          "eenheid": "g",
+          "ingredient": "rijst",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 300,
+          "eenheid": "g",
+          "ingredient": "rundergehakt",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "",
+          "ingredient": "kleine ui",
+          "ingredient_meervoud": "",
+          "toelichting": "gesnipperd"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 200,
+          "eenheid": "g",
+          "ingredient": "tomatenblokjes",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "tl",
+          "ingredient": "paprikapoeder",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 100,
+          "eenheid": "g",
+          "ingredient": "geraspte kaas",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "el",
+          "ingredient": "olijfolie",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": null,
+          "eenheid": "",
+          "ingredient": "Peper en zout",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "",
+          "stap": "Verwarm de oven voor op 190 °C. Kook de rijst volgens de verpakking."
+        },
+        {
+          "kop": "",
+          "stap": "Snijd de bovenkant van de paprika’s en bewaar die als dekseltje. Verwijder de zaadlijsten. Snijd voorzichtig ogen, een neus en een mond uit de paprika’s."
+        },
+        {
+          "kop": "",
+          "stap": "Bak de ui en het gehakt in olie. Roer de tomatenblokjes, rijst en het paprikapoeder erdoor. Breng op smaak."
+        },
+        {
+          "kop": "",
+          "stap": "Vul de paprika’s, strooi de kaas erover en zet de dekseltjes erop. Bak 25 minuten in de oven."
+        }
+      ],
+      "tags": "Halloween, herfst, feest, oven",
+      "meta_titel": "Halloween-paprika’s met rijst en gehakt",
+      "meta_omschrijving": "Vul oranje Halloween-paprika’s met rijst, rundergehakt, tomaat en kaas. Snijd er pompoengezichtjes in en bak ze in de oven voor een feestelijke maaltijd.",
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/24eb9a9a907e402dbe6e54f73f5bdf9c.webp"
+    }
+  },
+  {
+    "sourceImage": "03-mummie-hotdogs.png",
+    "data": {
+      "titel": "Mummie-hotdogs in bladerdeeg",
+      "slug": "mummie-hotdogs-in-bladerdeeg",
+      "intro": "<p>Deze mummie-hotdogs zijn knakworsten in een jasje van bladerdeeg. Houd bij het wikkelen ruimte voor het gezicht en maak na het bakken oogjes met mosterd of mayonaise. Het recept is voor 8 stuks.</p>",
+      "afbeelding_alt": "Mummie-hotdogs in goudbruin bladerdeeg met oogjes van saus",
+      "gang": "Snack",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 0,
+      "bereidingstijd": 30,
+      "personen": 8,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "",
+      "ingredienten": [
+        {
+          "groep": "",
+          "hoeveelheid": 8,
+          "eenheid": "",
+          "ingredient": "knakworst",
+          "ingredient_meervoud": "knakworsten",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 4,
+          "eenheid": "plakje",
+          "ingredient": "bladerdeeg",
+          "ingredient_meervoud": "",
+          "toelichting": "ontdooid"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "",
+          "ingredient": "ei",
+          "ingredient_meervoud": "",
+          "toelichting": "losgeklopt"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 2,
+          "eenheid": "el",
+          "ingredient": "mosterd",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 2,
+          "eenheid": "el",
+          "ingredient": "mayonaise",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 16,
+          "eenheid": "stipje",
+          "ingredient": "mayonaise of mosterd voor de ogen",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "",
+          "stap": "Verwarm de oven voor op 200 °C. Snijd elk plakje bladerdeeg in lange repen."
+        },
+        {
+          "kop": "",
+          "stap": "Wikkel de repen losjes om de knakworsten, zodat er ruimte overblijft voor het gezicht."
+        },
+        {
+          "kop": "",
+          "stap": "Leg de mummies op een bakplaat met bakpapier en bestrijk het deeg met ei."
+        },
+        {
+          "kop": "",
+          "stap": "Bak in 15–18 minuten goudbruin. Maak met kleine stipjes saus oogjes en serveer met mosterd en mayonaise."
+        }
+      ],
+      "tags": "Halloween, herfst, feest, oven",
+      "meta_titel": "Mummie-hotdogs in bladerdeeg voor Halloween",
+      "meta_omschrijving": "Maak 8 mummie-hotdogs van knakworsten in repen bladerdeeg. Bak ze goudbruin, maak oogjes van saus en serveer met mosterd en mayonaise voor Halloween.",
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/7b41201906f24739aaf6f2f91fc0d13e.webp"
+    }
+  },
+  {
+    "sourceImage": "04-heksenvingers.png",
+    "data": {
+      "titel": "Heksenvingers van kaasstengels",
+      "slug": "heksenvingers-van-kaasstengels",
+      "intro": "<p>Met bladerdeeg, oude kaas en amandelen bak je hartige heksenvingers. Geef ze knokkels door het deeg licht in te knijpen en serveer er tomatentapenade als rode dip bij. Het recept is voor 12 stuks.</p>",
+      "afbeelding_alt": "Hartige heksenvingers van kaasstengels met amandelnagels en rode dip",
+      "gang": "Snack",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 0,
+      "bereidingstijd": 25,
+      "personen": 12,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "",
+      "ingredienten": [
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "rol",
+          "ingredient": "vers bladerdeeg",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 100,
+          "eenheid": "g",
+          "ingredient": "geraspte oude kaas",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "",
+          "ingredient": "ei",
+          "ingredient_meervoud": "",
+          "toelichting": "losgeklopt"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 12,
+          "eenheid": "",
+          "ingredient": "amandel",
+          "ingredient_meervoud": "amandelen",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 2,
+          "eenheid": "el",
+          "ingredient": "tomatentapenade",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "",
+          "stap": "Verwarm de oven voor op 200 °C. Snijd het bladerdeeg in 12 lange repen."
+        },
+        {
+          "kop": "",
+          "stap": "Bestrijk de repen met ei en strooi de kaas erover. Draai de repen voorzichtig tot lange vingers."
+        },
+        {
+          "kop": "",
+          "stap": "Knijp op twee plekken licht in het deeg voor de knokkels. Leg aan het uiteinde een amandel als nagel."
+        },
+        {
+          "kop": "",
+          "stap": "Bak de vingers in 12–15 minuten goudbruin. Serveer met tomatentapenade als bloederige dip."
+        }
+      ],
+      "tags": "Halloween, herfst, feest, oven",
+      "meta_titel": "Heksenvingers van bladerdeeg met kaas",
+      "meta_omschrijving": "Bak 12 heksenvingers van bladerdeeg met oude kaas en een amandel als nagel. Serveer deze hartige Halloween-kaasstengels met rode tomatentapenade.",
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/bc710c9614c147f3be1eb2bfdf038d64.webp"
+    }
+  },
+  {
+    "sourceImage": "05-mini-pizzas-met-olijven.png",
+    "data": {
+      "titel": "Mini-pizza’s met spinnen van olijven",
+      "slug": "halloween-mini-pizzas-met-olijven",
+      "intro": "<p>Deze mini-pizza’s krijgen een griezelige versiering van zwarte olijven. Een halve olijf vormt het lijfje en dunne reepjes worden de poten. Met pizzadeeg, passata en mozzarella maak je 8 stuks.</p>",
+      "afbeelding_alt": "Mini-pizza’s met mozzarella en spinnen van zwarte olijven",
+      "gang": "Snack",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 0,
+      "bereidingstijd": 30,
+      "personen": 8,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "",
+      "ingredienten": [
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "rol",
+          "ingredient": "pizzadeeg",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 150,
+          "eenheid": "g",
+          "ingredient": "passata",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 150,
+          "eenheid": "g",
+          "ingredient": "geraspte mozzarella",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "tl",
+          "ingredient": "Italiaanse kruiden",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "blik",
+          "ingredient": "zwarte olijven",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "el",
+          "ingredient": "olijfolie",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "",
+          "stap": "Verwarm de oven voor op 220 °C. Steek 8 rondjes uit het pizzadeeg."
+        },
+        {
+          "kop": "",
+          "stap": "Leg de rondjes op een bakplaat. Bestrijk ze met passata en bestrooi met mozzarella en Italiaanse kruiden."
+        },
+        {
+          "kop": "",
+          "stap": "Halveer de olijven. Gebruik een halve olijf als lijfje van een spin en snijd andere helften in dunne reepjes voor de poten."
+        },
+        {
+          "kop": "",
+          "stap": "Bak de pizza’s 10–12 minuten, tot het deeg krokant is en de kaas gesmolten."
+        }
+      ],
+      "tags": "Halloween, herfst, feest, oven",
+      "meta_titel": "Halloween-mini-pizza’s met olijvenspinnen",
+      "meta_omschrijving": "Maak 8 Halloween-mini-pizza’s met passata, mozzarella en Italiaanse kruiden. Van zwarte olijven maak je spinnen die je op de pizza’s legt voor het bakken.",
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/eb9638576a4f4544bd0b0cae2df4b417.webp"
+    }
+  },
+  {
+    "sourceImage": "06-spookjesbananen.png",
+    "data": {
+      "titel": "Spookjesbananen met witte chocolade",
+      "slug": "spookjesbananen-met-witte-chocolade",
+      "intro": "<p>Halve bananen met een laagje witte chocolade veranderen in kleine spookjes. Pure chocoladedruppels vormen de ogen. Reken naast 20 minuten voorbereiding op minstens 30 minuten opstijven in de koelkast. Het recept is voor 8 stuks.</p>",
+      "afbeelding_alt": "Spookjes van banaan met witte chocolade en donkere chocoladeoogjes",
+      "gang": "Dessert",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 20,
+      "bereidingstijd": 0,
+      "personen": 8,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "Minstens 30 min opstijven",
+      "ingredienten": [
+        {
+          "groep": "",
+          "hoeveelheid": 4,
+          "eenheid": "",
+          "ingredient": "banaan",
+          "ingredient_meervoud": "bananen",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 200,
+          "eenheid": "g",
+          "ingredient": "witte chocolade",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 16,
+          "eenheid": "",
+          "ingredient": "pure chocoladedruppel",
+          "ingredient_meervoud": "pure chocoladedruppels",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 8,
+          "eenheid": "",
+          "ingredient": "satéprikker",
+          "ingredient_meervoud": "satéprikkers",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "",
+          "stap": "Pel de bananen en halveer ze. Steek in elk stuk een satéprikker."
+        },
+        {
+          "kop": "",
+          "stap": "Smelt de witte chocolade au bain-marie of in korte intervallen in de magnetron."
+        },
+        {
+          "kop": "",
+          "stap": "Haal de bananen door de chocolade en leg ze op bakpapier."
+        },
+        {
+          "kop": "",
+          "stap": "Druk twee chocoladedruppels als ogen in de chocolade. Laat de spookjes minstens 30 minuten opstijven in de koelkast."
+        }
+      ],
+      "tags": "Halloween, herfst, feest",
+      "meta_titel": "Spookjesbananen met witte chocolade",
+      "meta_omschrijving": "Maak 8 spookjesbananen met witte chocolade en ogen van pure chocoladedruppels. Een zoete Halloweentraktatie op een prikker; laat opstijven in de koelkast.",
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/a8fb529dd5dc463ca2d521b569fd745e.webp"
+    }
+  },
+  {
+    "sourceImage": "07-halloweenbrownies.png",
+    "data": {
+      "titel": "Halloweenbrownies met spinnenweb",
+      "slug": "halloweenbrownies-met-spinnenweb",
+      "intro": "<p>Deze Halloweenbrownies hebben een donkere chocoladebasis en een spinnenweb van witte chocolade. Laat de brownie na het bakken afkoelen voordat je de versiering aanbrengt. Het recept is voor 9 stukken.</p>",
+      "afbeelding_alt": "Chocoladebrownies met spinnenwebben van witte chocolade",
+      "gang": "Dessert",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 0,
+      "bereidingstijd": 45,
+      "personen": 9,
+      "portie_eenheid": "stukken",
+      "tijd_toelichting": "Plus afkoelen",
+      "ingredienten": [
+        {
+          "groep": "",
+          "hoeveelheid": 150,
+          "eenheid": "g",
+          "ingredient": "pure chocolade",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 125,
+          "eenheid": "g",
+          "ingredient": "boter",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 150,
+          "eenheid": "g",
+          "ingredient": "suiker",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 2,
+          "eenheid": "",
+          "ingredient": "ei",
+          "ingredient_meervoud": "eieren",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 75,
+          "eenheid": "g",
+          "ingredient": "bloem",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 20,
+          "eenheid": "g",
+          "ingredient": "cacaopoeder",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 50,
+          "eenheid": "g",
+          "ingredient": "witte chocolade",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "",
+          "stap": "Verwarm de oven voor op 180 °C. Bekleed een kleine bakvorm met bakpapier."
+        },
+        {
+          "kop": "",
+          "stap": "Smelt de pure chocolade met de boter. Roer de suiker en eieren erdoor."
+        },
+        {
+          "kop": "",
+          "stap": "Zeef de bloem en cacao boven de kom en spatel door het beslag. Giet in de bakvorm en bak 25 minuten."
+        },
+        {
+          "kop": "",
+          "stap": "Smelt de witte chocolade en teken na het afkoelen een spiraal op de brownie. Trek met een prikker lijntjes vanuit het midden naar buiten."
+        }
+      ],
+      "tags": "Halloween, herfst, feest, oven",
+      "meta_titel": "Halloweenbrownies met chocolade-spinnenweb",
+      "meta_omschrijving": "Bak Halloweenbrownies met pure chocolade en cacao. Teken na het afkoelen met witte chocolade een spinnenweb op de brownie en snijd in 9 stukken.",
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/0a2bd16c5a334130b6ca2c6d0e4f0f1c.webp"
+    }
+  },
+  {
+    "sourceImage": "08-heksenhoedjes.png",
+    "data": {
+      "titel": "Heksenhoedjes van chocolade en koekjes",
+      "slug": "heksenhoedjes-van-chocolade-en-koekjes",
+      "intro": "<p>Een omgekeerd ijshoorntje op een chocoladekoekje vormt de basis van deze heksenhoedjes. Met gesmolten chocolade zet je alles vast en geef je de hoedjes een chocoladelaag. Het recept is voor 12 stuks; reken extra tijd voor het opstijven.</p>",
+      "afbeelding_alt": "Heksenhoedjes van chocolade op ronde koekjes met gekleurde versiering",
+      "gang": "Dessert",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 25,
+      "bereidingstijd": 0,
+      "personen": 12,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "Plus opstijven",
+      "ingredienten": [
+        {
+          "groep": "",
+          "hoeveelheid": 12,
+          "eenheid": "",
+          "ingredient": "rond chocoladekoekje",
+          "ingredient_meervoud": "ronde chocoladekoekjes",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 12,
+          "eenheid": "",
+          "ingredient": "ijshoorntje",
+          "ingredient_meervoud": "ijshoorntjes",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 150,
+          "eenheid": "g",
+          "ingredient": "pure chocolade",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 12,
+          "eenheid": "",
+          "ingredient": "klein snoepje of suikerparel",
+          "ingredient_meervoud": "kleine snoepjes of gekleurde suikerparels",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "tl",
+          "ingredient": "kokosolie",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "",
+          "stap": "Smelt de chocolade met de kokosolie."
+        },
+        {
+          "kop": "",
+          "stap": "Doop de rand van elk ijshoorntje in de chocolade en zet het hoorntje midden op een koekje. Zo ontstaat een hoedje."
+        },
+        {
+          "kop": "",
+          "stap": "Bestrijk de hoedjes met de rest van de chocolade."
+        },
+        {
+          "kop": "",
+          "stap": "Versier de rand met snoepjes of suikerparels en laat opstijven op bakpapier."
+        }
+      ],
+      "tags": "Halloween, herfst, feest",
+      "meta_titel": "Heksenhoedjes van chocolade en koekjes",
+      "meta_omschrijving": "Maak 12 heksenhoedjes van ijshoorntjes, chocoladekoekjes en pure chocolade. Versier met snoepjes of suikerparels en laat de Halloweenhoedjes opstijven.",
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/5c94c9adca4b46c6a3d27ec3f1bf564e.webp"
+    }
+  },
+  {
+    "sourceImage": "09-monsterappels.png",
+    "data": {
+      "titel": "Monsterappels met pindakaas en aardbeientong",
+      "slug": "monsterappels-met-pindakaas",
+      "intro": "<p>Van appelkwarten maak je monstermonden met pindakaas, marshmallowtanden en een tong van aardbei. Een stukje amandelschaafsel wordt een hoektand. Het recept is voor 8 stuks.</p>",
+      "afbeelding_alt": "Appelmonsters met pindakaas, marshmallowtanden en een aardbeientong",
+      "gang": "Snack",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 20,
+      "bereidingstijd": 0,
+      "personen": 8,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "",
+      "ingredienten": [
+        {
+          "groep": "",
+          "hoeveelheid": 2,
+          "eenheid": "",
+          "ingredient": "rode appels",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 4,
+          "eenheid": "el",
+          "ingredient": "pindakaas",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 16,
+          "eenheid": "",
+          "ingredient": "mini-marshmallow",
+          "ingredient_meervoud": "mini-marshmallows",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 4,
+          "eenheid": "",
+          "ingredient": "aardbei",
+          "ingredient_meervoud": "aardbeien",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 8,
+          "eenheid": "",
+          "ingredient": "amandelschaafselstukje",
+          "ingredient_meervoud": "amandelschaafselstukjes",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "",
+          "stap": "Snijd de appels in kwarten en verwijder de klokhuizen. Snijd in elk kwart een inkeping voor de mond."
+        },
+        {
+          "kop": "",
+          "stap": "Bestrijk de binnenkant van de inkeping met pindakaas."
+        },
+        {
+          "kop": "",
+          "stap": "Druk mini-marshmallows als tanden in de boven- en onderkant. Steek een amandelschaafselstukje als hoektand ertussen."
+        },
+        {
+          "kop": "",
+          "stap": "Snijd de aardbeien in dunne plakjes en leg die als tong in de mond."
+        }
+      ],
+      "tags": "Halloween, herfst, feest",
+      "meta_titel": "Monsterappels met pindakaas en aardbei",
+      "meta_omschrijving": "Maak 8 monsterappels met pindakaas, mini-marshmallows als tanden en een tong van aardbei. Een griezelig fruitig Halloweenhapje met een amandelhoektand.",
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/d54db959154b41dea71d8a9e09ac6a5b.webp"
+    }
+  },
+  {
+    "sourceImage": "10-pompoencupcakes.png",
+    "data": {
+      "titel": "Pompoencupcakes met kaneelroom",
+      "slug": "pompoencupcakes-met-kaneelroom",
+      "intro": "<p>Deze pompoencupcakes maak je met pompoenpuree, kaneel en bruine suiker. Laat ze volledig afkoelen en werk ze af met een crème van roomkaas en slagroom. Het recept is voor 12 stuks.</p>",
+      "afbeelding_alt": "Pompoencupcakes met een toef roomkaascrème en kaneel",
+      "gang": "Dessert",
+      "moeilijkheid": "Gemiddeld",
+      "voorbereidingstijd": 0,
+      "bereidingstijd": 45,
+      "personen": 12,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "Plus afkoelen",
+      "ingredienten": [
+        {
+          "groep": "",
+          "hoeveelheid": 200,
+          "eenheid": "g",
+          "ingredient": "pompoenpuree",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 150,
+          "eenheid": "g",
+          "ingredient": "bloem",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 100,
+          "eenheid": "g",
+          "ingredient": "bruine suiker",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 2,
+          "eenheid": "",
+          "ingredient": "ei",
+          "ingredient_meervoud": "eieren",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 75,
+          "eenheid": "ml",
+          "ingredient": "zonnebloemolie",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "tl",
+          "ingredient": "bakpoeder",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "tl",
+          "ingredient": "kaneel",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 100,
+          "eenheid": "g",
+          "ingredient": "roomkaas",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 100,
+          "eenheid": "ml",
+          "ingredient": "slagroom",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 2,
+          "eenheid": "el",
+          "ingredient": "poedersuiker",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "",
+          "stap": "Verwarm de oven voor op 180 °C en zet papieren vormpjes in een muffinblik."
+        },
+        {
+          "kop": "",
+          "stap": "Klop de eieren met de suiker en olie. Roer de pompoenpuree erdoor."
+        },
+        {
+          "kop": "",
+          "stap": "Meng bloem, bakpoeder en kaneel en spatel door het beslag. Verdeel over de vormpjes en bak 20–22 minuten. Laat afkoelen."
+        },
+        {
+          "kop": "",
+          "stap": "Klop de roomkaas, slagroom en poedersuiker tot een stevige crème. Spuit op de cupcakes en bestuif eventueel met een beetje kaneel."
+        }
+      ],
+      "tags": "Halloween, herfst, feest, oven",
+      "meta_titel": "Pompoencupcakes met kaneel en roomkaas",
+      "meta_omschrijving": "Bak 12 pompoencupcakes met pompoenpuree, kaneel en bruine suiker. Laat afkoelen en spuit er een crème van roomkaas, slagroom en poedersuiker op.",
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/5b58fe6fed474b6ea7049a163cc9e5da.webp"
+    }
+  }
+]
