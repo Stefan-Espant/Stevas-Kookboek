@@ -1,0 +1,17 @@
+---
+import Layout from '../../layouts/Layout.wald'
+import NewsletterSignup from '../../components/NewsletterSignup.wald'
+import { breadcrumbSchema } from '../../lib/site'
+const schema = [breadcrumbSchema([['Home', '/'], ['Nieuwsbrief', '/nieuwsbrief']])]
+---
+<Layout title="Nieuwsbrief: elke week recepten in je mail" description="Schrijf je in voor de nieuwsbrief van Steva's Kookboek: één keer per week recepten van het seizoen en een tip uit Steva's keuken. Gratis, en afmelden kan altijd." path="/nieuwsbrief" schema={schema} fullHeight={true}>
+  <main class="newsletter-page">
+    <NewsletterSignup headingLevel="h1" />
+  </main>
+</Layout>
+
+<style>
+.newsletter-page {
+  padding-top: clamp(var(--byz-space-8), 8vw, var(--byz-space-24));
+}
+</style>

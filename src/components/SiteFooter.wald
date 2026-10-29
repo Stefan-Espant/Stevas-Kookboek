@@ -34,6 +34,7 @@ const year = new Date().getFullYear()
     <a href="/wat-eten-we">Verras me!</a>
     <a href="/wat-heb-ik-in-huis">Wat heb ik in huis?</a>
     <a href="/recept-insturen">Recept insturen</a>
+    <a href="/nieuwsbrief">Nieuwsbrief</a>
     {new SafeHtml(pageLinks)}
   </nav>
   <div class="site-footer__social">{new SafeHtml(socialLinks)}</div>
