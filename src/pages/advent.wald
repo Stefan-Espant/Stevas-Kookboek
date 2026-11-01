@@ -1,0 +1,312 @@
+---
+import Layout from '../layouts/Layout.wald'
+import PageHeader from '../components/PageHeader.wald'
+import { getAllRecipes, recipePath } from '../lib/recipes'
+import { srcsetFor } from '../lib/images'
+import { ADVENT, ADVENT_JAAR } from '../lib/advent'
+// Adventkalender: 31 deurtjes, één recept per dag in december. Het deurtje van vandaag klik je open,
+// eerdere dagen staan open, latere zitten op slot. De datum bepaalt de browser (statische site); met
+// ?datum=2026-12-05 kun je een dag nabootsen om te testen.
+// NOG NIET LIVE: noindex (dus ook niet in de sitemap) en nergens gelinkt. Haal noindex weg om te lanceren.
+const recipes = new Map((await getAllRecipes()).map(recipe => [recipe.slug, recipe]))
+
+const deuren = ADVENT.map(({ dag, slug, feest }) => {
+  const recipe = recipes.get(slug)
+  const datum = `${dag} december`
+  const image = recipe?.image
+  const srcset = image ? srcsetFor(image) : ''
+  const media = image
+    ? renderTemplate`<img src="${image}" ${new SafeHtml(srcset ? renderTemplate`srcset="${srcset}" sizes="(min-width: 1024px) 18vw, (min-width: 640px) 30vw, 46vw"` : '')} alt="" loading="lazy" decoding="async" class="deur__foto">`
+    : '<div class="deur__foto deur__foto--leeg"><img src="/logo-steva.svg" alt=""></div>'
+  const tekst = recipe
+    ? renderTemplate`<h2 class="deur__titel">${recipe.title}</h2><p class="deur__meta">${recipe.totalTime} min</p><a class="deur__link" href="${recipePath(recipe.slug)}">Naar het recept <span aria-hidden="true">→</span></a>`
+    : '<h2 class="deur__titel">Een verrassing</h2><p class="deur__meta">Recept volgt</p>'
+  return renderTemplate`<article class="deur${feest ? ' deur--feest' : ''}" data-dag="${dag}">
+    <div class="deur__inhoud">
+      ${new SafeHtml(media)}
+      <div class="deur__tekst">
+        <p class="deur__datum">${datum}${feest ? renderTemplate` · ${feest}` : ''}</p>
+        ${new SafeHtml(tekst)}
+      </div>
+    </div>
+    <button type="button" class="deur__voor" aria-label="Deurtje ${dag} openen">
+      <span class="deur__nummer" aria-hidden="true">${dag}</span>
+      ${new SafeHtml(feest ? renderTemplate`<span class="deur__feest" aria-hidden="true">${feest}</span>` : '')}
+      <span class="deur__slot" aria-hidden="true"></span>
+    </button>
+  </article>`
+}).join('')
+
+const lead = 'Elke dag in december gaat er een deurtje open met een recept voor de feestdagen: van kruidnoten en banketstaaf tot kerststol en oliebollen.'
+---
+<Layout title="Adventkalender: elke dag een recept in december" description={lead} path="/advent" noindex={true}>
+  <main class="advent" data-jaar={ADVENT_JAAR}>
+    <PageHeader kicker="Steva’s adventkalender" title="Elke dag een deurtje" lead={lead} />
+    <p class="advent__status" aria-live="polite"></p>
+    <div class="advent__kalender">{new SafeHtml(deuren)}</div>
+    <p class="advent__melding" role="status" aria-live="polite"></p>
+  </main>
+</Layout>
+
+<script>
+;(function () {
+  var root = document.querySelector('.advent')
+  if (!root) return
+  var JAAR = Number(root.dataset.jaar)
+  var KEY = 'steva-advent-' + JAAR
+  var status = root.querySelector('.advent__status')
+  var melding = root.querySelector('.advent__melding')
+
+  // Vandaag in Nederlandse tijd, of de datum uit ?datum=JJJJ-MM-DD (om te testen).
+  function vandaag() {
+    var test = new URLSearchParams(location.search).get('datum')
+    if (test && /^\d{4}-\d{2}-\d{2}$/.test(test)) { var p = test.split('-').map(Number); return { j: p[0], m: p[1], d: p[2] } }
+    var delen = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()).split('-').map(Number)
+    return { j: delen[0], m: delen[1], d: delen[2] }
+  }
+  var nu = vandaag()
+  // Laatste dag die open mag: 0 vóór december, 31 vanaf januari.
+  var open = nu.j > JAAR || (nu.j === JAAR && nu.m === 12 && nu.d >= 31) ? 31 : (nu.j === JAAR && nu.m === 12 ? nu.d : 0)
+  var vandaagDag = nu.j === JAAR && nu.m === 12 ? nu.d : 0
+
+  var bewaard = []
+  try { bewaard = JSON.parse(localStorage.getItem(KEY) || '[]') } catch (e) {}
+  function bewaar(dag) {
+    if (bewaard.indexOf(dag) === -1) bewaard.push(dag)
+    try { localStorage.setItem(KEY, JSON.stringify(bewaard)) } catch (e) {}
+  }
+
+  // Status bovenaan.
+  if (open === 0) {
+    var dagen = Math.ceil((Date.UTC(JAAR, 11, 1) - Date.UTC(nu.j, nu.m - 1, nu.d)) / 864e5)
+    status.textContent = dagen === 1 ? 'Morgen gaat het eerste deurtje open!' : 'Nog ' + dagen + ' dagen tot het eerste deurtje.'
+  } else if (vandaagDag && vandaagDag <= 31) {
+    status.textContent = 'Vandaag mag deurtje ' + vandaagDag + ' open.'
+  } else {
+    status.textContent = 'Alle deurtjes zijn open. Gelukkig nieuwjaar!'
+  }
+
+  root.querySelectorAll('.deur').forEach(function (deur) {
+    var dag = Number(deur.dataset.dag)
+    var knop = deur.querySelector('.deur__voor')
+    var inhoud = deur.querySelector('.deur__inhoud')
+    function openen(animatie) {
+      if (!animatie) deur.classList.add('is-direct')
+      deur.classList.add('is-open')
+      knop.setAttribute('aria-expanded', 'true')
+      knop.tabIndex = -1
+      inhoud.removeAttribute('inert')
+      bewaar(dag)
+      if (!animatie) requestAnimationFrame(function () { deur.classList.remove('is-direct') })
+    }
+    inhoud.setAttribute('inert', '')
+    if (dag > open) {
+      deur.classList.add('is-dicht')
+      knop.setAttribute('aria-disabled', 'true')
+      knop.setAttribute('aria-label', 'Deurtje ' + dag + ' gaat open op ' + dag + ' december')
+    } else if (dag === vandaagDag && bewaard.indexOf(dag) === -1) {
+      deur.classList.add('is-vandaag')
+    } else {
+      openen(false)   // eerdere dagen (en eerder geopende) staan direct open
+    }
+    knop.addEventListener('click', function () {
+      if (deur.classList.contains('is-dicht')) {
+        deur.classList.remove('is-schud'); void deur.offsetWidth; deur.classList.add('is-schud')
+        melding.textContent = 'Nog even geduld: deurtje ' + dag + ' gaat open op ' + dag + ' december.'
+        return
+      }
+      deur.classList.remove('is-vandaag')
+      openen(true)
+      melding.textContent = 'Deurtje ' + dag + ' is open: ' + deur.querySelector('.deur__titel').textContent + '.'
+    })
+  })
+})()
+</script>
+
+<style>
+.advent {
+  max-width: var(--steva-pagina-breedte);
+  margin: 0 auto;
+  padding: var(--byz-space-12) var(--steva-pagina-marge) var(--byz-space-24);
+
+  & .advent__status {
+    margin: calc(-1 * var(--byz-space-6)) auto var(--byz-space-10);
+    text-align: center;
+    color: var(--byz-color-text-secondary);
+    font-family: var(--steva-font-script);
+    font-size: var(--byz-text-2xl);
+  }
+  & .advent__kalender {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--byz-space-4);
+  }
+  & .advent__melding {
+    min-height: 1.5em;
+    margin-top: var(--byz-space-8);
+    text-align: center;
+    color: var(--byz-color-text-secondary);
+  }
+
+  /* Deurtje: de inhoud (gerecht) ligt eronder, het luikje draait open op zijn linkerscharnier. */
+  & .deur {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    perspective: 1200px;
+    border-radius: 0.875rem;
+    box-shadow: inset 0 0 0 3px var(--steva-goud), inset 0 0 30px rgb(0 0 0 / 0.6);
+    background: var(--steva-bordeaux-donker);
+  }
+  & .deur__inhoud {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: inherit;
+  }
+  & .deur__foto {
+    flex: 1 1 55%;
+    min-height: 0;
+    width: 100%;
+    object-fit: cover;
+  }
+  & .deur__foto--leeg {
+    display: grid;
+    place-items: center;
+    background: var(--steva-bordeaux);
+  }
+  & .deur__foto--leeg img { width: 60%; }
+  & .deur__tekst {
+    padding: var(--byz-space-3) var(--byz-space-3) var(--byz-space-4);
+    text-align: center;
+  }
+  & .deur__datum {
+    margin: 0;
+    color: var(--byz-color-text-secondary);
+    font-size: var(--byz-text-xs);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  & .deur__titel {
+    margin: var(--byz-space-1) 0;
+    font-size: var(--byz-text-base);
+    font-weight: var(--byz-font-semibold);
+    line-height: 1.2;
+    text-transform: uppercase;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  & .deur__meta {
+    margin: 0 0 var(--byz-space-2);
+    font-size: var(--byz-text-sm);
+    color: var(--byz-color-text-muted);
+  }
+  & .deur__link {
+    display: inline-block;
+    padding: var(--byz-space-1) var(--byz-space-3);
+    border-radius: 999px;
+    background: var(--byz-color-accent);
+    color: var(--steva-bordeaux-donker);
+    font-size: var(--byz-text-sm);
+    font-weight: var(--byz-font-semibold);
+    text-decoration: none;
+  }
+
+  & .deur__voor {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: inherit;
+    background: linear-gradient(155deg, var(--steva-bordeaux-licht), var(--steva-bordeaux-rand) 50%, #4a0e03);
+    box-shadow: inset 0 0 0 3px var(--steva-goud), inset 0 0 0 9px var(--steva-bordeaux), inset 0 0 0 11px rgb(255 196 113 / 0.5), 0 10px 24px rgb(0 0 0 / 0.35);
+    color: var(--steva-goud);
+    cursor: pointer;
+    transform-origin: 0 50%;
+    transition: transform 0.9s cubic-bezier(0.6, 0.05, 0.3, 1), box-shadow 0.3s ease;
+    backface-visibility: hidden;
+  }
+  & .deur__voor::after {
+    /* deurknopje */
+    content: "";
+    position: absolute;
+    right: 12%;
+    top: 62%;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff1c9, var(--steva-goud) 55%, #b07a2a);
+  }
+  & .deur__nummer {
+    font-size: clamp(2.6rem, 9vw, 4.4rem);
+    font-weight: var(--byz-font-semibold);
+    line-height: 1;
+    text-shadow: 0 3px 0 var(--steva-bordeaux-donker), 0 0 24px rgb(255 180 80 / 0.35);
+  }
+  & .deur__feest {
+    position: absolute;
+    bottom: 12%;
+    left: 0;
+    right: 0;
+    font-family: var(--steva-font-script);
+    font-size: var(--byz-text-lg);
+    color: var(--steva-creme);
+  }
+  /* Feestdagen: rood lint met gouden randje. */
+  & .deur--feest .deur__voor {
+    background:
+      linear-gradient(90deg, transparent 78%, #d4342b 78%, #f04a3a 84%, #b1241c 90%, transparent 90%),
+      linear-gradient(155deg, var(--steva-bordeaux-licht), var(--steva-bordeaux-rand) 50%, #4a0e03);
+  }
+
+  /* Vandaag: gloeit en wiebelt af en toe, klik om te openen. */
+  & .deur.is-vandaag .deur__voor {
+    box-shadow: inset 0 0 0 3px var(--steva-goud), inset 0 0 0 9px var(--steva-bordeaux), inset 0 0 0 11px rgb(255 196 113 / 0.5), 0 0 0 4px var(--steva-goud), 0 0 40px rgb(255 174 61 / 0.6);
+    animation: advent-wiebel 3s ease-in-out infinite;
+  }
+  & .deur.is-open .deur__voor {
+    transform: rotateY(-108deg);
+    pointer-events: none;
+  }
+  & .deur.is-direct .deur__voor { transition: none; }
+  /* Op slot: iets gedimd, en schudden als je het toch probeert. */
+  & .deur.is-dicht .deur__voor {
+    cursor: not-allowed;
+    filter: saturate(0.75) brightness(0.85);
+  }
+  & .deur.is-dicht .deur__slot::before {
+    content: "🔒";
+    position: absolute;
+    top: 8%;
+    right: 10%;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  & .deur.is-schud .deur__voor { animation: advent-schud 0.45s ease-in-out; }
+}
+@keyframes advent-wiebel {
+  0%, 82%, 100% { transform: rotate(0); }
+  86% { transform: rotate(-2deg); }
+  90% { transform: rotate(2deg); }
+  94% { transform: rotate(-1deg); }
+}
+@keyframes advent-schud {
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+@media (min-width: 640px) {
+  .advent .advent__kalender { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .advent .advent__kalender { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--byz-space-5); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .advent .deur__voor { transition: none; }
+  .advent .deur.is-vandaag .deur__voor,
+  .advent .deur.is-schud .deur__voor { animation: none; }
+}
+</style>
