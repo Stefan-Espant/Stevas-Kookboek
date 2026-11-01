@@ -1,0 +1,489 @@
+---
+import Layout from '../layouts/Layout.wald'
+import PageHeader from '../components/PageHeader.wald'
+import { getAllRecipes, recipePath } from '../lib/recipes'
+import { srcsetFor } from '../lib/images'
+import { ADVENT, ADVENT_JAAR, adventOpenTot } from '../lib/advent'
+// Adventkalender: elke dag in december een ingepakt cadeautje met lint, strik en label. Uitpakken trekt het
+// lint los en scheurt het papier opzij; daarachter zit het recept. Feestdagen zijn de grote pakjes.
+// Alleen pakjes t/m de builddatum bevatten een recept (adventOpenTot); latere zijn lege dozen, zodat
+// "inspecteren" niets verklapt. De browser bepaalt welke dichte pakjes al open mogen; test met ?datum=2026-12-05.
+// NOG NIET LIVE: noindex (dus ook niet in de sitemap) en nergens gelinkt. Haal noindex weg om te lanceren.
+const recipes = new Map((await getAllRecipes()).map(recipe => [recipe.slug, recipe]))
+const openTot = adventOpenTot()
+
+const PAPIER = ['streep', 'stip', 'ster', 'ruit']
+const HOOG = new Set([2, 9, 13, 20, 28])
+const BREED = new Set([7, 16, 22, 29])
+
+// Een pakje dat nog niet open mag: alleen het papier, zonder titel, foto of link.
+const leegPakje = (dag, feest) => renderTemplate`<article class="pakje pakje--${feest ? 'feest' : PAPIER[dag % PAPIER.length]}${vormVan(dag, feest)}" data-dag="${dag}" data-leeg>
+    <div class="pakje__inhoud"></div>
+    ${new SafeHtml(papierVan(dag, feest))}
+  </article>`
+const vormVan = (dag, feest) => feest ? ' pakje--groot-vak' : HOOG.has(dag) ? ' pakje--hoog' : BREED.has(dag) ? ' pakje--breed' : ''
+const papierVan = (dag, feest) => renderTemplate`<button type="button" class="pakje__papier" aria-label="Pakje ${dag} uitpakken">
+      <span class="pakje__helft pakje__helft--links" aria-hidden="true"></span>
+      <span class="pakje__helft pakje__helft--rechts" aria-hidden="true"></span>
+      <span class="pakje__lint" aria-hidden="true"></span>
+      <span class="pakje__strik" aria-hidden="true"></span>
+      <span class="pakje__label" aria-hidden="true"><b>${dag}</b>${new SafeHtml(feest ? renderTemplate`<i>${feest}</i>` : '')}</span>
+    </button>`
+
+const pakjes = ADVENT.map(({ dag, slug, feest }) => {
+  if (dag > openTot) return leegPakje(dag, feest)
+  const recipe = recipes.get(slug)
+  const image = recipe?.image
+  const srcset = image ? srcsetFor(image) : ''
+  const foto = image
+    ? renderTemplate`<img src="${image}" ${new SafeHtml(srcset ? renderTemplate`srcset="${srcset}" sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 66vw"` : '')} alt="" loading="lazy" decoding="async" class="pakje__foto">`
+    : '<span class="pakje__foto pakje__foto--leeg"><img src="/logo-steva.svg" alt=""></span>'
+  const titel = recipe ? recipe.title : 'Een verrassing'
+  const meta = recipe ? `${recipe.totalTime} min` : 'Recept volgt'
+  const tekst = renderTemplate`<span class="pakje__datum">${dag} december${feest ? ` · ${feest}` : ''}</span><span class="pakje__titel">${titel}</span><span class="pakje__meta">${meta}</span>${new SafeHtml(recipe ? '<span class="pakje__knop">Naar het recept <span aria-hidden="true">→</span></span>' : '')}`
+  const inhoud = recipe
+    ? renderTemplate`<a class="pakje__inhoud" href="${recipePath(recipe.slug)}">${new SafeHtml(foto)}<span class="pakje__tekst">${new SafeHtml(tekst)}</span></a>`
+    : renderTemplate`<div class="pakje__inhoud">${new SafeHtml(foto)}<span class="pakje__tekst">${new SafeHtml(tekst)}</span></div>`
+  return renderTemplate`<article class="pakje pakje--${feest ? 'feest' : PAPIER[dag % PAPIER.length]}${vormVan(dag, feest)}" data-dag="${dag}" data-titel="${titel}">
+    ${new SafeHtml(inhoud)}
+    ${new SafeHtml(papierVan(dag, feest))}
+  </article>`
+}).join('')
+
+const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor de feestdagen: van kruidnoten en banketstaaf tot kerststol en oliebollen.'
+---
+<Layout title="Adventkalender: elke dag een recept in december" description={lead} path="/advent" noindex={true}>
+  <main class="advent" data-advent data-jaar={ADVENT_JAAR}>
+    <PageHeader kicker="Steva’s adventkalender" title="Elke dag een pakje" lead={lead} />
+
+    <section class="advent__vandaag" aria-labelledby="advent-vandaag" hidden>
+      <h2 class="advent__kop" id="advent-vandaag"></h2>
+      <p class="advent__sub"></p>
+      <div class="advent__spot"></div>
+    </section>
+
+    <div class="advent__voortgang" hidden>
+      <span class="advent__balk" aria-hidden="true"><span></span></span>
+      <span class="advent__teller"></span>
+    </div>
+
+    <h2 class="advent__kop advent__kop--alle">Alle pakjes</h2>
+    <div class="advent__stapel">{new SafeHtml(pakjes)}</div>
+    <p class="advent__toast" data-toast role="status" aria-live="polite"></p>
+  </main>
+</Layout>
+
+<script>
+;(function () {
+  var root = document.querySelector('[data-advent]')
+  if (!root) return
+  var JAAR = Number(root.dataset.jaar), KEY = 'steva-advent-' + JAAR
+  var rustig = matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  // Vandaag in Nederlandse tijd, of de datum uit ?datum=JJJJ-MM-DD (om te testen).
+  function vandaag() {
+    var test = new URLSearchParams(location.search).get('datum')
+    if (test && /^\d{4}-\d{2}-\d{2}$/.test(test)) { var p = test.split('-').map(Number); return { j: p[0], m: p[1], d: p[2] } }
+    var d = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()).split('-').map(Number)
+    return { j: d[0], m: d[1], d: d[2] }
+  }
+  var nu = vandaag()
+  var voorbij = nu.j > JAAR || (nu.j === JAAR && nu.m === 12 && nu.d >= 31)
+  var open = voorbij ? 31 : (nu.j === JAAR && nu.m === 12 ? nu.d : 0)
+  var vandaagDag = nu.j === JAAR && nu.m === 12 ? nu.d : 0
+  // Met ?datum (testen) wordt niets onthouden: na herladen zit het pakje weer dicht.
+  var testen = new URLSearchParams(location.search).has('datum'), bewaard = []
+  try { if (!testen) bewaard = JSON.parse(localStorage.getItem(KEY) || '[]') } catch (e) {}
+  function bewaar(dag) { if (bewaard.indexOf(dag) === -1) bewaard.push(dag); if (testen) return; try { localStorage.setItem(KEY, JSON.stringify(bewaard)) } catch (e) {} }
+  var toast = root.querySelector('[data-toast]'), toastTimer
+  function melding(tekst) {
+    toast.textContent = tekst; toast.classList.add('is-zichtbaar')
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { toast.classList.remove('is-zichtbaar') }, 3200)
+  }
+
+  // Confetti in de kleuren van het pakpapier.
+  var KLEUREN = ['#ffc471', '#d4342b', '#fcf6ea', '#2f6b4a', '#ffae3d']
+  function confetti(pakje) {
+    if (rustig) return
+    for (var i = 0; i < 26; i++) {
+      var c = document.createElement('span'), hoek = -Math.PI / 2 + (Math.random() - 0.5) * 2.6, afstand = 60 + Math.random() * 110
+      c.className = 'pakje__confetti'
+      c.style.background = KLEUREN[i % KLEUREN.length]
+      c.style.setProperty('--dx', Math.cos(hoek) * afstand + 'px'); c.style.setProperty('--dy', Math.sin(hoek) * afstand + 'px')
+      c.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg')
+      c.style.animationDelay = Math.random() * 0.2 + 's'
+      pakje.appendChild(c); setTimeout(c.remove.bind(c), 1500)
+    }
+  }
+
+  var paren = {}
+  function zetOpen(pakje, animatie) {
+    if (!animatie) pakje.classList.add('is-direct')
+    pakje.classList.add('is-open'); pakje.classList.remove('is-vandaag')
+    var knop = pakje.querySelector('.pakje__papier'); knop.tabIndex = -1; knop.setAttribute('aria-hidden', 'true')
+    pakje.querySelector('.pakje__inhoud').removeAttribute('inert')
+    if (!animatie) requestAnimationFrame(function () { requestAnimationFrame(function () { pakje.classList.remove('is-direct') }) })
+  }
+  function koppel(pakje) {
+    var dag = Number(pakje.dataset.dag)
+    ;(paren[dag] = paren[dag] || []).push(pakje)
+    var knop = pakje.querySelector('.pakje__papier')
+    pakje.querySelector('.pakje__inhoud').setAttribute('inert', '')
+    // Leeg pakje (de inhoud zit nog niet in deze build): blijft dicht, ook als de datum al zover is.
+    var leeg = pakje.hasAttribute('data-leeg')
+    if (dag > open || leeg) {
+      pakje.classList.add('is-dicht')
+      knop.setAttribute('aria-disabled', 'true')
+      knop.setAttribute('aria-label', dag <= open ? 'Pakje ' + dag + ', wordt nog klaargelegd' : 'Pakje ' + dag + ', mag open op ' + dag + ' december')
+    } else if (dag === vandaagDag && bewaard.indexOf(dag) === -1) {
+      pakje.classList.add('is-vandaag')
+      knop.setAttribute('aria-label', 'Pakje ' + dag + ' uitpakken: het recept van vandaag')
+    } else {
+      zetOpen(pakje, false)
+    }
+    knop.addEventListener('click', function () {
+      if (pakje.classList.contains('is-dicht')) {
+        pakje.classList.remove('is-schud'); void pakje.offsetWidth; pakje.classList.add('is-schud')
+        melding(dag <= open ? 'Pakje ' + dag + ' wordt nog klaargelegd. Kijk zo nog eens!'
+          : open === 0 ? 'Het eerste pakje mag open op 1 december.' : 'Niet stiekem schudden! Pakje ' + dag + ' mag open op ' + dag + ' december.')
+        return
+      }
+      bewaar(dag)
+      paren[dag].forEach(function (p) { zetOpen(p, true) })
+      confetti(pakje)
+      if (dag === spotDag) vak.querySelector('.advent__sub').textContent = 'Het recept van vandaag'
+      melding('Pakje ' + dag + ': ' + pakje.dataset.titel)
+      var link = pakje.querySelector('a.pakje__inhoud')
+      if (link) setTimeout(function () { link.focus({ preventScroll: true }) }, rustig ? 0 : 900)
+      voortgang()
+    })
+  }
+
+  // Uitgelicht bovenaan: het pakje van vandaag, of vóór december pakje 1 met een aftelling.
+  var vak = root.querySelector('.advent__vandaag'), spotDag = vandaagDag || (open === 0 ? 1 : 0)
+  if (spotDag && !voorbij) {
+    var kopie = root.querySelector('.advent__stapel .pakje[data-dag="' + spotDag + '"]').cloneNode(true)
+    kopie.classList.add('pakje--uitgelicht')
+    var foto = kopie.querySelector('img.pakje__foto'); if (foto) { foto.loading = 'eager'; foto.sizes = '(min-width: 640px) 560px, 92vw' }
+    vak.querySelector('.advent__spot').appendChild(kopie)
+    if (open === 0) {
+      var dagen = Math.ceil((Date.UTC(JAAR, 11, 1) - Date.UTC(nu.j, nu.m - 1, nu.d)) / 864e5)
+      vak.querySelector('.advent__kop').textContent = dagen === 1 ? 'Nog één nachtje slapen!' : 'Nog ' + dagen + ' nachtjes slapen'
+      vak.querySelector('.advent__sub').textContent = 'dan mag het eerste pakje open'
+    } else {
+      vak.querySelector('.advent__kop').textContent = 'Vandaag: pakje ' + spotDag
+      vak.querySelector('.advent__sub').textContent = bewaard.indexOf(spotDag) === -1 ? 'Trek aan het lint en pak het recept van vandaag uit' : 'Het recept van vandaag'
+    }
+    vak.hidden = false
+  } else if (voorbij) {
+    root.querySelector('.advent__kop--alle').textContent = 'Alles is uitgepakt. Gelukkig nieuwjaar!'
+  }
+
+  root.querySelectorAll('.pakje').forEach(koppel)
+
+  function voortgang() {
+    if (open === 0) return
+    var n = root.querySelectorAll('.advent__stapel .pakje.is-open').length
+    var balk = root.querySelector('.advent__voortgang')
+    balk.hidden = false
+    balk.querySelector('.advent__balk span').style.width = (n / 31 * 100) + '%'
+    balk.querySelector('.advent__teller').textContent = n + ' van 31 pakjes uitgepakt'
+  }
+  voortgang()
+})()
+</script>
+
+<style>
+.advent {
+  max-width: var(--steva-pagina-breedte);
+  margin: 0 auto;
+  padding: var(--byz-space-12) var(--steva-pagina-marge) var(--byz-space-24);
+
+  & .advent__vandaag { margin: 0 auto var(--byz-space-12); text-align: center; }
+  & .advent__kop {
+    margin: 0;
+    font-size: var(--byz-text-2xl);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    text-shadow: var(--steva-tekst-schaduw);
+  }
+  & .advent__sub {
+    margin: var(--byz-space-1) 0 var(--byz-space-8);
+    color: var(--steva-goud);
+    font-family: var(--steva-font-script);
+    font-size: var(--byz-text-2xl);
+  }
+  & .advent__spot { max-width: 35rem; margin: 0 auto; }
+
+  & .advent__voortgang {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--byz-space-3);
+    margin: 0 auto var(--byz-space-10);
+    color: var(--byz-color-text-secondary);
+    font-size: var(--byz-text-sm);
+    font-weight: var(--byz-font-semibold);
+  }
+  & .advent__voortgang[hidden] { display: none; }
+  & .advent__balk { width: min(14rem, 40vw); height: 0.5rem; border-radius: 999px; background: rgb(252 246 234 / 0.15); overflow: hidden; }
+  & .advent__balk span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #d4342b, var(--steva-goud)); transition: width 0.6s ease; }
+  & .advent__kop--alle { margin-bottom: var(--byz-space-6); text-align: center; font-size: var(--byz-text-xl); }
+
+  /* ── De stapel: pakjes in verschillende maten, zoals onder de boom ─────── */
+  & .advent__stapel {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: 8.5rem;
+    grid-auto-flow: dense;
+    gap: var(--byz-space-3);
+  }
+  & .pakje--hoog { grid-row: span 2; }
+  & .pakje--breed { grid-column: span 2; }
+  & .pakje--groot-vak { grid-column: span 2; grid-row: span 2; }
+
+  /* Alle versiering is in em, zodat het uitgelichte pakje alles groter krijgt met één font-size. */
+  & .pakje {
+    --lint: #c8322a;
+    --lint-licht: #f05a48;
+    --lint-breed: 0.55em;
+    --kruis: 42%;
+    position: relative;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: #1a0300;
+    box-shadow: 0 10px 22px rgb(0 0 0 / 0.4);
+  }
+  & .pakje--streep {
+    --papier: repeating-linear-gradient(45deg, #fcf6ea 0 0.6em, #f3e6cc 0.6em 0.75em, #c8322a 0.75em 1em, #f3e6cc 1em 1.15em);
+    --lint: #2f6b4a; --lint-licht: #4f9a6e;
+  }
+  & .pakje--stip {
+    --papier: radial-gradient(circle, #ffc471 0.13em, transparent 0.16em) 0 0 / 1em 1em, radial-gradient(circle, #ffc471 0.13em, transparent 0.16em) 0.5em 0.5em / 1em 1em, linear-gradient(160deg, #2f6b4a, #1d4632);
+    --lint: #c8322a; --lint-licht: #f05a48;
+  }
+  & .pakje--ster {
+    --papier: radial-gradient(circle, #fcf6ea 0.08em, transparent 0.11em) 0 0 / 0.8em 0.8em, radial-gradient(circle, rgb(252 246 234 / 0.6) 0.06em, transparent 0.09em) 0.4em 0.4em / 0.8em 0.8em, linear-gradient(160deg, #d4342b, #9d1d16);
+    --lint: #ffc471; --lint-licht: #fff1c9;
+  }
+  & .pakje--ruit {
+    --papier: repeating-linear-gradient(0deg, transparent 0 0.9em, rgb(87 17 3 / 0.28) 0.9em 1.1em), repeating-linear-gradient(90deg, transparent 0 0.9em, rgb(87 17 3 / 0.28) 0.9em 1.1em), linear-gradient(160deg, #f0c27a, #c98f45);
+    --lint: #571103; --lint-licht: #8c230e;
+  }
+  & .pakje--feest {
+    --papier: repeating-linear-gradient(60deg, transparent 0 1.1em, rgb(255 196 113 / 0.35) 1.1em 1.2em), repeating-linear-gradient(-60deg, transparent 0 1.1em, rgb(255 196 113 / 0.35) 1.1em 1.2em), linear-gradient(160deg, #8c230e, #430b00);
+    --lint: #ffc471; --lint-licht: #fff1c9;
+    --lint-breed: 0.8em;
+  }
+
+  /* Achter het papier: foto met de titel eroverheen; de hele kaart is de link. */
+  & .pakje__inhoud { position: absolute; inset: 0; display: block; overflow: hidden; color: var(--steva-creme); text-decoration: none; }
+  & .pakje__foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+  & .pakje__foto--leeg { display: grid; place-items: center; background: var(--steva-bordeaux); }
+  & .pakje__foto--leeg img { width: 60%; }
+  & a.pakje__inhoud:hover .pakje__foto, & a.pakje__inhoud:focus-visible .pakje__foto { transform: scale(1.05); }
+  & a.pakje__inhoud:focus-visible { outline: 3px solid var(--byz-color-focus); outline-offset: -3px; }
+  & .pakje__tekst {
+    position: absolute;
+    inset: auto 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 2rem 0.6rem 0.6rem;
+    background: linear-gradient(to top, rgb(26 3 0 / 0.95), rgb(26 3 0 / 0.7) 55%, transparent);
+    text-align: center;
+  }
+  & .pakje__datum { color: var(--steva-goud); font-size: 0.65rem; font-weight: var(--byz-font-semibold); text-transform: uppercase; letter-spacing: 0.04em; }
+  & .pakje__titel { font-size: 0.8rem; font-weight: var(--byz-font-semibold); line-height: 1.15; text-transform: uppercase; overflow-wrap: break-word; hyphens: auto; }
+  & .pakje__meta { font-size: 0.7rem; opacity: 0.8; }
+  & .pakje__knop { display: none; }
+  & :is(.pakje--groot-vak, .pakje--uitgelicht) .pakje__datum { font-size: var(--byz-text-sm); }
+  & :is(.pakje--groot-vak, .pakje--uitgelicht) .pakje__titel { font-size: var(--byz-text-lg); }
+
+  /* ── Het pakpapier ─────────────────────────────────────────────────────── */
+  & .pakje__papier {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+  }
+  /* Twee helften van hetzelfde vel (clip-path), zodat het patroon doorloopt tot het opengescheurd wordt. */
+  & .pakje__helft {
+    position: absolute;
+    inset: 0;
+    background: var(--papier);
+    box-shadow: inset 0 -1.5em 2.5em rgb(0 0 0 / 0.22), inset 0 1em 1.5em rgb(255 255 255 / 0.08);
+    transition: transform 0.75s cubic-bezier(0.55, 0, 0.25, 1) 0.3s, opacity 0.4s ease 0.65s;
+  }
+  & .pakje__helft--links { clip-path: polygon(0 0, 51% 0, 48% 18%, 52% 36%, 47% 55%, 52% 74%, 48% 90%, 51% 100%, 0 100%); }
+  & .pakje__helft--rechts { clip-path: polygon(51% 0, 100% 0, 100% 100%, 51% 100%, 48% 90%, 52% 74%, 47% 55%, 52% 36%, 48% 18%); }
+  & .pakje__lint {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, transparent calc(50% - var(--lint-breed) / 2), var(--lint) calc(50% - var(--lint-breed) / 2), var(--lint-licht) 50%, var(--lint) calc(50% + var(--lint-breed) / 2), transparent calc(50% + var(--lint-breed) / 2)),
+      linear-gradient(transparent calc(var(--kruis) - var(--lint-breed) / 2), var(--lint) calc(var(--kruis) - var(--lint-breed) / 2), var(--lint-licht) var(--kruis), var(--lint) calc(var(--kruis) + var(--lint-breed) / 2), transparent calc(var(--kruis) + var(--lint-breed) / 2));
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.3));
+    transition: transform 0.45s ease, opacity 0.35s ease;
+  }
+  & .pakje__strik {
+    position: absolute;
+    left: 50%;
+    top: var(--kruis);
+    width: 3.4em;
+    height: 1.7em;
+    translate: -50% -70%;
+    background: radial-gradient(circle at 50% 70%, var(--lint-licht) 0 0.32em, var(--lint) 0.33em 0.42em, transparent 0.43em);
+    filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.35));
+    transition: transform 0.5s cubic-bezier(0.5, 0, 0.8, 0.3), opacity 0.4s ease 0.1s;
+  }
+  & .pakje__strik::before,
+  & .pakje__strik::after {
+    content: "";
+    position: absolute;
+    bottom: 0.15em;
+    width: 1.55em;
+    height: 1.2em;
+    border: 0.36em solid var(--lint);
+    border-radius: 50% 50% 45% 45%;
+  }
+  & .pakje__strik::before { left: 0; rotate: -18deg; border-right-color: var(--lint-licht); }
+  & .pakje__strik::after { right: 0; rotate: 18deg; border-left-color: var(--lint-licht); }
+  & .pakje__label {
+    position: absolute;
+    left: 50%;
+    top: var(--kruis);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 2.6em;
+    padding: 0.2em 0.55em 0.25em 0.95em;
+    border-radius: 0.3em;
+    background: #fcf6ea;
+    box-shadow: 0 3px 6px rgb(0 0 0 / 0.35);
+    color: var(--steva-bordeaux);
+    transform-origin: 0 0;
+    translate: 0.5em 0.55em;
+    rotate: 9deg;
+    transition: transform 0.45s ease, opacity 0.35s ease;
+  }
+  & .pakje__label::before {
+    content: "";
+    position: absolute;
+    left: 0.32em;
+    top: 50%;
+    width: 0.32em;
+    height: 0.32em;
+    margin-top: -0.16em;
+    border-radius: 50%;
+    background: rgb(87 17 3 / 0.5);
+  }
+  & .pakje__label b { font-size: 1.45em; font-weight: var(--byz-font-semibold); line-height: 1.05; }
+  & .pakje__label i { font-family: var(--steva-font-script); font-size: 0.95em; font-style: normal; white-space: nowrap; }
+  & .pakje--groot-vak { font-size: 1.05rem; }
+
+  /* Uitpakken: eerst gaat het lint eraf, dan scheurt het papier opzij. */
+  & .pakje.is-open .pakje__papier { pointer-events: none; }
+  & .pakje.is-open .pakje__strik { transform: translateY(-260%) rotate(-25deg) scale(0.8); opacity: 0; }
+  & .pakje.is-open .pakje__lint { transform: scale(1.25); opacity: 0; }
+  & .pakje.is-open .pakje__label { transform: translate(40%, 160%) rotate(25deg); opacity: 0; }
+  & .pakje.is-open .pakje__helft--links { transform: translateX(-75%) rotate(-7deg); opacity: 0; }
+  & .pakje.is-open .pakje__helft--rechts { transform: translateX(75%) rotate(7deg); opacity: 0; }
+  & .pakje.is-direct :is(.pakje__helft, .pakje__lint, .pakje__strik, .pakje__label) { transition: none; }
+
+  /* Vandaag: gouden gloed en een hupje. */
+  & .pakje.is-vandaag { box-shadow: 0 0 0 3px var(--steva-goud), 0 0 34px rgb(255 174 61 / 0.6); overflow: visible; }
+  & .pakje.is-vandaag .pakje__papier { animation: pakje-hup 2.8s ease-in-out infinite; }
+  & .pakje.is-vandaag .pakje__helft { border-radius: 0.5rem; }
+  & .pakje.is-open { overflow: hidden; }
+  /* Nog niet aan de beurt: wat doffer, met een slotje op het label. */
+  & .pakje.is-dicht .pakje__papier { cursor: not-allowed; filter: saturate(0.75) brightness(0.78); }
+  & .pakje.is-dicht .pakje__label::after { content: "🔒"; position: absolute; top: -0.55em; right: -0.5em; font-size: 0.7em; }
+  & .pakje.is-schud .pakje__papier { animation: pakje-schud 0.5s ease-in-out; }
+  & .pakje__papier:focus-visible { outline: 3px solid var(--byz-color-focus); outline-offset: 3px; }
+
+  & .pakje__confetti {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    width: 0.45rem;
+    height: 0.7rem;
+    border-radius: 1px;
+    pointer-events: none;
+    z-index: 3;
+    animation: pakje-confetti 1.2s cubic-bezier(0.2, 0.6, 0.4, 1) forwards;
+  }
+
+  /* Het uitgelichte pakje van vandaag. */
+  & .advent__spot .pakje--uitgelicht { aspect-ratio: 4 / 3; font-size: clamp(1.4rem, 5vw, 2.1rem); }
+  & .pakje--uitgelicht .pakje__tekst { gap: 0.35rem; padding: 4rem 1.2rem 1.3rem; }
+  & .pakje--uitgelicht .pakje__titel { font-size: var(--byz-text-xl); }
+  & .pakje--uitgelicht .pakje__meta { font-size: var(--byz-text-sm); }
+  & .pakje--uitgelicht .pakje__knop {
+    display: inline-block;
+    align-self: center;
+    margin-top: 0.4rem;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    background: var(--byz-color-accent);
+    box-shadow: inset 0 -3px 0 var(--steva-oranje-donker);
+    color: var(--steva-bordeaux-donker);
+    font-size: var(--byz-text-sm);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+  }
+
+  & .advent__toast {
+    position: fixed;
+    left: 50%;
+    bottom: max(var(--byz-space-6), env(safe-area-inset-bottom));
+    z-index: 20;
+    max-width: calc(100vw - 2rem);
+    margin: 0;
+    padding: var(--byz-space-3) var(--byz-space-5);
+    border-radius: 999px;
+    background: var(--steva-creme);
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.45);
+    color: var(--steva-bordeaux-donker);
+    font-weight: var(--byz-font-semibold);
+    text-align: center;
+    opacity: 0;
+    transform: translate(-50%, 1rem);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  & .advent__toast.is-zichtbaar { opacity: 1; transform: translate(-50%, 0); }
+
+  /* Media queries binnen het blok: alleen geneste (&) selectors raken ook de server-HTML. */
+  @media (min-width: 640px) {
+    & .advent__stapel { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 10rem; gap: var(--byz-space-4); }
+    & .pakje { font-size: 1.1rem; }
+    & .pakje--groot-vak { font-size: 1.5rem; }
+  }
+  @media (min-width: 1024px) {
+    & .advent__stapel { grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: 11rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    & :is(.pakje__helft, .pakje__lint, .pakje__strik, .pakje__label, .pakje__foto, .advent__toast, .advent__balk span) { transition: none; }
+    & .pakje.is-vandaag .pakje__papier, & .pakje.is-schud .pakje__papier { animation: none; }
+  }
+}
+@keyframes pakje-hup {
+  0%, 78%, 100% { transform: none; }
+  83% { transform: translateY(-6%) rotate(-2deg); }
+  88% { transform: translateY(0) rotate(1.5deg); }
+  92% { transform: translateY(-2%) rotate(-1deg); }
+}
+@keyframes pakje-schud {
+  20%, 60% { transform: rotate(-4deg); }
+  40%, 80% { transform: rotate(4deg); }
+}
+@keyframes pakje-confetti {
+  from { transform: translate(-50%, -50%) rotate(0); opacity: 1; }
+  to { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + 60px)) rotate(var(--r)); opacity: 0; }
+}
+</style>
