@@ -44,3 +44,17 @@ export const ADVENT: AdventDag[] = [
   { dag: 30, slug: 'appelflappen' },
   { dag: 31, slug: 'oliebollen', feest: 'Oudejaarsdag' }
 ]
+
+/**
+ * Tot en met welke dag de inhoud in de build mag (0 vóór december, 31 vanaf oudejaarsdag). Latere pakjes
+ * worden lege dozen, zodat ook "inspecteren" niets verklapt; een dagelijkse build (zie
+ * .github/workflows/advent-build.yml) legt elke nacht het nieuwe pakje erbij.
+ * Testen: ADVENT_DATUM=2026-12-07 npm run build:preview.
+ */
+export function adventOpenTot(): number {
+  const datum = process.env.ADVENT_DATUM || new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date())
+  const [jaar, maand, dag] = datum.split('-').map(Number)
+  if (jaar > ADVENT_JAAR) return 31
+  if (jaar < ADVENT_JAAR || maand < 12) return 0
+  return Math.min(dag, 31)
+}

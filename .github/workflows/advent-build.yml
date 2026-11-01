@@ -1,0 +1,23 @@
+# Adventkalender: elke nacht om 00:01 (Nederlandse wintertijd = 23:01 UTC) een nieuwe Vercel-build, zodat
+# het pakje van die dag in de site komt. Pakjes van latere dagen staan nooit in de HTML (zie
+# adventOpenTot in src/lib/advent.ts). Draait van de nacht naar 1 december t/m de nacht naar 31 december.
+# Nodig: repository-secret VERCEL_DEPLOY_HOOK met de deploy-hook-URL van het Vercel-project
+# (Vercel → Settings → Git → Deploy Hooks, branch main).
+name: Adventkalender dagelijkse build
+
+on:
+  schedule:
+    - cron: '1 23 30 11 *'
+    - cron: '1 23 1-30 12 *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Vercel-build starten
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "Secret VERCEL_DEPLOY_HOOK ontbreekt"; exit 1; fi
+          curl -fsS -X POST "$HOOK"
