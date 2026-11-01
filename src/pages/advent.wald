@@ -4,35 +4,35 @@ import PageHeader from '../components/PageHeader.wald'
 import { getAllRecipes, recipePath } from '../lib/recipes'
 import { srcsetFor } from '../lib/images'
 import { ADVENT, ADVENT_JAAR } from '../lib/advent'
-// Adventkalender: 31 deurtjes, één recept per dag in december. Het deurtje van vandaag klik je open,
-// eerdere dagen staan open, latere zitten op slot. De datum bepaalt de browser (statische site); met
-// ?datum=2026-12-05 kun je een dag nabootsen om te testen.
+// Adventkalender: 31 deurtjes, één recept per dag in december. Bovenaan staat het deurtje van vandaag
+// groot (vóór december: een aftelling); daaronder de hele kalender. Eerdere dagen staan op een kier open,
+// latere zitten op slot. De datum bepaalt de browser (statische site); met ?datum=2026-12-05 kun je een
+// dag nabootsen om te testen.
 // NOG NIET LIVE: noindex (dus ook niet in de sitemap) en nergens gelinkt. Haal noindex weg om te lanceren.
 const recipes = new Map((await getAllRecipes()).map(recipe => [recipe.slug, recipe]))
 
 const deuren = ADVENT.map(({ dag, slug, feest }) => {
   const recipe = recipes.get(slug)
-  const datum = `${dag} december`
   const image = recipe?.image
   const srcset = image ? srcsetFor(image) : ''
-  const media = image
-    ? renderTemplate`<img src="${image}" ${new SafeHtml(srcset ? renderTemplate`srcset="${srcset}" sizes="(min-width: 1024px) 18vw, (min-width: 640px) 30vw, 46vw"` : '')} alt="" loading="lazy" decoding="async" class="deur__foto">`
-    : '<div class="deur__foto deur__foto--leeg"><img src="/logo-steva.svg" alt=""></div>'
-  const tekst = recipe
-    ? renderTemplate`<h2 class="deur__titel">${recipe.title}</h2><p class="deur__meta">${recipe.totalTime} min</p><a class="deur__link" href="${recipePath(recipe.slug)}">Naar het recept <span aria-hidden="true">→</span></a>`
-    : '<h2 class="deur__titel">Een verrassing</h2><p class="deur__meta">Recept volgt</p>'
-  return renderTemplate`<article class="deur${feest ? ' deur--feest' : ''}" data-dag="${dag}">
-    <div class="deur__inhoud">
-      ${new SafeHtml(media)}
-      <div class="deur__tekst">
-        <p class="deur__datum">${datum}${feest ? renderTemplate` · ${feest}` : ''}</p>
-        ${new SafeHtml(tekst)}
-      </div>
-    </div>
-    <button type="button" class="deur__voor" aria-label="Deurtje ${dag} openen">
-      <span class="deur__nummer" aria-hidden="true">${dag}</span>
-      ${new SafeHtml(feest ? renderTemplate`<span class="deur__feest" aria-hidden="true">${feest}</span>` : '')}
-      <span class="deur__slot" aria-hidden="true"></span>
+  const foto = image
+    ? renderTemplate`<img src="${image}" ${new SafeHtml(srcset ? renderTemplate`srcset="${srcset}" sizes="(min-width: 1024px) 16vw, (min-width: 640px) 25vw, 33vw"` : '')} alt="" loading="lazy" decoding="async" class="deur__foto">`
+    : '<span class="deur__foto deur__foto--leeg"><img src="/logo-steva.svg" alt=""></span>'
+  const titel = recipe ? recipe.title : 'Een verrassing'
+  const meta = recipe ? `${recipe.totalTime} min` : 'Recept volgt'
+  // Achter het deurtje: de hele kaart is de link naar het recept (of, zonder gepubliceerd recept, geen link).
+  const tekst = renderTemplate`<span class="deur__datum">${dag} december${feest ? ` · ${feest}` : ''}</span><span class="deur__titel">${titel}</span><span class="deur__meta">${meta}</span>${new SafeHtml(recipe ? '<span class="deur__knop">Naar het recept <span aria-hidden="true">→</span></span>' : '')}`
+  const inhoud = recipe
+    ? renderTemplate`<a class="deur__inhoud" href="${recipePath(recipe.slug)}">${new SafeHtml(foto)}<span class="deur__tekst">${new SafeHtml(tekst)}</span></a>`
+    : renderTemplate`<div class="deur__inhoud">${new SafeHtml(foto)}<span class="deur__tekst">${new SafeHtml(tekst)}</span></div>`
+  return renderTemplate`<article class="deur${feest ? ' deur--feest' : ''}" data-dag="${dag}" data-titel="${titel}">
+    ${new SafeHtml(inhoud)}
+    <button type="button" class="deur__luik" aria-label="Deurtje ${dag} openen">
+      <span class="deur__kant deur__kant--voor" aria-hidden="true">
+        <span class="deur__nummer">${dag}</span>
+        ${new SafeHtml(feest ? renderTemplate`<span class="deur__feest">${feest}</span>` : '')}
+      </span>
+      <span class="deur__kant deur__kant--achter" aria-hidden="true"></span>
     </button>
   </article>`
 }).join('')
@@ -42,9 +42,21 @@ const lead = 'Elke dag in december gaat er een deurtje open met een recept voor 
 <Layout title="Adventkalender: elke dag een recept in december" description={lead} path="/advent" noindex={true}>
   <main class="advent" data-jaar={ADVENT_JAAR}>
     <PageHeader kicker="Steva’s adventkalender" title="Elke dag een deurtje" lead={lead} />
-    <p class="advent__status" aria-live="polite"></p>
+
+    <section class="advent__vandaag" aria-labelledby="advent-vandaag" hidden>
+      <h2 class="advent__kop" id="advent-vandaag"></h2>
+      <p class="advent__sub"></p>
+      <div class="advent__spot"></div>
+    </section>
+
+    <div class="advent__voortgang" hidden>
+      <span class="advent__balk" aria-hidden="true"><span></span></span>
+      <span class="advent__teller"></span>
+    </div>
+
+    <h2 class="advent__kop advent__kop--alle">Alle deurtjes</h2>
     <div class="advent__kalender">{new SafeHtml(deuren)}</div>
-    <p class="advent__melding" role="status" aria-live="polite"></p>
+    <p class="advent__toast" role="status" aria-live="polite"></p>
   </main>
 </Layout>
 
@@ -52,74 +64,113 @@ const lead = 'Elke dag in december gaat er een deurtje open met een recept voor 
 ;(function () {
   var root = document.querySelector('.advent')
   if (!root) return
-  var JAAR = Number(root.dataset.jaar)
-  var KEY = 'steva-advent-' + JAAR
-  var status = root.querySelector('.advent__status')
-  var melding = root.querySelector('.advent__melding')
+  var JAAR = Number(root.dataset.jaar), KEY = 'steva-advent-' + JAAR
+  var rustig = matchMedia('(prefers-reduced-motion: reduce)').matches
+  var toast = root.querySelector('.advent__toast'), toastTimer
 
   // Vandaag in Nederlandse tijd, of de datum uit ?datum=JJJJ-MM-DD (om te testen).
   function vandaag() {
     var test = new URLSearchParams(location.search).get('datum')
     if (test && /^\d{4}-\d{2}-\d{2}$/.test(test)) { var p = test.split('-').map(Number); return { j: p[0], m: p[1], d: p[2] } }
-    var delen = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()).split('-').map(Number)
-    return { j: delen[0], m: delen[1], d: delen[2] }
+    var d = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()).split('-').map(Number)
+    return { j: d[0], m: d[1], d: d[2] }
   }
   var nu = vandaag()
-  // Laatste dag die open mag: 0 vóór december, 31 vanaf januari.
-  var open = nu.j > JAAR || (nu.j === JAAR && nu.m === 12 && nu.d >= 31) ? 31 : (nu.j === JAAR && nu.m === 12 ? nu.d : 0)
+  var voorbij = nu.j > JAAR || (nu.j === JAAR && nu.m === 12 && nu.d >= 31)
+  var open = voorbij ? 31 : (nu.j === JAAR && nu.m === 12 ? nu.d : 0)   // hoogste dag die open mag
   var vandaagDag = nu.j === JAAR && nu.m === 12 ? nu.d : 0
 
   var bewaard = []
   try { bewaard = JSON.parse(localStorage.getItem(KEY) || '[]') } catch (e) {}
-  function bewaar(dag) {
-    if (bewaard.indexOf(dag) === -1) bewaard.push(dag)
-    try { localStorage.setItem(KEY, JSON.stringify(bewaard)) } catch (e) {}
-  }
+  function bewaar(dag) { if (bewaard.indexOf(dag) === -1) bewaard.push(dag); try { localStorage.setItem(KEY, JSON.stringify(bewaard)) } catch (e) {} }
 
-  // Status bovenaan.
-  if (open === 0) {
-    var dagen = Math.ceil((Date.UTC(JAAR, 11, 1) - Date.UTC(nu.j, nu.m - 1, nu.d)) / 864e5)
-    status.textContent = dagen === 1 ? 'Morgen gaat het eerste deurtje open!' : 'Nog ' + dagen + ' dagen tot het eerste deurtje.'
-  } else if (vandaagDag && vandaagDag <= 31) {
-    status.textContent = 'Vandaag mag deurtje ' + vandaagDag + ' open.'
-  } else {
-    status.textContent = 'Alle deurtjes zijn open. Gelukkig nieuwjaar!'
+  function melding(tekst) {
+    toast.textContent = tekst; toast.classList.add('is-zichtbaar')
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { toast.classList.remove('is-zichtbaar') }, 3200)
   }
-
-  root.querySelectorAll('.deur').forEach(function (deur) {
-    var dag = Number(deur.dataset.dag)
-    var knop = deur.querySelector('.deur__voor')
-    var inhoud = deur.querySelector('.deur__inhoud')
-    function openen(animatie) {
-      if (!animatie) deur.classList.add('is-direct')
-      deur.classList.add('is-open')
-      knop.setAttribute('aria-expanded', 'true')
-      knop.tabIndex = -1
-      inhoud.removeAttribute('inert')
-      bewaar(dag)
-      if (!animatie) requestAnimationFrame(function () { deur.classList.remove('is-direct') })
+  // Gouden vonken bij het openen.
+  function vonken(deur) {
+    if (rustig) return
+    for (var i = 0; i < 18; i++) {
+      var v = document.createElement('span'), hoek = Math.random() * Math.PI * 2, afstand = 50 + Math.random() * 90
+      v.className = 'deur__vonk'
+      v.style.setProperty('--dx', Math.cos(hoek) * afstand + 'px'); v.style.setProperty('--dy', Math.sin(hoek) * afstand + 'px')
+      v.style.animationDelay = Math.random() * 0.15 + 's'
+      deur.appendChild(v); setTimeout(v.remove.bind(v), 1200)
     }
-    inhoud.setAttribute('inert', '')
+  }
+
+  // Elk deurtje (in de kalender en eventueel uitgelicht bovenaan) krijgt dezelfde bediening.
+  var paren = {}   // dag → [kalenderdeur, uitgelichte deur]
+  function zetOpen(deur, animatie) {
+    if (!animatie) deur.classList.add('is-direct')
+    deur.classList.add('is-open'); deur.classList.remove('is-vandaag')
+    var luik = deur.querySelector('.deur__luik'); luik.tabIndex = -1; luik.setAttribute('aria-hidden', 'true')
+    deur.querySelector('.deur__inhoud').removeAttribute('inert')
+    if (!animatie) requestAnimationFrame(function () { requestAnimationFrame(function () { deur.classList.remove('is-direct') }) })
+  }
+  function koppel(deur) {
+    var dag = Number(deur.dataset.dag)
+    ;(paren[dag] = paren[dag] || []).push(deur)
+    var luik = deur.querySelector('.deur__luik')
+    deur.querySelector('.deur__inhoud').setAttribute('inert', '')
     if (dag > open) {
       deur.classList.add('is-dicht')
-      knop.setAttribute('aria-disabled', 'true')
-      knop.setAttribute('aria-label', 'Deurtje ' + dag + ' gaat open op ' + dag + ' december')
+      luik.setAttribute('aria-disabled', 'true')
+      luik.setAttribute('aria-label', 'Deurtje ' + dag + ', gaat open op ' + dag + ' december')
     } else if (dag === vandaagDag && bewaard.indexOf(dag) === -1) {
       deur.classList.add('is-vandaag')
+      luik.setAttribute('aria-label', 'Deurtje ' + dag + ' openen: het recept van vandaag')
     } else {
-      openen(false)   // eerdere dagen (en eerder geopende) staan direct open
+      zetOpen(deur, false)
     }
-    knop.addEventListener('click', function () {
+    luik.addEventListener('click', function () {
       if (deur.classList.contains('is-dicht')) {
         deur.classList.remove('is-schud'); void deur.offsetWidth; deur.classList.add('is-schud')
-        melding.textContent = 'Nog even geduld: deurtje ' + dag + ' gaat open op ' + dag + ' december.'
+        melding(dag === 1 && open === 0 ? 'Het eerste deurtje gaat open op 1 december.' : 'Nog even geduld: deurtje ' + dag + ' gaat open op ' + dag + ' december.')
         return
       }
-      deur.classList.remove('is-vandaag')
-      openen(true)
-      melding.textContent = 'Deurtje ' + dag + ' is open: ' + deur.querySelector('.deur__titel').textContent + '.'
+      bewaar(dag)
+      paren[dag].forEach(function (d) { zetOpen(d, true) })
+      vonken(deur)
+      melding('Deurtje ' + dag + ': ' + deur.dataset.titel)
+      var link = deur.querySelector('a.deur__inhoud')
+      if (link) setTimeout(function () { link.focus({ preventScroll: true }) }, rustig ? 0 : 700)
+      voortgang()
     })
-  })
+  }
+
+  // Uitgelicht bovenaan: vandaag, of vóór december het (dichte) eerste deurtje met een aftelling.
+  var vak = root.querySelector('.advent__vandaag'), spotDag = vandaagDag || (open === 0 ? 1 : 0)
+  if (spotDag && !voorbij) {
+    var kopie = root.querySelector('.advent__kalender .deur[data-dag="' + spotDag + '"]').cloneNode(true)
+    kopie.classList.add('deur--groot')
+    var foto = kopie.querySelector('img.deur__foto'); if (foto) { foto.loading = 'eager'; foto.sizes = '(min-width: 640px) 520px, 90vw' }
+    vak.querySelector('.advent__spot').appendChild(kopie)
+    if (open === 0) {
+      var dagen = Math.ceil((Date.UTC(JAAR, 11, 1) - Date.UTC(nu.j, nu.m - 1, nu.d)) / 864e5)
+      vak.querySelector('.advent__kop').textContent = dagen === 1 ? 'Morgen gaat het eerste deurtje open!' : 'Nog ' + dagen + ' dagen'
+      vak.querySelector('.advent__sub').textContent = dagen === 1 ? 'Kom morgen terug voor het eerste recept.' : 'tot het eerste deurtje opengaat'
+    } else {
+      vak.querySelector('.advent__kop').textContent = 'Vandaag: deurtje ' + spotDag
+      vak.querySelector('.advent__sub').textContent = bewaard.indexOf(spotDag) === -1 ? 'Klik op het deurtje om het recept van vandaag te zien.' : 'Het recept van vandaag'
+    }
+    vak.hidden = false
+  } else if (voorbij) {
+    root.querySelector('.advent__kop--alle').textContent = 'Alle deurtjes zijn open. Gelukkig nieuwjaar!'
+  }
+
+  root.querySelectorAll('.deur').forEach(koppel)
+
+  function voortgang() {
+    if (open === 0) return
+    var n = root.querySelectorAll('.advent__kalender .deur.is-open').length
+    var balk = root.querySelector('.advent__voortgang')
+    balk.hidden = false
+    balk.querySelector('.advent__balk span').style.width = (n / 31 * 100) + '%'
+    balk.querySelector('.advent__teller').textContent = n + ' van 31 deurtjes open'
+  }
+  voortgang()
 })()
 </script>
 
@@ -129,46 +180,95 @@ const lead = 'Elke dag in december gaat er een deurtje open met een recept voor 
   margin: 0 auto;
   padding: var(--byz-space-12) var(--steva-pagina-marge) var(--byz-space-24);
 
-  & .advent__status {
-    margin: calc(-1 * var(--byz-space-6)) auto var(--byz-space-10);
+  /* ── Uitgelicht: vandaag (of de aftelling) ─────────────────────────────── */
+  & .advent__vandaag {
+    max-width: 34rem;
+    margin: 0 auto var(--byz-space-12);
     text-align: center;
+  }
+  & .advent__kop {
+    margin: 0;
+    font-size: var(--byz-text-2xl);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    text-shadow: var(--steva-tekst-schaduw);
+  }
+  & .advent__sub {
+    margin: var(--byz-space-1) 0 var(--byz-space-6);
     color: var(--byz-color-text-secondary);
     font-family: var(--steva-font-script);
-    font-size: var(--byz-text-2xl);
+    font-size: var(--byz-text-xl);
   }
-  & .advent__kalender {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--byz-space-4);
-  }
-  & .advent__melding {
-    min-height: 1.5em;
-    margin-top: var(--byz-space-8);
-    text-align: center;
-    color: var(--byz-color-text-secondary);
+  & .advent__spot {
+    max-width: 22rem;
+    margin: 0 auto;
   }
 
-  /* Deurtje: de inhoud (gerecht) ligt eronder, het luikje draait open op zijn linkerscharnier. */
+  /* ── Voortgang ─────────────────────────────────────────────────────────── */
+  & .advent__voortgang {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--byz-space-3);
+    margin: 0 auto var(--byz-space-10);
+    color: var(--byz-color-text-secondary);
+    font-size: var(--byz-text-sm);
+    font-weight: var(--byz-font-semibold);
+  }
+  & .advent__voortgang[hidden] { display: none; }
+  & .advent__balk {
+    width: min(14rem, 40vw);
+    height: 0.5rem;
+    border-radius: 999px;
+    background: rgb(252 246 234 / 0.15);
+    overflow: hidden;
+  }
+  & .advent__balk span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--byz-color-accent), var(--steva-goud));
+    transition: width 0.6s ease;
+  }
+  & .advent__kop--alle {
+    margin-bottom: var(--byz-space-6);
+    text-align: center;
+    font-size: var(--byz-text-xl);
+  }
+
+  /* ── De kalender ───────────────────────────────────────────────────────── */
+  & .advent__kalender {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-flow: dense;
+    gap: var(--byz-space-3);
+  }
+  /* Feestdagen zijn dubbel zo breed, zoals de grote deurtjes in een echte adventkalender. */
+  & .advent__kalender .deur--feest { grid-column: span 2; aspect-ratio: 3 / 2; }
+
   & .deur {
     position: relative;
     aspect-ratio: 3 / 4;
-    perspective: 1200px;
-    border-radius: 0.875rem;
-    box-shadow: inset 0 0 0 3px var(--steva-goud), inset 0 0 30px rgb(0 0 0 / 0.6);
-    background: var(--steva-bordeaux-donker);
+    perspective: 900px;
+    border-radius: 0.75rem;
+    background: #1a0300;
+    box-shadow: inset 0 0 0 2px var(--steva-goud), inset 0 0 24px rgb(0 0 0 / 0.7);
   }
+  /* Achter het deurtje: foto met de titel eroverheen; de hele kaart is de link. */
   & .deur__inhoud {
     position: absolute;
     inset: 0;
-    display: flex;
-    flex-direction: column;
+    display: block;
     overflow: hidden;
     border-radius: inherit;
+    color: var(--steva-creme);
+    text-decoration: none;
   }
   & .deur__foto {
-    flex: 1 1 55%;
-    min-height: 0;
+    position: absolute;
+    inset: 0;
     width: 100%;
+    height: 100%;
     object-fit: cover;
   }
   & .deur__foto--leeg {
@@ -178,135 +278,205 @@ const lead = 'Elke dag in december gaat er een deurtje open met een recept voor 
   }
   & .deur__foto--leeg img { width: 60%; }
   & .deur__tekst {
-    padding: var(--byz-space-3) var(--byz-space-3) var(--byz-space-4);
+    position: absolute;
+    inset: auto 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 2.2rem 0.6rem 0.6rem;
+    background: linear-gradient(to top, rgb(26 3 0 / 0.95), rgb(26 3 0 / 0.75) 55%, transparent);
     text-align: center;
   }
   & .deur__datum {
-    margin: 0;
     color: var(--byz-color-text-secondary);
-    font-size: var(--byz-text-xs);
+    font-size: 0.65rem;
     font-weight: var(--byz-font-semibold);
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
   & .deur__titel {
-    margin: var(--byz-space-1) 0;
-    font-size: var(--byz-text-base);
+    font-size: 0.8rem;
     font-weight: var(--byz-font-semibold);
-    line-height: 1.2;
+    line-height: 1.15;
     text-transform: uppercase;
     overflow-wrap: break-word;
     hyphens: auto;
   }
-  & .deur__meta {
-    margin: 0 0 var(--byz-space-2);
-    font-size: var(--byz-text-sm);
-    color: var(--byz-color-text-muted);
-  }
-  & .deur__link {
-    display: inline-block;
-    padding: var(--byz-space-1) var(--byz-space-3);
-    border-radius: 999px;
-    background: var(--byz-color-accent);
-    color: var(--steva-bordeaux-donker);
-    font-size: var(--byz-text-sm);
-    font-weight: var(--byz-font-semibold);
-    text-decoration: none;
-  }
+  & .deur__meta { font-size: 0.7rem; opacity: 0.8; }
+  & .deur__knop { display: none; }
+  & a.deur__inhoud:hover .deur__foto,
+  & a.deur__inhoud:focus-visible .deur__foto { transform: scale(1.05); }
+  & .deur__foto { transition: transform 0.4s ease; }
+  & a.deur__inhoud:focus-visible { outline: 3px solid var(--byz-color-focus); outline-offset: 2px; }
 
-  & .deur__voor {
+  /* Het luikje: voor- en achterkant; open blijft het op een kier staan (achterkant zichtbaar). */
+  & .deur__luik {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    border: 0;
+    border-radius: inherit;
+    background: none;
+    cursor: pointer;
+    transform-origin: 0 50%;
+    transform-style: preserve-3d;
+    transition: transform 0.9s cubic-bezier(0.6, 0.05, 0.3, 1);
+  }
+  & .deur__kant {
     position: absolute;
     inset: 0;
     display: grid;
     place-items: center;
-    padding: 0;
-    border: 0;
     border-radius: inherit;
-    background: linear-gradient(155deg, var(--steva-bordeaux-licht), var(--steva-bordeaux-rand) 50%, #4a0e03);
-    box-shadow: inset 0 0 0 3px var(--steva-goud), inset 0 0 0 9px var(--steva-bordeaux), inset 0 0 0 11px rgb(255 196 113 / 0.5), 0 10px 24px rgb(0 0 0 / 0.35);
-    color: var(--steva-goud);
-    cursor: pointer;
-    transform-origin: 0 50%;
-    transition: transform 0.9s cubic-bezier(0.6, 0.05, 0.3, 1), box-shadow 0.3s ease;
     backface-visibility: hidden;
   }
-  & .deur__voor::after {
-    /* deurknopje */
+  & .deur__kant--voor {
+    background: linear-gradient(155deg, var(--steva-bordeaux-licht), var(--steva-bordeaux-rand) 50%, #4a0e03);
+    box-shadow: inset 0 0 0 2px var(--steva-goud), inset 0 0 0 6px var(--steva-bordeaux), inset 0 0 0 8px rgb(255 196 113 / 0.5), 0 8px 18px rgb(0 0 0 / 0.35);
+    color: var(--steva-goud);
+  }
+  & .deur__kant--voor::after {
     content: "";
     position: absolute;
-    right: 12%;
-    top: 62%;
-    width: 0.7rem;
-    height: 0.7rem;
+    right: 11%;
+    top: 60%;
+    width: 0.55rem;
+    height: 0.55rem;
     border-radius: 50%;
     background: radial-gradient(circle at 35% 30%, #fff1c9, var(--steva-goud) 55%, #b07a2a);
   }
+  & .deur__kant--achter {
+    transform: rotateY(180deg);
+    background: linear-gradient(155deg, #3c0a02, #2a0600);
+    box-shadow: inset 0 0 0 2px rgb(255 196 113 / 0.6);
+  }
   & .deur__nummer {
-    font-size: clamp(2.6rem, 9vw, 4.4rem);
+    font-size: clamp(1.8rem, 7vw, 3.2rem);
     font-weight: var(--byz-font-semibold);
     line-height: 1;
-    text-shadow: 0 3px 0 var(--steva-bordeaux-donker), 0 0 24px rgb(255 180 80 / 0.35);
+    text-shadow: 0 3px 0 var(--steva-bordeaux-donker), 0 0 20px rgb(255 180 80 / 0.35);
   }
   & .deur__feest {
     position: absolute;
-    bottom: 12%;
+    bottom: 10%;
     left: 0;
     right: 0;
     font-family: var(--steva-font-script);
-    font-size: var(--byz-text-lg);
+    font-size: var(--byz-text-base);
     color: var(--steva-creme);
   }
-  /* Feestdagen: rood lint met gouden randje. */
-  & .deur--feest .deur__voor {
+  & .deur--feest .deur__kant--voor {
     background:
-      linear-gradient(90deg, transparent 78%, #d4342b 78%, #f04a3a 84%, #b1241c 90%, transparent 90%),
+      linear-gradient(90deg, transparent 70%, #d4342b 70%, #f04a3a 74%, #b1241c 78%, transparent 78%),   /* lint links van de knop */
       linear-gradient(155deg, var(--steva-bordeaux-licht), var(--steva-bordeaux-rand) 50%, #4a0e03);
   }
 
-  /* Vandaag: gloeit en wiebelt af en toe, klik om te openen. */
-  & .deur.is-vandaag .deur__voor {
-    box-shadow: inset 0 0 0 3px var(--steva-goud), inset 0 0 0 9px var(--steva-bordeaux), inset 0 0 0 11px rgb(255 196 113 / 0.5), 0 0 0 4px var(--steva-goud), 0 0 40px rgb(255 174 61 / 0.6);
-    animation: advent-wiebel 3s ease-in-out infinite;
+  & .deur.is-open .deur__luik { transform: rotateY(-118deg); pointer-events: none; }
+  & .deur.is-direct .deur__luik { transition: none; }
+  & .deur.is-open { z-index: 1; }
+
+  /* Vandaag: gouden gloed en af en toe een wiebel. */
+  & .deur.is-vandaag .deur__kant--voor {
+    box-shadow: inset 0 0 0 2px var(--steva-goud), inset 0 0 0 6px var(--steva-bordeaux), inset 0 0 0 8px rgb(255 196 113 / 0.5), 0 0 0 3px var(--steva-goud), 0 0 32px rgb(255 174 61 / 0.65);
   }
-  & .deur.is-open .deur__voor {
-    transform: rotateY(-108deg);
-    pointer-events: none;
-  }
-  & .deur.is-direct .deur__voor { transition: none; }
-  /* Op slot: iets gedimd, en schudden als je het toch probeert. */
-  & .deur.is-dicht .deur__voor {
-    cursor: not-allowed;
-    filter: saturate(0.75) brightness(0.85);
-  }
-  & .deur.is-dicht .deur__slot::before {
+  & .deur.is-vandaag .deur__luik { animation: advent-wiebel 3s ease-in-out infinite; }
+  /* Op slot: gedimd met een slotje; schudt als je het probeert. */
+  & .deur.is-dicht .deur__luik { cursor: not-allowed; }
+  & .deur.is-dicht .deur__kant--voor { filter: saturate(0.7) brightness(0.8); }
+  & .deur.is-dicht .deur__kant--voor::before {
     content: "🔒";
     position: absolute;
-    top: 8%;
-    right: 10%;
-    font-size: 0.9rem;
-    opacity: 0.7;
+    top: 7%;
+    right: 9%;
+    font-size: 0.75rem;
+    opacity: 0.65;
   }
-  & .deur.is-schud .deur__voor { animation: advent-schud 0.45s ease-in-out; }
+  & .deur.is-schud .deur__luik { animation: advent-schud 0.45s ease-in-out; }
+  & .deur__luik:focus-visible { outline: 3px solid var(--byz-color-focus); outline-offset: 3px; }
+
+  & .deur__vonk {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff6d8, var(--steva-goud) 60%, transparent 70%);
+    pointer-events: none;
+    z-index: 3;
+    animation: advent-vonk 0.9s ease-out forwards;
+  }
+
+  /* Groot uitgelicht deurtje: meer tekst en een duidelijke knop. */
+  & .deur--groot { aspect-ratio: 3 / 4; }
+  & .deur--groot.deur--feest { aspect-ratio: 3 / 4; }
+  & .deur--groot .deur__nummer { font-size: clamp(5rem, 22vw, 8rem); }
+  & .deur--groot .deur__feest { font-size: var(--byz-text-2xl); }
+  & .deur--groot .deur__tekst { gap: 0.35rem; padding: 4rem 1.2rem 1.3rem; }
+  & .deur--groot .deur__datum { font-size: var(--byz-text-sm); }
+  & .deur--groot .deur__titel { font-size: var(--byz-text-xl); }
+  & .deur--groot .deur__meta { font-size: var(--byz-text-sm); }
+  & .deur--groot .deur__knop {
+    display: inline-block;
+    align-self: center;
+    margin-top: 0.4rem;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    background: var(--byz-color-accent);
+    box-shadow: inset 0 -3px 0 var(--steva-oranje-donker);
+    color: var(--steva-bordeaux-donker);
+    font-weight: var(--byz-font-semibold);
+    text-transform: uppercase;
+    font-size: var(--byz-text-sm);
+  }
+  & .deur--groot .deur__kant--voor::after { width: 0.9rem; height: 0.9rem; }
+  & .deur--groot.is-dicht .deur__kant--voor::before { font-size: 1.3rem; }
+
+  /* Melding onderin beeld (bij een dicht deurtje of na het openen). */
+  & .advent__toast {
+    position: fixed;
+    left: 50%;
+    bottom: max(var(--byz-space-6), env(safe-area-inset-bottom));
+    z-index: 20;
+    max-width: calc(100vw - 2rem);
+    margin: 0;
+    padding: var(--byz-space-3) var(--byz-space-5);
+    border-radius: 999px;
+    background: var(--steva-creme);
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.45);
+    color: var(--steva-bordeaux-donker);
+    font-weight: var(--byz-font-semibold);
+    text-align: center;
+    opacity: 0;
+    transform: translate(-50%, 1rem);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  & .advent__toast.is-zichtbaar { opacity: 1; transform: translate(-50%, 0); }
 }
 @keyframes advent-wiebel {
-  0%, 82%, 100% { transform: rotate(0); }
-  86% { transform: rotate(-2deg); }
-  90% { transform: rotate(2deg); }
-  94% { transform: rotate(-1deg); }
+  0%, 80%, 100% { transform: rotateY(0); }
+  85% { transform: rotateY(-14deg); }
+  90% { transform: rotateY(-4deg); }
+  94% { transform: rotateY(-9deg); }
 }
 @keyframes advent-schud {
-  20%, 60% { transform: translateX(-6px); }
-  40%, 80% { transform: translateX(6px); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+@keyframes advent-vonk {
+  from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  to { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.3); opacity: 0; }
 }
 @media (min-width: 640px) {
-  .advent .advent__kalender { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .advent .advent__kalender { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--byz-space-4); }
+  .advent .deur__titel { font-size: 0.9rem; }
 }
 @media (min-width: 1024px) {
-  .advent .advent__kalender { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--byz-space-5); }
+  .advent .advent__kalender { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .advent .deur__voor { transition: none; }
-  .advent .deur.is-vandaag .deur__voor,
-  .advent .deur.is-schud .deur__voor { animation: none; }
+  .advent .deur__luik, .advent .deur__foto, .advent .advent__toast, .advent .advent__balk span { transition: none; }
+  .advent .deur.is-vandaag .deur__luik, .advent .deur.is-schud .deur__luik { animation: none; }
 }
 </style>
