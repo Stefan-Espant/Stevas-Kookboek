@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.wald'
 import PageHeader from '../../components/PageHeader.wald'
 import RecipeGrid from '../../components/RecipeGrid.wald'
 import Breadcrumbs from '../../components/Breadcrumbs.wald'
+import PepernotenIntro from '../../components/PepernotenIntro.wald'
 import { collectionPath, getCollections, recipePath } from '../../lib/recipes'
 import { breadcrumbSchema, clipDescription, collectionSchema } from '../../lib/site'
 type Props = { thema: string }
@@ -28,7 +29,14 @@ const schema = [
   collectionSchema(collection.seoTitle, description, path, collection.recipes.map(r => [r.title, recipePath(r.slug)]))
 ]
 const breadcrumbs = await Breadcrumbs.render({ items: crumbs })
-const grid = await RecipeGrid.render({ recipes: collection.recipes, headingLevel: 2, eager: 1, balanced: collection.slug === 'halloween' })
+const isPepernoten = collection.slug === 'pepernoten'
+const grid = await RecipeGrid.render({ recipes: collection.recipes, headingLevel: isPepernoten ? 3 : 2, eager: 1, balanced: collection.slug === 'halloween' || isPepernoten })
+const headerHtml = isPepernoten
+  ? await PepernotenIntro.render({ count })
+  : await PageHeader.render({ kicker: collection.slug === 'halloween' ? 'Als je durft…' : 'Inspiratie', title: collection.title, lead })
+const recipesHtml = isPepernoten
+  ? `<section class="theme__flavours" id="smaken" aria-labelledby="smaken-titel"><h2 id="smaken-titel">Kies jouw favoriete smaak</h2><p>Eén basis, volop variatie. Elk recept bevat de volledige ingrediëntenlijst, bereiding en bewaartips.</p>${grid}</section>`
+  : grid
 
 // Andere thema's als interne links onderaan.
 const others = collections.filter(c => c.slug !== collection.slug)
@@ -60,12 +68,12 @@ const othersHtml = others.length
   ? renderTemplate`<nav class="theme__others" aria-labelledby="andere-themas"><h2 id="andere-themas">Meer inspiratie</h2><ul>${new SafeHtml(others.map(c => renderTemplate`<li><a href="${collectionPath(c.slug)}">${c.title}</a></li>`).join(''))}</ul></nav>`
   : ''
 ---
-<Layout title={collection.seoTitle} description={description} path={path} schema={schema}>
+<Layout title={collection.seoTitle} description={description} path={path} schema={schema} ogImage={isPepernoten ? '/images/pepernoten/strooizak.webp' : undefined}>
   <main class={isHalloween ? 'theme theme--halloween' : 'theme'} data-season-effect={seasonEffect}>
     {new SafeHtml(decorHtml)}
     {new SafeHtml(breadcrumbs)}
-    <PageHeader kicker={isHalloween ? 'Als je durft…' : 'Inspiratie'} title={collection.title} lead={lead} />
-    {new SafeHtml(grid)}
+    {new SafeHtml(headerHtml)}
+    {new SafeHtml(recipesHtml)}
     {new SafeHtml(othersHtml)}
   </main>
 </Layout>
@@ -79,6 +87,18 @@ const othersHtml = others.length
   max-width: var(--steva-pagina-breedte);
   margin: 0 auto;
   padding: var(--byz-space-12) var(--steva-pagina-marge) var(--byz-space-24);
+
+  & .theme__flavours { scroll-margin-top: 7rem; }
+  & .theme__flavours > h2 {
+    font-size: var(--byz-text-2xl);
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  & .theme__flavours > p {
+    max-width: 65ch;
+    margin: var(--byz-space-3) 0 var(--byz-space-8);
+    color: var(--byz-color-text-muted);
+  }
 
   & .theme__others {
     margin-top: var(--byz-space-20);

@@ -1,0 +1,1328 @@
+[
+  {
+    "sourceImage": "roomboter.png",
+    "data": {
+      "gang": "Snack",
+      "slug": "kruidnoten-roomboter",
+      "tags": "pepernoten, sinterklaas, kruidnoten, bakken, vegetarisch, klassiek",
+      "tips": "<ul><li>Laat de kruidnoten volledig afkoelen voordat je ze beoordeelt op knapperigheid of met chocolade afwerkt.</li><li>Bak de twee platen na elkaar; reken samen op ongeveer 30–40 minuten oventijd.</li><li>Dit recept is een redactioneel concept en nog niet proefgebakken. Het beeld is een illustratie van de smaakvariant.</li><li>Bevat tarwe (gluten) en melk. Controleer de etiketten van chocolade, kruidenmixen en smaakmakers.</li></ul>",
+      "intro": "<p>Zelf kruidnoten bakken begint met roomboter, basterdsuiker en speculaaskruiden. Deze klassieke variant is knapperig, kruidig en lekker om samen te maken voor Sinterklaas.</p><p>Voor circa 70 kleine kruidnoten. Lekker voor de intocht, in de schoen of op tafel tijdens pakjesavond.</p>",
+      "titel": "Kruidnoten",
+      "keuken": [
+        "57d92d8b-3598-499a-ba8b-2332863947c0"
+      ],
+      "vragen": [
+        {
+          "vraag": "Zijn dit pepernoten of kruidnoten?",
+          "antwoord": "<p>Dit zijn de ronde, knapperige kruidnoten die vaak pepernoten worden genoemd. Traditionele pepernoten zijn taaier en hebben een onregelmatige vorm.</p>"
+        },
+        {
+          "vraag": "Waarom zijn mijn kruidnoten nog zacht na het bakken?",
+          "antwoord": "<p>Warme kruidnoten zijn nog zacht. Laat ze volledig afkoelen op een rooster voordat je de knapperigheid beoordeelt. De benodigde baktijd hangt af van je oven en de grootte van de balletjes.</p>"
+        }
+      ],
+      "bewaren": "<p>Bewaar de volledig afgekoelde kruidnoten droog, donker en luchtdicht. Ongecoate kruidnoten zijn het lekkerst binnen circa een week; afgewerkte kruidnoten binnen enkele dagen. Bewaar chocoladevarianten op een koele plek.</p>",
+      "personen": 70,
+      "bereiding": [
+        {
+          "kop": "Deeg mengen",
+          "stap": "Meng zelfrijzend bakmeel, suiker, zout en de specerijen. Wrijf de koude boter er met je vingertoppen door tot een kruimelig mengsel."
+        },
+        {
+          "kop": "Vloeistof toevoegen",
+          "stap": "Voeg de vloeibare smaakmakers en eerst de aangegeven hoeveelheid melk toe. Kneed kort tot een samenhangend deeg. Voeg alleen als nodig extra melk beetje bij beetje toe."
+        },
+        {
+          "kop": "Koelen en voorverwarmen",
+          "stap": "Verpak het deeg en laat 30 minuten in de koelkast rusten. Verwarm de oven voor op 170 °C boven- en onderwarmte. Bekleed twee bakplaten met bakpapier."
+        },
+        {
+          "kop": "Vormen en bakken",
+          "stap": "Verdeel in circa 70 balletjes van ongeveer 7–8 g. Leg met minstens 2 cm tussenruimte op de platen en druk licht aan. Bak elke plaat afzonderlijk in het midden van de oven, circa 15–20 minuten, tot de bovenkant droog is en de onderkant licht kleurt."
+        },
+        {
+          "kop": "Afkoelen",
+          "stap": "Laat 5 minuten op de plaat liggen en daarna volledig afkoelen op een rooster. De kruidnoten worden steviger en knapperiger tijdens het afkoelen."
+        }
+      ],
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/eb2998412ba5491fb48c485a60d5e579.webp",
+      "meta_titel": "Kruidnoten",
+      "ingredienten": [
+        {
+          "groep": "Deeg",
+          "eenheid": "g",
+          "ingredient": "zelfrijzend bakmeel",
+          "hoeveelheid": 250,
+          "toelichting": "",
+          "ingredient_meervoud": ""
+        },
+        {
+          "groep": "",
+          "eenheid": "g",
+          "ingredient": "donkerbruine basterdsuiker",
+          "hoeveelheid": 125,
+          "toelichting": "",
+          "ingredient_meervoud": ""
+        },
+        {
+          "groep": "",
+          "eenheid": "g",
+          "ingredient": "ongezouten roomboter",
+          "hoeveelheid": 100,
+          "toelichting": "koud, in blokjes",
+          "ingredient_meervoud": ""
+        },
+        {
+          "groep": "",
+          "eenheid": "g",
+          "ingredient": "speculaaskruiden",
+          "hoeveelheid": 8,
+          "toelichting": "",
+          "ingredient_meervoud": ""
+        },
+        {
+          "groep": "",
+          "eenheid": "ml",
+          "ingredient": "melk",
+          "hoeveelheid": 45,
+          "toelichting": "begin hiermee; voeg zo nodig geleidelijk extra toe",
+          "ingredient_meervoud": ""
+        },
+        {
+          "groep": "",
+          "eenheid": "snuf",
+          "ingredient": "zout",
+          "hoeveelheid": 1,
+          "toelichting": "",
+          "ingredient_meervoud": ""
+        }
+      ],
+      "moeilijkheid": "Makkelijk",
+      "afbeelding_alt": "Kruidnoten, geserveerd in een keramieken schaaltje",
+      "bereidingstijd": 40,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "30 min koelen + volledig afkoelen",
+      "meta_omschrijving": "Kruidnoten zelf maken voor Sinterklaas. Met ingrediënten voor circa 70 stuks, duidelijke bereidingsstappen en bewaartips.",
+      "voorbereidingstijd": 20
+    }
+  },
+  {
+    "sourceImage": "pandan-kokos.png",
+    "data": {
+      "titel": "Kruidnoten met pandan en kokos",
+      "slug": "kruidnoten-pandan-kokos",
+      "intro": "<p>Pandan geeft deze kruidnoten een zachte, geurige smaak en een groene kleur. Met kokosmelk in het deeg, witte chocolade en geroosterde kokos maak je een verrassende variant voor de strooizak.</p><p>Voor circa 70 kleine kruidnoten. Lekker voor de intocht, in de schoen of op tafel tijdens pakjesavond.</p>",
+      "afbeelding_alt": "Kruidnoten met pandan en kokos, geserveerd in een keramieken schaaltje",
+      "gang": "Snack",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 20,
+      "bereidingstijd": 40,
+      "personen": 70,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "30 min koelen + volledig afkoelen + chocolade laten opstijven",
+      "ingredienten": [
+        {
+          "groep": "Deeg",
+          "hoeveelheid": 250,
+          "eenheid": "g",
+          "ingredient": "zelfrijzend bakmeel",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 100,
+          "eenheid": "g",
+          "ingredient": "ongezouten roomboter",
+          "ingredient_meervoud": "",
+          "toelichting": "koud, in blokjes"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 2,
+          "eenheid": "g",
+          "ingredient": "speculaaskruiden",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "snuf",
+          "ingredient": "zout",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 125,
+          "eenheid": "g",
+          "ingredient": "lichte basterdsuiker",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 45,
+          "eenheid": "ml",
+          "ingredient": "kokosmelk",
+          "ingredient_meervoud": "",
+          "toelichting": "begin hiermee; voeg zo nodig geleidelijk extra toe"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 0.5,
+          "eenheid": "tl",
+          "ingredient": "geconcentreerde pandanpasta",
+          "ingredient_meervoud": "",
+          "toelichting": "volg de doseeraanwijzing op het etiket; sterkte verschilt per merk"
+        },
+        {
+          "groep": "Afwerking",
+          "hoeveelheid": 200,
+          "eenheid": "g",
+          "ingredient": "witte chocolade",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 20,
+          "eenheid": "g",
+          "ingredient": "geroosterde geraspte kokos",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "Deeg mengen",
+          "stap": "Meng zelfrijzend bakmeel, suiker, zout en de specerijen. Wrijf de koude boter er met je vingertoppen door tot een kruimelig mengsel."
+        },
+        {
+          "kop": "Vloeistof toevoegen",
+          "stap": "Roer de pandanpasta door de kokosmelk. Voeg de vloeibare smaakmakers en eerst de aangegeven hoeveelheid kokosmelk toe. Kneed kort tot een samenhangend deeg. Voeg alleen als nodig extra kokosmelk beetje bij beetje toe."
+        },
+        {
+          "kop": "Koelen en voorverwarmen",
+          "stap": "Verpak het deeg en laat 30 minuten in de koelkast rusten. Verwarm de oven voor op 170 °C boven- en onderwarmte. Bekleed twee bakplaten met bakpapier."
+        },
+        {
+          "kop": "Vormen en bakken",
+          "stap": "Verdeel in circa 70 balletjes van ongeveer 7–8 g. Leg met minstens 2 cm tussenruimte op de platen en druk licht aan. Bak elke plaat afzonderlijk in het midden van de oven, circa 15–20 minuten, tot de bovenkant droog is en de onderkant licht kleurt."
+        },
+        {
+          "kop": "Afkoelen",
+          "stap": "Laat 5 minuten op de plaat liggen en daarna volledig afkoelen op een rooster. De kruidnoten worden steviger en knapperiger tijdens het afkoelen."
+        },
+        {
+          "kop": "Chocolade en afwerking",
+          "stap": "Smelt de chocolade voorzichtig au bain-marie in een droge kom; laat de kom het water niet raken. Dip de kruidnoten voor de helft in de witte chocolade en bestrooi direct met geroosterde kokos."
+        },
+        {
+          "kop": "Laten opstijven",
+          "stap": "Laat de afwerking volledig opstijven op bakpapier."
+        }
+      ],
+      "tips": "<ul><li>Pandanpasta verschilt sterk per merk. Volg het etiket en gebruik liever eerst wat minder dan te veel.</li><li>Laat de kruidnoten volledig afkoelen voordat je ze beoordeelt op knapperigheid of met chocolade afwerkt.</li><li>Bak de twee platen na elkaar; reken samen op ongeveer 30–40 minuten oventijd.</li><li>Dit recept is een redactioneel concept en nog niet proefgebakken. Het beeld is een illustratie van de smaakvariant.</li><li>Bevat tarwe (gluten) en melk. Controleer de etiketten van chocolade, kruidenmixen en smaakmakers.</li></ul>",
+      "bewaren": "<p>Bewaar de volledig afgekoelde kruidnoten droog, donker en luchtdicht. Ongecoate kruidnoten zijn het lekkerst binnen circa een week; afgewerkte kruidnoten binnen enkele dagen. Bewaar chocoladevarianten op een koele plek.</p>",
+      "vragen": [
+        {
+          "vraag": "Zijn dit pepernoten of kruidnoten?",
+          "antwoord": "<p>Dit zijn de ronde, knapperige kruidnoten die vaak pepernoten worden genoemd. Traditionele pepernoten zijn taaier en hebben een onregelmatige vorm.</p>"
+        },
+        {
+          "vraag": "Waarom zijn mijn kruidnoten nog zacht na het bakken?",
+          "antwoord": "<p>Warme kruidnoten zijn nog zacht. Laat ze volledig afkoelen op een rooster voordat je de knapperigheid beoordeelt. De benodigde baktijd hangt af van je oven en de grootte van de balletjes.</p>"
+        }
+      ],
+      "tags": "pepernoten, sinterklaas, kruidnoten, bakken, vegetarisch",
+      "meta_titel": "Kruidnoten met pandan en kokos",
+      "meta_omschrijving": "Kruidnoten met pandan en kokos zelf maken voor Sinterklaas. Met ingrediënten voor circa 70 stuks, duidelijke bereidingsstappen en bewaartips.",
+      "keuken": [
+        "57d92d8b-3598-499a-ba8b-2332863947c0"
+      ],
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/d8e8f7bab4e949b8b41f6cb501c86123.webp"
+    }
+  },
+  {
+    "sourceImage": "pumpkin-spice.png",
+    "data": {
+      "titel": "Pumpkin spice kruidnoten",
+      "slug": "kruidnoten-pumpkin-spice",
+      "intro": "<p>Kaneel, gember, nootmuskaat, kruidnagel en piment geven deze kruidnoten hun pumpkin-spicesmaak. Een dun lijntje witte chocolade maakt ze extra feestelijk; pompoenpuree komt er niet aan te pas.</p><p>Voor circa 70 kleine kruidnoten. Lekker voor de intocht, in de schoen of op tafel tijdens pakjesavond.</p>",
+      "afbeelding_alt": "Pumpkin spice kruidnoten, geserveerd in een keramieken schaaltje",
+      "gang": "Snack",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 20,
+      "bereidingstijd": 40,
+      "personen": 70,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "30 min koelen + volledig afkoelen + chocolade laten opstijven",
+      "ingredienten": [
+        {
+          "groep": "Deeg",
+          "hoeveelheid": 250,
+          "eenheid": "g",
+          "ingredient": "zelfrijzend bakmeel",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 125,
+          "eenheid": "g",
+          "ingredient": "donkerbruine basterdsuiker",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 100,
+          "eenheid": "g",
+          "ingredient": "ongezouten roomboter",
+          "ingredient_meervoud": "",
+          "toelichting": "koud, in blokjes"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 45,
+          "eenheid": "ml",
+          "ingredient": "melk",
+          "ingredient_meervoud": "",
+          "toelichting": "begin hiermee; voeg zo nodig geleidelijk extra toe"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "snuf",
+          "ingredient": "zout",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 2,
+          "eenheid": "tl",
+          "ingredient": "kaneel",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 0.5,
+          "eenheid": "tl",
+          "ingredient": "gemberpoeder",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 0.25,
+          "eenheid": "tl",
+          "ingredient": "nootmuskaat",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 0.125,
+          "eenheid": "tl",
+          "ingredient": "gemalen kruidnagel",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 0.125,
+          "eenheid": "tl",
+          "ingredient": "piment",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "Afwerking",
+          "hoeveelheid": 75,
+          "eenheid": "g",
+          "ingredient": "witte chocolade",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "Deeg mengen",
+          "stap": "Meng zelfrijzend bakmeel, suiker, zout en de specerijen. Wrijf de koude boter er met je vingertoppen door tot een kruimelig mengsel."
+        },
+        {
+          "kop": "Vloeistof toevoegen",
+          "stap": "Voeg de vloeibare smaakmakers en eerst de aangegeven hoeveelheid melk toe. Kneed kort tot een samenhangend deeg. Voeg alleen als nodig extra melk beetje bij beetje toe."
+        },
+        {
+          "kop": "Koelen en voorverwarmen",
+          "stap": "Verpak het deeg en laat 30 minuten in de koelkast rusten. Verwarm de oven voor op 170 °C boven- en onderwarmte. Bekleed twee bakplaten met bakpapier."
+        },
+        {
+          "kop": "Vormen en bakken",
+          "stap": "Verdeel in circa 70 balletjes van ongeveer 7–8 g. Leg met minstens 2 cm tussenruimte op de platen en druk licht aan. Bak elke plaat afzonderlijk in het midden van de oven, circa 15–20 minuten, tot de bovenkant droog is en de onderkant licht kleurt."
+        },
+        {
+          "kop": "Afkoelen",
+          "stap": "Laat 5 minuten op de plaat liggen en daarna volledig afkoelen op een rooster. De kruidnoten worden steviger en knapperiger tijdens het afkoelen."
+        },
+        {
+          "kop": "Chocolade en afwerking",
+          "stap": "Smelt de chocolade voorzichtig au bain-marie in een droge kom; laat de kom het water niet raken. Trek dunne lijntjes witte chocolade over de afgekoelde kruidnoten."
+        },
+        {
+          "kop": "Laten opstijven",
+          "stap": "Laat de afwerking volledig opstijven op bakpapier."
+        }
+      ],
+      "tips": "<ul><li>Pumpkin spice is hier een droge kruidenmix. Voeg geen pompoenpuree toe; dat verandert het deeg en de knapperigheid.</li><li>Laat de kruidnoten volledig afkoelen voordat je ze beoordeelt op knapperigheid of met chocolade afwerkt.</li><li>Bak de twee platen na elkaar; reken samen op ongeveer 30–40 minuten oventijd.</li><li>Dit recept is een redactioneel concept en nog niet proefgebakken. Het beeld is een illustratie van de smaakvariant.</li><li>Bevat tarwe (gluten) en melk. Controleer de etiketten van chocolade, kruidenmixen en smaakmakers.</li></ul>",
+      "bewaren": "<p>Bewaar de volledig afgekoelde kruidnoten droog, donker en luchtdicht. Ongecoate kruidnoten zijn het lekkerst binnen circa een week; afgewerkte kruidnoten binnen enkele dagen. Bewaar chocoladevarianten op een koele plek.</p>",
+      "vragen": [
+        {
+          "vraag": "Zijn dit pepernoten of kruidnoten?",
+          "antwoord": "<p>Dit zijn de ronde, knapperige kruidnoten die vaak pepernoten worden genoemd. Traditionele pepernoten zijn taaier en hebben een onregelmatige vorm.</p>"
+        },
+        {
+          "vraag": "Waarom zijn mijn kruidnoten nog zacht na het bakken?",
+          "antwoord": "<p>Warme kruidnoten zijn nog zacht. Laat ze volledig afkoelen op een rooster voordat je de knapperigheid beoordeelt. De benodigde baktijd hangt af van je oven en de grootte van de balletjes.</p>"
+        }
+      ],
+      "tags": "pepernoten, sinterklaas, kruidnoten, bakken, vegetarisch",
+      "meta_titel": "Pumpkin spice kruidnoten",
+      "meta_omschrijving": "Pumpkin spice kruidnoten zelf maken voor Sinterklaas. Met ingrediënten voor circa 70 stuks, duidelijke bereidingsstappen en bewaartips.",
+      "keuken": [
+        "57d92d8b-3598-499a-ba8b-2332863947c0"
+      ],
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/6b49df4789584262a6a39383da81d0b4.webp"
+    }
+  },
+  {
+    "sourceImage": "salted-caramel.png",
+    "data": {
+      "titel": "Salted caramel kruidnoten",
+      "slug": "kruidnoten-salted-caramel",
+      "intro": "<p>Knapperige speculaaskruidnoten met een laagje karamelchocolade en een paar vlokjes zeezout. Zo maak je zelf de zoet-zoute smaak die zo lekker past bij de Sinterklaastijd.</p><p>Voor circa 70 kleine kruidnoten. Lekker voor de intocht, in de schoen of op tafel tijdens pakjesavond.</p>",
+      "afbeelding_alt": "Salted caramel kruidnoten, geserveerd in een keramieken schaaltje",
+      "gang": "Snack",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 20,
+      "bereidingstijd": 40,
+      "personen": 70,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "30 min koelen + volledig afkoelen + chocolade laten opstijven",
+      "ingredienten": [
+        {
+          "groep": "Deeg",
+          "hoeveelheid": 250,
+          "eenheid": "g",
+          "ingredient": "zelfrijzend bakmeel",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 125,
+          "eenheid": "g",
+          "ingredient": "donkerbruine basterdsuiker",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 100,
+          "eenheid": "g",
+          "ingredient": "ongezouten roomboter",
+          "ingredient_meervoud": "",
+          "toelichting": "koud, in blokjes"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 8,
+          "eenheid": "g",
+          "ingredient": "speculaaskruiden",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 45,
+          "eenheid": "ml",
+          "ingredient": "melk",
+          "ingredient_meervoud": "",
+          "toelichting": "begin hiermee; voeg zo nodig geleidelijk extra toe"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "snuf",
+          "ingredient": "zout",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "Afwerking",
+          "hoeveelheid": 250,
+          "eenheid": "g",
+          "ingredient": "karamelchocolade (chocolade met karamelsmaak)",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": null,
+          "eenheid": "",
+          "ingredient": "zeezoutvlokken",
+          "ingredient_meervoud": "",
+          "toelichting": "een paar vlokken per portie, naar smaak"
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "Deeg mengen",
+          "stap": "Meng zelfrijzend bakmeel, suiker, zout en de specerijen. Wrijf de koude boter er met je vingertoppen door tot een kruimelig mengsel."
+        },
+        {
+          "kop": "Vloeistof toevoegen",
+          "stap": "Voeg de vloeibare smaakmakers en eerst de aangegeven hoeveelheid melk toe. Kneed kort tot een samenhangend deeg. Voeg alleen als nodig extra melk beetje bij beetje toe."
+        },
+        {
+          "kop": "Koelen en voorverwarmen",
+          "stap": "Verpak het deeg en laat 30 minuten in de koelkast rusten. Verwarm de oven voor op 170 °C boven- en onderwarmte. Bekleed twee bakplaten met bakpapier."
+        },
+        {
+          "kop": "Vormen en bakken",
+          "stap": "Verdeel in circa 70 balletjes van ongeveer 7–8 g. Leg met minstens 2 cm tussenruimte op de platen en druk licht aan. Bak elke plaat afzonderlijk in het midden van de oven, circa 15–20 minuten, tot de bovenkant droog is en de onderkant licht kleurt."
+        },
+        {
+          "kop": "Afkoelen",
+          "stap": "Laat 5 minuten op de plaat liggen en daarna volledig afkoelen op een rooster. De kruidnoten worden steviger en knapperiger tijdens het afkoelen."
+        },
+        {
+          "kop": "Chocolade en afwerking",
+          "stap": "Smelt de chocolade voorzichtig au bain-marie in een droge kom; laat de kom het water niet raken. Haal de kruidnoten door karamelchocolade, laat uitlekken op een vork en leg op bakpapier. Strooi er enkele zoutvlokjes op voordat de chocolade stolt."
+        },
+        {
+          "kop": "Laten opstijven",
+          "stap": "Laat de afwerking volledig opstijven op bakpapier."
+        }
+      ],
+      "tips": "<ul><li>Laat de kruidnoten volledig afkoelen voordat je ze beoordeelt op knapperigheid of met chocolade afwerkt.</li><li>Bak de twee platen na elkaar; reken samen op ongeveer 30–40 minuten oventijd.</li><li>Dit recept is een redactioneel concept en nog niet proefgebakken. Het beeld is een illustratie van de smaakvariant.</li><li>Bevat tarwe (gluten) en melk. Controleer de etiketten van chocolade, kruidenmixen en smaakmakers.</li></ul>",
+      "bewaren": "<p>Bewaar de volledig afgekoelde kruidnoten droog, donker en luchtdicht. Ongecoate kruidnoten zijn het lekkerst binnen circa een week; afgewerkte kruidnoten binnen enkele dagen. Bewaar chocoladevarianten op een koele plek.</p>",
+      "vragen": [
+        {
+          "vraag": "Zijn dit pepernoten of kruidnoten?",
+          "antwoord": "<p>Dit zijn de ronde, knapperige kruidnoten die vaak pepernoten worden genoemd. Traditionele pepernoten zijn taaier en hebben een onregelmatige vorm.</p>"
+        },
+        {
+          "vraag": "Waarom zijn mijn kruidnoten nog zacht na het bakken?",
+          "antwoord": "<p>Warme kruidnoten zijn nog zacht. Laat ze volledig afkoelen op een rooster voordat je de knapperigheid beoordeelt. De benodigde baktijd hangt af van je oven en de grootte van de balletjes.</p>"
+        }
+      ],
+      "tags": "pepernoten, sinterklaas, kruidnoten, bakken, vegetarisch",
+      "meta_titel": "Salted caramel kruidnoten",
+      "meta_omschrijving": "Salted caramel kruidnoten zelf maken voor Sinterklaas. Met ingrediënten voor circa 70 stuks, duidelijke bereidingsstappen en bewaartips.",
+      "keuken": [
+        "57d92d8b-3598-499a-ba8b-2332863947c0"
+      ],
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/687cdec6adde4cb7b4c14f3e0b5bfcf0.webp"
+    }
+  },
+  {
+    "sourceImage": "pistache-witte-chocolade.png",
+    "data": {
+      "titel": "Kruidnoten met pistache en witte chocolade",
+      "slug": "kruidnoten-pistache-witte-chocolade",
+      "intro": "<p>Romige witte chocolade en fijngehakte pistachenoten maken van zelfgebakken kruidnoten een feestelijke traktatie. In het deeg zit wat minder speculaaskruiden, zodat de pistache goed tot zijn recht komt.</p><p>Voor circa 70 kleine kruidnoten. Lekker voor de intocht, in de schoen of op tafel tijdens pakjesavond.</p>",
+      "afbeelding_alt": "Kruidnoten met pistache en witte chocolade, geserveerd in een keramieken schaaltje",
+      "gang": "Snack",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 20,
+      "bereidingstijd": 40,
+      "personen": 70,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "30 min koelen + volledig afkoelen + chocolade laten opstijven",
+      "ingredienten": [
+        {
+          "groep": "Deeg",
+          "hoeveelheid": 250,
+          "eenheid": "g",
+          "ingredient": "zelfrijzend bakmeel",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 125,
+          "eenheid": "g",
+          "ingredient": "donkerbruine basterdsuiker",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 100,
+          "eenheid": "g",
+          "ingredient": "ongezouten roomboter",
+          "ingredient_meervoud": "",
+          "toelichting": "koud, in blokjes"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 4,
+          "eenheid": "g",
+          "ingredient": "speculaaskruiden",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 45,
+          "eenheid": "ml",
+          "ingredient": "melk",
+          "ingredient_meervoud": "",
+          "toelichting": "begin hiermee; voeg zo nodig geleidelijk extra toe"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "snuf",
+          "ingredient": "zout",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "Afwerking",
+          "hoeveelheid": 250,
+          "eenheid": "g",
+          "ingredient": "witte chocolade",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 40,
+          "eenheid": "g",
+          "ingredient": "fijngehakte ongezouten pistachenoten",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "Deeg mengen",
+          "stap": "Meng zelfrijzend bakmeel, suiker, zout en de specerijen. Wrijf de koude boter er met je vingertoppen door tot een kruimelig mengsel."
+        },
+        {
+          "kop": "Vloeistof toevoegen",
+          "stap": "Voeg de vloeibare smaakmakers en eerst de aangegeven hoeveelheid melk toe. Kneed kort tot een samenhangend deeg. Voeg alleen als nodig extra melk beetje bij beetje toe."
+        },
+        {
+          "kop": "Koelen en voorverwarmen",
+          "stap": "Verpak het deeg en laat 30 minuten in de koelkast rusten. Verwarm de oven voor op 170 °C boven- en onderwarmte. Bekleed twee bakplaten met bakpapier."
+        },
+        {
+          "kop": "Vormen en bakken",
+          "stap": "Verdeel in circa 70 balletjes van ongeveer 7–8 g. Leg met minstens 2 cm tussenruimte op de platen en druk licht aan. Bak elke plaat afzonderlijk in het midden van de oven, circa 15–20 minuten, tot de bovenkant droog is en de onderkant licht kleurt."
+        },
+        {
+          "kop": "Afkoelen",
+          "stap": "Laat 5 minuten op de plaat liggen en daarna volledig afkoelen op een rooster. De kruidnoten worden steviger en knapperiger tijdens het afkoelen."
+        },
+        {
+          "kop": "Chocolade en afwerking",
+          "stap": "Smelt de chocolade voorzichtig au bain-marie in een droge kom; laat de kom het water niet raken. Haal de kruidnoten door witte chocolade en bestrooi direct met fijngehakte pistachenoten."
+        },
+        {
+          "kop": "Laten opstijven",
+          "stap": "Laat de afwerking volledig opstijven op bakpapier."
+        }
+      ],
+      "tips": "<ul><li>Laat de kruidnoten volledig afkoelen voordat je ze beoordeelt op knapperigheid of met chocolade afwerkt.</li><li>Bak de twee platen na elkaar; reken samen op ongeveer 30–40 minuten oventijd.</li><li>Dit recept is een redactioneel concept en nog niet proefgebakken. Het beeld is een illustratie van de smaakvariant.</li><li>Bevat tarwe (gluten) en melk. Bevat ook pistachenoten. Controleer de etiketten van chocolade, kruidenmixen en smaakmakers.</li></ul>",
+      "bewaren": "<p>Bewaar de volledig afgekoelde kruidnoten droog, donker en luchtdicht. Ongecoate kruidnoten zijn het lekkerst binnen circa een week; afgewerkte kruidnoten binnen enkele dagen. Bewaar chocoladevarianten op een koele plek.</p>",
+      "vragen": [
+        {
+          "vraag": "Zijn dit pepernoten of kruidnoten?",
+          "antwoord": "<p>Dit zijn de ronde, knapperige kruidnoten die vaak pepernoten worden genoemd. Traditionele pepernoten zijn taaier en hebben een onregelmatige vorm.</p>"
+        },
+        {
+          "vraag": "Waarom zijn mijn kruidnoten nog zacht na het bakken?",
+          "antwoord": "<p>Warme kruidnoten zijn nog zacht. Laat ze volledig afkoelen op een rooster voordat je de knapperigheid beoordeelt. De benodigde baktijd hangt af van je oven en de grootte van de balletjes.</p>"
+        }
+      ],
+      "tags": "pepernoten, sinterklaas, kruidnoten, bakken, vegetarisch",
+      "meta_titel": "Kruidnoten met pistache en witte chocolade",
+      "meta_omschrijving": "Kruidnoten met pistache en witte chocolade zelf maken voor Sinterklaas. Met ingrediënten voor circa 70 stuks, duidelijke bereidingsstappen en bewaartips.",
+      "keuken": [
+        "57d92d8b-3598-499a-ba8b-2332863947c0"
+      ],
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/a8919a568bf544d1a3cb71aced63df6b.webp"
+    }
+  },
+  {
+    "sourceImage": "espresso-pure-chocolade.png",
+    "data": {
+      "titel": "Kruidnoten met espresso en pure chocolade",
+      "slug": "kruidnoten-espresso-pure-chocolade",
+      "intro": "<p>Een beetje espresso in het deeg en een laagje pure chocolade geven deze kruidnoten een volle koffiesmaak. Een lekkere variant voor bij de koffie tijdens een gezellige Sinterklaasavond.</p><p>Voor circa 70 kleine kruidnoten. Lekker voor de intocht, in de schoen of op tafel tijdens pakjesavond.</p>",
+      "afbeelding_alt": "Kruidnoten met espresso en pure chocolade, geserveerd in een keramieken schaaltje",
+      "gang": "Snack",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 20,
+      "bereidingstijd": 40,
+      "personen": 70,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "30 min koelen + volledig afkoelen + chocolade laten opstijven",
+      "ingredienten": [
+        {
+          "groep": "Deeg",
+          "hoeveelheid": 250,
+          "eenheid": "g",
+          "ingredient": "zelfrijzend bakmeel",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 125,
+          "eenheid": "g",
+          "ingredient": "donkerbruine basterdsuiker",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 100,
+          "eenheid": "g",
+          "ingredient": "ongezouten roomboter",
+          "ingredient_meervoud": "",
+          "toelichting": "koud, in blokjes"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 8,
+          "eenheid": "g",
+          "ingredient": "speculaaskruiden",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 45,
+          "eenheid": "ml",
+          "ingredient": "melk",
+          "ingredient_meervoud": "",
+          "toelichting": "begin hiermee; voeg zo nodig geleidelijk extra toe"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "snuf",
+          "ingredient": "zout",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 2,
+          "eenheid": "tl",
+          "ingredient": "instant-espressopoeder",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "Afwerking",
+          "hoeveelheid": 250,
+          "eenheid": "g",
+          "ingredient": "pure chocolade",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "Deeg mengen",
+          "stap": "Meng zelfrijzend bakmeel, suiker, zout en de specerijen. Wrijf de koude boter er met je vingertoppen door tot een kruimelig mengsel."
+        },
+        {
+          "kop": "Vloeistof toevoegen",
+          "stap": "Los het espressopoeder op in de eerste eetlepel melk en laat afkoelen. Voeg de vloeibare smaakmakers en eerst de aangegeven hoeveelheid melk toe. Kneed kort tot een samenhangend deeg. Voeg alleen als nodig extra melk beetje bij beetje toe."
+        },
+        {
+          "kop": "Koelen en voorverwarmen",
+          "stap": "Verpak het deeg en laat 30 minuten in de koelkast rusten. Verwarm de oven voor op 170 °C boven- en onderwarmte. Bekleed twee bakplaten met bakpapier."
+        },
+        {
+          "kop": "Vormen en bakken",
+          "stap": "Verdeel in circa 70 balletjes van ongeveer 7–8 g. Leg met minstens 2 cm tussenruimte op de platen en druk licht aan. Bak elke plaat afzonderlijk in het midden van de oven, circa 15–20 minuten, tot de bovenkant droog is en de onderkant licht kleurt."
+        },
+        {
+          "kop": "Afkoelen",
+          "stap": "Laat 5 minuten op de plaat liggen en daarna volledig afkoelen op een rooster. De kruidnoten worden steviger en knapperiger tijdens het afkoelen."
+        },
+        {
+          "kop": "Chocolade en afwerking",
+          "stap": "Smelt de chocolade voorzichtig au bain-marie in een droge kom; laat de kom het water niet raken. Haal de kruidnoten door pure chocolade, laat uitlekken op een vork en leg op bakpapier."
+        },
+        {
+          "kop": "Laten opstijven",
+          "stap": "Laat de afwerking volledig opstijven op bakpapier."
+        }
+      ],
+      "tips": "<ul><li>Laat de kruidnoten volledig afkoelen voordat je ze beoordeelt op knapperigheid of met chocolade afwerkt.</li><li>Bak de twee platen na elkaar; reken samen op ongeveer 30–40 minuten oventijd.</li><li>Dit recept is een redactioneel concept en nog niet proefgebakken. Het beeld is een illustratie van de smaakvariant.</li><li>Bevat tarwe (gluten) en melk. Controleer de etiketten van chocolade, kruidenmixen en smaakmakers.</li></ul>",
+      "bewaren": "<p>Bewaar de volledig afgekoelde kruidnoten droog, donker en luchtdicht. Ongecoate kruidnoten zijn het lekkerst binnen circa een week; afgewerkte kruidnoten binnen enkele dagen. Bewaar chocoladevarianten op een koele plek.</p>",
+      "vragen": [
+        {
+          "vraag": "Zijn dit pepernoten of kruidnoten?",
+          "antwoord": "<p>Dit zijn de ronde, knapperige kruidnoten die vaak pepernoten worden genoemd. Traditionele pepernoten zijn taaier en hebben een onregelmatige vorm.</p>"
+        },
+        {
+          "vraag": "Waarom zijn mijn kruidnoten nog zacht na het bakken?",
+          "antwoord": "<p>Warme kruidnoten zijn nog zacht. Laat ze volledig afkoelen op een rooster voordat je de knapperigheid beoordeelt. De benodigde baktijd hangt af van je oven en de grootte van de balletjes.</p>"
+        }
+      ],
+      "tags": "pepernoten, sinterklaas, kruidnoten, bakken, vegetarisch",
+      "meta_titel": "Kruidnoten met espresso en pure chocolade",
+      "meta_omschrijving": "Kruidnoten met espresso en pure chocolade zelf maken voor Sinterklaas. Met ingrediënten voor circa 70 stuks, duidelijke bereidingsstappen en bewaartips.",
+      "keuken": [
+        "57d92d8b-3598-499a-ba8b-2332863947c0"
+      ],
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/f38846cb77e44a2586bca3ff17012cb5.webp"
+    }
+  },
+  {
+    "sourceImage": "sinaasappel-pure-chocolade.png",
+    "data": {
+      "titel": "Kruidnoten met sinaasappel en pure chocolade",
+      "slug": "kruidnoten-sinaasappel-pure-chocolade",
+      "intro": "<p>Fijne sinaasappelrasp geeft het kruidnotendeeg een frisse citrussmaak. Een laagje pure chocolade maakt deze combinatie met warme speculaaskruiden helemaal af.</p><p>Voor circa 70 kleine kruidnoten. Lekker voor de intocht, in de schoen of op tafel tijdens pakjesavond.</p>",
+      "afbeelding_alt": "Kruidnoten met sinaasappel en pure chocolade, geserveerd in een keramieken schaaltje",
+      "gang": "Snack",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 20,
+      "bereidingstijd": 40,
+      "personen": 70,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "30 min koelen + volledig afkoelen + chocolade laten opstijven",
+      "ingredienten": [
+        {
+          "groep": "Deeg",
+          "hoeveelheid": 250,
+          "eenheid": "g",
+          "ingredient": "zelfrijzend bakmeel",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 125,
+          "eenheid": "g",
+          "ingredient": "donkerbruine basterdsuiker",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 100,
+          "eenheid": "g",
+          "ingredient": "ongezouten roomboter",
+          "ingredient_meervoud": "",
+          "toelichting": "koud, in blokjes"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 8,
+          "eenheid": "g",
+          "ingredient": "speculaaskruiden",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 45,
+          "eenheid": "ml",
+          "ingredient": "melk",
+          "ingredient_meervoud": "",
+          "toelichting": "begin hiermee; voeg zo nodig geleidelijk extra toe"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "snuf",
+          "ingredient": "zout",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "",
+          "ingredient": "sinaasappel",
+          "ingredient_meervoud": "sinaasappelen",
+          "toelichting": "gewassen, alleen de fijne rasp van de schil"
+        },
+        {
+          "groep": "Afwerking",
+          "hoeveelheid": 250,
+          "eenheid": "g",
+          "ingredient": "pure chocolade",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "Deeg mengen",
+          "stap": "Meng zelfrijzend bakmeel, suiker, zout en de specerijen. Wrijf de koude boter er met je vingertoppen door tot een kruimelig mengsel."
+        },
+        {
+          "kop": "Vloeistof toevoegen",
+          "stap": "Voeg de fijne sinaasappelrasp toe aan het kruimelige mengsel. Gebruik alleen het oranje deel. Voeg de vloeibare smaakmakers en eerst de aangegeven hoeveelheid melk toe. Kneed kort tot een samenhangend deeg. Voeg alleen als nodig extra melk beetje bij beetje toe."
+        },
+        {
+          "kop": "Koelen en voorverwarmen",
+          "stap": "Verpak het deeg en laat 30 minuten in de koelkast rusten. Verwarm de oven voor op 170 °C boven- en onderwarmte. Bekleed twee bakplaten met bakpapier."
+        },
+        {
+          "kop": "Vormen en bakken",
+          "stap": "Verdeel in circa 70 balletjes van ongeveer 7–8 g. Leg met minstens 2 cm tussenruimte op de platen en druk licht aan. Bak elke plaat afzonderlijk in het midden van de oven, circa 15–20 minuten, tot de bovenkant droog is en de onderkant licht kleurt."
+        },
+        {
+          "kop": "Afkoelen",
+          "stap": "Laat 5 minuten op de plaat liggen en daarna volledig afkoelen op een rooster. De kruidnoten worden steviger en knapperiger tijdens het afkoelen."
+        },
+        {
+          "kop": "Chocolade en afwerking",
+          "stap": "Smelt de chocolade voorzichtig au bain-marie in een droge kom; laat de kom het water niet raken. Haal de kruidnoten door pure chocolade, laat uitlekken op een vork en leg op bakpapier."
+        },
+        {
+          "kop": "Laten opstijven",
+          "stap": "Laat de afwerking volledig opstijven op bakpapier."
+        }
+      ],
+      "tips": "<ul><li>Laat de kruidnoten volledig afkoelen voordat je ze beoordeelt op knapperigheid of met chocolade afwerkt.</li><li>Bak de twee platen na elkaar; reken samen op ongeveer 30–40 minuten oventijd.</li><li>Dit recept is een redactioneel concept en nog niet proefgebakken. Het beeld is een illustratie van de smaakvariant.</li><li>Bevat tarwe (gluten) en melk. Controleer de etiketten van chocolade, kruidenmixen en smaakmakers.</li></ul>",
+      "bewaren": "<p>Bewaar de volledig afgekoelde kruidnoten droog, donker en luchtdicht. Ongecoate kruidnoten zijn het lekkerst binnen circa een week; afgewerkte kruidnoten binnen enkele dagen. Bewaar chocoladevarianten op een koele plek.</p>",
+      "vragen": [
+        {
+          "vraag": "Zijn dit pepernoten of kruidnoten?",
+          "antwoord": "<p>Dit zijn de ronde, knapperige kruidnoten die vaak pepernoten worden genoemd. Traditionele pepernoten zijn taaier en hebben een onregelmatige vorm.</p>"
+        },
+        {
+          "vraag": "Waarom zijn mijn kruidnoten nog zacht na het bakken?",
+          "antwoord": "<p>Warme kruidnoten zijn nog zacht. Laat ze volledig afkoelen op een rooster voordat je de knapperigheid beoordeelt. De benodigde baktijd hangt af van je oven en de grootte van de balletjes.</p>"
+        }
+      ],
+      "tags": "pepernoten, sinterklaas, kruidnoten, bakken, vegetarisch",
+      "meta_titel": "Kruidnoten met sinaasappel en pure chocolade",
+      "meta_omschrijving": "Kruidnoten met sinaasappel en pure chocolade zelf maken voor Sinterklaas. Met ingrediënten voor circa 70 stuks, duidelijke bereidingsstappen en bewaartips.",
+      "keuken": [
+        "57d92d8b-3598-499a-ba8b-2332863947c0"
+      ],
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/1a11d0a4f39b449c92318cae42c32538.webp"
+    }
+  },
+  {
+    "sourceImage": "citroen-maanzaad.png",
+    "data": {
+      "titel": "Kruidnoten met citroen en maanzaad",
+      "slug": "kruidnoten-citroen-maanzaad",
+      "intro": "<p>Citroenrasp en maanzaad geven deze lichte kruidnoten een frisse twist. De speculaaskruiden laten we achterwege; dunne lijntjes witte chocolade zorgen voor een zoete afwerking.</p><p>Voor circa 70 kleine kruidnoten. Lekker voor de intocht, in de schoen of op tafel tijdens pakjesavond.</p>",
+      "afbeelding_alt": "Kruidnoten met citroen en maanzaad, geserveerd in een keramieken schaaltje",
+      "gang": "Snack",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 20,
+      "bereidingstijd": 40,
+      "personen": 70,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "30 min koelen + volledig afkoelen + chocolade laten opstijven",
+      "ingredienten": [
+        {
+          "groep": "Deeg",
+          "hoeveelheid": 250,
+          "eenheid": "g",
+          "ingredient": "zelfrijzend bakmeel",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 100,
+          "eenheid": "g",
+          "ingredient": "ongezouten roomboter",
+          "ingredient_meervoud": "",
+          "toelichting": "koud, in blokjes"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 45,
+          "eenheid": "ml",
+          "ingredient": "melk",
+          "ingredient_meervoud": "",
+          "toelichting": "begin hiermee; voeg zo nodig geleidelijk extra toe"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "snuf",
+          "ingredient": "zout",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 125,
+          "eenheid": "g",
+          "ingredient": "lichte basterdsuiker",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "",
+          "ingredient": "citroen",
+          "ingredient_meervoud": "citroenen",
+          "toelichting": "gewassen, alleen de fijne rasp van de schil"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "el",
+          "ingredient": "maanzaad",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "Afwerking",
+          "hoeveelheid": 75,
+          "eenheid": "g",
+          "ingredient": "witte chocolade",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "Deeg mengen",
+          "stap": "Meng zelfrijzend bakmeel, suiker, zout en de specerijen. Wrijf de koude boter er met je vingertoppen door tot een kruimelig mengsel."
+        },
+        {
+          "kop": "Vloeistof toevoegen",
+          "stap": "Meng citroenrasp en maanzaad door het meel. Gebruik alleen het gele deel van de schil. Voeg de vloeibare smaakmakers en eerst de aangegeven hoeveelheid melk toe. Kneed kort tot een samenhangend deeg. Voeg alleen als nodig extra melk beetje bij beetje toe."
+        },
+        {
+          "kop": "Koelen en voorverwarmen",
+          "stap": "Verpak het deeg en laat 30 minuten in de koelkast rusten. Verwarm de oven voor op 170 °C boven- en onderwarmte. Bekleed twee bakplaten met bakpapier."
+        },
+        {
+          "kop": "Vormen en bakken",
+          "stap": "Verdeel in circa 70 balletjes van ongeveer 7–8 g. Leg met minstens 2 cm tussenruimte op de platen en druk licht aan. Bak elke plaat afzonderlijk in het midden van de oven, circa 15–20 minuten, tot de bovenkant droog is en de onderkant licht kleurt."
+        },
+        {
+          "kop": "Afkoelen",
+          "stap": "Laat 5 minuten op de plaat liggen en daarna volledig afkoelen op een rooster. De kruidnoten worden steviger en knapperiger tijdens het afkoelen."
+        },
+        {
+          "kop": "Chocolade en afwerking",
+          "stap": "Smelt de chocolade voorzichtig au bain-marie in een droge kom; laat de kom het water niet raken. Versier de kruidnoten met dunne lijntjes witte chocolade."
+        },
+        {
+          "kop": "Laten opstijven",
+          "stap": "Laat de afwerking volledig opstijven op bakpapier."
+        }
+      ],
+      "tips": "<ul><li>Laat de kruidnoten volledig afkoelen voordat je ze beoordeelt op knapperigheid of met chocolade afwerkt.</li><li>Bak de twee platen na elkaar; reken samen op ongeveer 30–40 minuten oventijd.</li><li>Dit recept is een redactioneel concept en nog niet proefgebakken. Het beeld is een illustratie van de smaakvariant.</li><li>Bevat tarwe (gluten) en melk. Controleer de etiketten van chocolade, kruidenmixen en smaakmakers.</li></ul>",
+      "bewaren": "<p>Bewaar de volledig afgekoelde kruidnoten droog, donker en luchtdicht. Ongecoate kruidnoten zijn het lekkerst binnen circa een week; afgewerkte kruidnoten binnen enkele dagen. Bewaar chocoladevarianten op een koele plek.</p>",
+      "vragen": [
+        {
+          "vraag": "Zijn dit pepernoten of kruidnoten?",
+          "antwoord": "<p>Dit zijn de ronde, knapperige kruidnoten die vaak pepernoten worden genoemd. Traditionele pepernoten zijn taaier en hebben een onregelmatige vorm.</p>"
+        },
+        {
+          "vraag": "Waarom zijn mijn kruidnoten nog zacht na het bakken?",
+          "antwoord": "<p>Warme kruidnoten zijn nog zacht. Laat ze volledig afkoelen op een rooster voordat je de knapperigheid beoordeelt. De benodigde baktijd hangt af van je oven en de grootte van de balletjes.</p>"
+        }
+      ],
+      "tags": "pepernoten, sinterklaas, kruidnoten, bakken, vegetarisch",
+      "meta_titel": "Kruidnoten met citroen en maanzaad",
+      "meta_omschrijving": "Kruidnoten met citroen en maanzaad zelf maken voor Sinterklaas. Met ingrediënten voor circa 70 stuks, duidelijke bereidingsstappen en bewaartips.",
+      "keuken": [
+        "57d92d8b-3598-499a-ba8b-2332863947c0"
+      ],
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/ca4437bd28834e4b95f099eda6cedf6f.webp"
+    }
+  },
+  {
+    "sourceImage": "chai-vanille.png",
+    "data": {
+      "titel": "Chai-vanille kruidnoten",
+      "slug": "kruidnoten-chai-vanille",
+      "intro": "<p>Kaneel, kardemom, gember, kruidnagel en vanille geven deze kruidnoten een warme chaismaak. Zonder chocoladelaag blijft de kruidige smaak van het zelfgebakken koekje centraal staan.</p><p>Voor circa 70 kleine kruidnoten. Lekker voor de intocht, in de schoen of op tafel tijdens pakjesavond.</p>",
+      "afbeelding_alt": "Chai-vanille kruidnoten, geserveerd in een keramieken schaaltje",
+      "gang": "Snack",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 20,
+      "bereidingstijd": 40,
+      "personen": 70,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "30 min koelen + volledig afkoelen",
+      "ingredienten": [
+        {
+          "groep": "Deeg",
+          "hoeveelheid": 250,
+          "eenheid": "g",
+          "ingredient": "zelfrijzend bakmeel",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 125,
+          "eenheid": "g",
+          "ingredient": "donkerbruine basterdsuiker",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 100,
+          "eenheid": "g",
+          "ingredient": "ongezouten roomboter",
+          "ingredient_meervoud": "",
+          "toelichting": "koud, in blokjes"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 40,
+          "eenheid": "ml",
+          "ingredient": "melk",
+          "ingredient_meervoud": "",
+          "toelichting": "begin hiermee; voeg zo nodig geleidelijk extra toe"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "snuf",
+          "ingredient": "zout",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1.5,
+          "eenheid": "tl",
+          "ingredient": "kaneel",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 0.5,
+          "eenheid": "tl",
+          "ingredient": "kardemom",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 0.5,
+          "eenheid": "tl",
+          "ingredient": "gemberpoeder",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 0.125,
+          "eenheid": "tl",
+          "ingredient": "gemalen kruidnagel",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "tl",
+          "ingredient": "vanille-extract",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "Deeg mengen",
+          "stap": "Meng zelfrijzend bakmeel, suiker, zout en de specerijen. Wrijf de koude boter er met je vingertoppen door tot een kruimelig mengsel."
+        },
+        {
+          "kop": "Vloeistof toevoegen",
+          "stap": "Voeg het vanille-extract met de melk toe. Begin met 40 ml melk. Voeg de vloeibare smaakmakers en eerst de aangegeven hoeveelheid melk toe. Kneed kort tot een samenhangend deeg. Voeg alleen als nodig extra melk beetje bij beetje toe."
+        },
+        {
+          "kop": "Koelen en voorverwarmen",
+          "stap": "Verpak het deeg en laat 30 minuten in de koelkast rusten. Verwarm de oven voor op 170 °C boven- en onderwarmte. Bekleed twee bakplaten met bakpapier."
+        },
+        {
+          "kop": "Vormen en bakken",
+          "stap": "Verdeel in circa 70 balletjes van ongeveer 7–8 g. Leg met minstens 2 cm tussenruimte op de platen en druk licht aan. Bak elke plaat afzonderlijk in het midden van de oven, circa 15–20 minuten, tot de bovenkant droog is en de onderkant licht kleurt."
+        },
+        {
+          "kop": "Afkoelen",
+          "stap": "Laat 5 minuten op de plaat liggen en daarna volledig afkoelen op een rooster. De kruidnoten worden steviger en knapperiger tijdens het afkoelen."
+        }
+      ],
+      "tips": "<ul><li>Laat de kruidnoten volledig afkoelen voordat je ze beoordeelt op knapperigheid of met chocolade afwerkt.</li><li>Bak de twee platen na elkaar; reken samen op ongeveer 30–40 minuten oventijd.</li><li>Dit recept is een redactioneel concept en nog niet proefgebakken. Het beeld is een illustratie van de smaakvariant.</li><li>Bevat tarwe (gluten) en melk. Controleer de etiketten van chocolade, kruidenmixen en smaakmakers.</li></ul>",
+      "bewaren": "<p>Bewaar de volledig afgekoelde kruidnoten droog, donker en luchtdicht. Ongecoate kruidnoten zijn het lekkerst binnen circa een week; afgewerkte kruidnoten binnen enkele dagen. Bewaar chocoladevarianten op een koele plek.</p>",
+      "vragen": [
+        {
+          "vraag": "Zijn dit pepernoten of kruidnoten?",
+          "antwoord": "<p>Dit zijn de ronde, knapperige kruidnoten die vaak pepernoten worden genoemd. Traditionele pepernoten zijn taaier en hebben een onregelmatige vorm.</p>"
+        },
+        {
+          "vraag": "Waarom zijn mijn kruidnoten nog zacht na het bakken?",
+          "antwoord": "<p>Warme kruidnoten zijn nog zacht. Laat ze volledig afkoelen op een rooster voordat je de knapperigheid beoordeelt. De benodigde baktijd hangt af van je oven en de grootte van de balletjes.</p>"
+        }
+      ],
+      "tags": "pepernoten, sinterklaas, kruidnoten, bakken, vegetarisch",
+      "meta_titel": "Chai-vanille kruidnoten",
+      "meta_omschrijving": "Chai-vanille kruidnoten zelf maken voor Sinterklaas. Met ingrediënten voor circa 70 stuks, duidelijke bereidingsstappen en bewaartips.",
+      "keuken": [
+        "57d92d8b-3598-499a-ba8b-2332863947c0"
+      ],
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/896ffa9688a14052b5fa18947497ebf6.webp"
+    }
+  },
+  {
+    "sourceImage": "framboos-witte-chocolade.png",
+    "data": {
+      "titel": "Kruidnoten met framboos en witte chocolade",
+      "slug": "kruidnoten-framboos-witte-chocolade",
+      "intro": "<p>Een laagje witte chocolade en gevriesdroogde frambozen geven zelfgebakken kruidnoten een friszoete, feestelijke afwerking. De verkruimelde frambozen zorgen voor kleur en een klein zuurtje.</p><p>Voor circa 70 kleine kruidnoten. Lekker voor de intocht, in de schoen of op tafel tijdens pakjesavond.</p>",
+      "afbeelding_alt": "Kruidnoten met framboos en witte chocolade, geserveerd in een keramieken schaaltje",
+      "gang": "Snack",
+      "moeilijkheid": "Makkelijk",
+      "voorbereidingstijd": 20,
+      "bereidingstijd": 40,
+      "personen": 70,
+      "portie_eenheid": "stuks",
+      "tijd_toelichting": "30 min koelen + volledig afkoelen + chocolade laten opstijven",
+      "ingredienten": [
+        {
+          "groep": "Deeg",
+          "hoeveelheid": 250,
+          "eenheid": "g",
+          "ingredient": "zelfrijzend bakmeel",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 125,
+          "eenheid": "g",
+          "ingredient": "donkerbruine basterdsuiker",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 100,
+          "eenheid": "g",
+          "ingredient": "ongezouten roomboter",
+          "ingredient_meervoud": "",
+          "toelichting": "koud, in blokjes"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 4,
+          "eenheid": "g",
+          "ingredient": "speculaaskruiden",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 45,
+          "eenheid": "ml",
+          "ingredient": "melk",
+          "ingredient_meervoud": "",
+          "toelichting": "begin hiermee; voeg zo nodig geleidelijk extra toe"
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 1,
+          "eenheid": "snuf",
+          "ingredient": "zout",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "Afwerking",
+          "hoeveelheid": 250,
+          "eenheid": "g",
+          "ingredient": "witte chocolade",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        },
+        {
+          "groep": "",
+          "hoeveelheid": 15,
+          "eenheid": "g",
+          "ingredient": "verkruimelde gevriesdroogde frambozen",
+          "ingredient_meervoud": "",
+          "toelichting": ""
+        }
+      ],
+      "bereiding": [
+        {
+          "kop": "Deeg mengen",
+          "stap": "Meng zelfrijzend bakmeel, suiker, zout en de specerijen. Wrijf de koude boter er met je vingertoppen door tot een kruimelig mengsel."
+        },
+        {
+          "kop": "Vloeistof toevoegen",
+          "stap": "Voeg de vloeibare smaakmakers en eerst de aangegeven hoeveelheid melk toe. Kneed kort tot een samenhangend deeg. Voeg alleen als nodig extra melk beetje bij beetje toe."
+        },
+        {
+          "kop": "Koelen en voorverwarmen",
+          "stap": "Verpak het deeg en laat 30 minuten in de koelkast rusten. Verwarm de oven voor op 170 °C boven- en onderwarmte. Bekleed twee bakplaten met bakpapier."
+        },
+        {
+          "kop": "Vormen en bakken",
+          "stap": "Verdeel in circa 70 balletjes van ongeveer 7–8 g. Leg met minstens 2 cm tussenruimte op de platen en druk licht aan. Bak elke plaat afzonderlijk in het midden van de oven, circa 15–20 minuten, tot de bovenkant droog is en de onderkant licht kleurt."
+        },
+        {
+          "kop": "Afkoelen",
+          "stap": "Laat 5 minuten op de plaat liggen en daarna volledig afkoelen op een rooster. De kruidnoten worden steviger en knapperiger tijdens het afkoelen."
+        },
+        {
+          "kop": "Chocolade en afwerking",
+          "stap": "Smelt de chocolade voorzichtig au bain-marie in een droge kom; laat de kom het water niet raken. Haal de kruidnoten door witte chocolade en strooi er direct verkruimelde gevriesdroogde frambozen op."
+        },
+        {
+          "kop": "Laten opstijven",
+          "stap": "Laat de afwerking volledig opstijven op bakpapier."
+        }
+      ],
+      "tips": "<ul><li>Gebruik gevriesdroogde frambozen. Verse frambozen bevatten te veel vocht voor deze afwerking.</li><li>Laat de kruidnoten volledig afkoelen voordat je ze beoordeelt op knapperigheid of met chocolade afwerkt.</li><li>Bak de twee platen na elkaar; reken samen op ongeveer 30–40 minuten oventijd.</li><li>Dit recept is een redactioneel concept en nog niet proefgebakken. Het beeld is een illustratie van de smaakvariant.</li><li>Bevat tarwe (gluten) en melk. Controleer de etiketten van chocolade, kruidenmixen en smaakmakers.</li></ul>",
+      "bewaren": "<p>Bewaar de volledig afgekoelde kruidnoten droog, donker en luchtdicht. Ongecoate kruidnoten zijn het lekkerst binnen circa een week; afgewerkte kruidnoten binnen enkele dagen. Bewaar chocoladevarianten op een koele plek.</p>",
+      "vragen": [
+        {
+          "vraag": "Zijn dit pepernoten of kruidnoten?",
+          "antwoord": "<p>Dit zijn de ronde, knapperige kruidnoten die vaak pepernoten worden genoemd. Traditionele pepernoten zijn taaier en hebben een onregelmatige vorm.</p>"
+        },
+        {
+          "vraag": "Waarom zijn mijn kruidnoten nog zacht na het bakken?",
+          "antwoord": "<p>Warme kruidnoten zijn nog zacht. Laat ze volledig afkoelen op een rooster voordat je de knapperigheid beoordeelt. De benodigde baktijd hangt af van je oven en de grootte van de balletjes.</p>"
+        }
+      ],
+      "tags": "pepernoten, sinterklaas, kruidnoten, bakken, vegetarisch",
+      "meta_titel": "Kruidnoten met framboos en witte chocolade",
+      "meta_omschrijving": "Kruidnoten met framboos en witte chocolade zelf maken voor Sinterklaas. Met ingrediënten voor circa 70 stuks, duidelijke bereidingsstappen en bewaartips.",
+      "keuken": [
+        "57d92d8b-3598-499a-ba8b-2332863947c0"
+      ],
+      "afbeelding": "https://fsn1.your-objectstorage.com/centaur-media/cfc0b3b2a36f4b85b1cb452c43399bd6/4cceb1b6b71d441f9000d91e369c2c9e.webp"
+    }
+  }
+]
