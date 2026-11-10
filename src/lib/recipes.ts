@@ -153,7 +153,7 @@ function toRecipe(entry: CentaurEntry, cuisinesById: Map<string, Cuisine>): Reci
 
 let allRecipes: Promise<Recipe[]> | null = null
 
-/** Alle recepten, nieuwste eerst. Items zonder slug of titel (bv. testitems) worden overgeslagen. */
+/** Alle recepten, nieuwste eerst binnen de gewone recepten en daarna Halloween. Items zonder slug of titel worden overgeslagen. */
 export function getAllRecipes(): Promise<Recipe[]> {
   allRecipes ??= (async () => {
     const [entries, cuisines] = await Promise.all([getCollection('recepten'), getAllCuisineEntries()])
@@ -172,7 +172,9 @@ export function getAllRecipes(): Promise<Recipe[]> {
         seen.add(recipe.slug)
         return true
       })
-    return unique
+    // Halloween onderaan; de stabiele sortering behoudt de datumvolgorde per groep.
+    const halloween = (recipe: Recipe) => Number(recipe.tags.some(tag => tag.toLowerCase() === 'halloween'))
+    return unique.sort((a, b) => halloween(a) - halloween(b))
   })()
   return allRecipes
 }

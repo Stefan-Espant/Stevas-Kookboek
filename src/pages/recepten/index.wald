@@ -78,7 +78,7 @@ const filterHtml = recipes.length > 1 && (courses.length > 1 || cuisines.length 
         ${new SafeHtml(select('tijd', 'Tijd', option('', 'Maakt niet uit') + option('15', 'Tot 15 minuten') + option('30', 'Tot 30 minuten') + option('60', 'Tot een uur') + option('lang', 'Langer dan een uur')))}
         ${new SafeHtml(levels.length > 1 ? select('niveau', 'Niveau', option('', 'Alle niveaus') + levels.map(level => option(level, level)).join('')) : '')}
         ${new SafeHtml(select('dieet', 'Dieet', option('', 'Alles') + option('vegetarisch', 'Vegetarisch') + option('vegan', 'Vegan')))}
-        ${new SafeHtml(select('sorteer', 'Sorteren', option('', 'Nieuwste eerst') + option('snel', 'Snelste eerst') + option('az', 'Op naam (A–Z)')))}
+        ${new SafeHtml(select('sorteer', 'Sorteren', option('', 'Aanbevolen volgorde') + option('snel', 'Snelste eerst') + option('az', 'Op naam (A–Z)')))}
       </div>
       </div></div>
       <div class="recipes__filter-row">
