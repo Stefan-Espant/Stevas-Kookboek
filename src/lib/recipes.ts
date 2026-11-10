@@ -331,6 +331,13 @@ export async function getCollections(): Promise<Collection[]> {
       recipes: tagged('gezellig', 'feest', 'fondue', 'delen', 'barbecue')
     },
     {
+      slug: 'pepernoten',
+      title: 'Zelf pepernoten maken',
+      seoTitle: 'Zelf pepernoten maken: van klassiek tot pandan',
+      description: 'Traditioneel, maar top! Bak zelf knapperige kruidnoten: van klassieke roomboter tot pandan-kokos, pumpkin spice en chocolade.',
+      recipes: tagged('pepernoten').sort((a, b) => Number(hasTag(b, 'klassiek')) - Number(hasTag(a, 'klassiek')) || a.title.localeCompare(b.title, 'nl'))
+    },
+    {
       slug: 'halloween',
       title: 'Halloweenrecepten',
       seoTitle: 'Halloweenrecepten om samen te maken',

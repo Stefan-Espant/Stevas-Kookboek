@@ -85,7 +85,7 @@ const stepsHtml = `<ol>${recipe.steps.map(step => renderTemplate`<li>${new SafeH
 
 // Verborgen tot het script draait: zonder JavaScript zie je gewoon het recept zoals het is.
 const scalerHtml = servings
-  ? renderTemplate`<div class="recipe__scaler" data-servings="${servings}" hidden>
+  ? renderTemplate`<div class="recipe__scaler" data-servings="${servings}" data-yield-unit="${yieldUnit}" hidden>
       <span class="recipe__scaler-label" id="personen-label">Aantal ${yieldUnit}</span>
       <div class="recipe__scaler-controls" role="group" aria-labelledby="personen-label">
         <button type="button" data-step="-1" aria-label="Eén ${singularYield} minder">−</button>
@@ -173,8 +173,10 @@ document.querySelectorAll('.recipe__scaler').forEach(function (scaler) {
   var minus = scaler.querySelector('[data-step="-1"]')
   var plus = scaler.querySelector('[data-step="1"]')
   var MIN = 1
-  var MAX = 24
-  var FRACTIONS = [[0, ''], [0.25, '¼'], [1 / 3, '⅓'], [0.5, '½'], [2 / 3, '⅔'], [0.75, '¾'], [1, '']]
+  // Een bakrecept kan al met meer dan 24 stuks beginnen. Houd de personenlimiet
+  // voor diners; geef recepten in stuks ruimte om hun uitgangshoeveelheid te verhogen.
+  var MAX = scaler.dataset.yieldUnit === 'personen' ? Math.max(24, base) : Math.max(200, base * 4)
+  var FRACTIONS = [[0, ''], [0.125, '⅛'], [0.25, '¼'], [1 / 3, '⅓'], [0.5, '½'], [2 / 3, '⅔'], [0.75, '¾'], [1, '']]
 
   // Zelfde afrondregels als formatQuantity in src/lib/quantity.ts — houd die gelijk.
   function format(value) {
@@ -291,6 +293,11 @@ document.querySelectorAll('.recipe__scaler').forEach(function (scaler) {
   color: var(--byz-color-text-muted);
   font-size: var(--byz-text-lg);
   line-height: var(--byz-leading-relaxed);
+}
+/* Links uit CMS-richtext behouden ook na bezoek voldoende contrast. */
+.recipe__lead, .recipe__steps {
+  & a, & a:visited { color: #fff; text-decoration: underline; text-underline-offset: .2em; }
+  & a:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
 }
 /* Link naar de keuken onder de kerngegevens (alleen als het recept een keuken heeft). */
 .recipe__meta {
