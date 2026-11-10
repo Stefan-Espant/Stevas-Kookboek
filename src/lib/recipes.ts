@@ -333,6 +333,13 @@ export async function getCollections(): Promise<Collection[]> {
       recipes: tagged('gezellig', 'feest', 'fondue', 'delen', 'barbecue')
     },
     {
+      slug: 'sinterklaas',
+      title: 'Sinterklaasrecepten',
+      seoTitle: 'Sinterklaasrecepten: kruidnoten, speculaas en banketstaaf',
+      description: 'Maak er een heerlijk avondje van met zelfgebakken kruidnoten, speculaasjes, banketstaaf en warme chocolademelk. Recepten voor de sinterklaastijd en pakjesavond.',
+      recipes: tagged('sinterklaas')
+    },
+    {
       slug: 'pepernoten',
       title: 'Zelf pepernoten maken',
       seoTitle: 'Zelf pepernoten maken: van klassiek tot pandan',

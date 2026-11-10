@@ -64,7 +64,17 @@ const seasonSections = await Promise.all(SEASONS.map(async season => {
   const attributes = ` data-season-months="${season.months.join(',')}"${season === buildSeason ? '' : ' hidden'}`
   return sectionHtml(`seizoen-${season.slug}`, season.title, [collectionPath(season.slug), `Meer ${season.name.toLowerCase()}recepten`], await RecipeGrid.render({ recipes: picks }), false, attributes)
 }))
-const seasonScript = `<script data-wald-no-hoist>(function(){var m=String(new Date().getMonth()+1);document.querySelectorAll('[data-season-months]').forEach(function(s){s.hidden=s.dataset.seasonMonths.split(',').indexOf(m)<0})})()</script>`
+// Ook na een statische build stopt het Sinterklaasblok na pakjesavond.
+const seasonScript = `<script data-wald-no-hoist>(function(){var d=new Date();var m=String(d.getMonth()+1);document.querySelectorAll('[data-season-months]').forEach(function(s){s.hidden=s.dataset.seasonMonths.split(',').indexOf(m)<0});var sint=document.querySelector('[data-sinterklaas-season]');if(sint)sint.hidden=!(d.getMonth()===10||d.getMonth()===11&&d.getDate()<=5)})()</script>`
+const sinterklaas = collections.find(collection => collection.slug === 'sinterklaas')
+const sinterklaasPicks = sinterklaas
+  ? [...sinterklaas.recipes.filter(recipe => !recipe.tags.some(tag => tag.toLowerCase() === 'pepernoten')), ...sinterklaas.recipes.filter(recipe => recipe.tags.some(tag => tag.toLowerCase() === 'pepernoten'))].slice(0, 3)
+  : []
+const sinterklaasDate = new Date()
+const isSinterklaasSeason = sinterklaasDate.getMonth() === 10 || (sinterklaasDate.getMonth() === 11 && sinterklaasDate.getDate() <= 5)
+const sinterklaasSection = sinterklaas
+  ? sectionHtml('sinterklaas-recepten', 'Een heerlijk avondje is gekomen', [collectionPath(sinterklaas.slug), 'Alle sinterklaasrecepten'], await RecipeGrid.render({ recipes: sinterklaasPicks }), true, ` data-sinterklaas-season${isSinterklaasSeason ? '' : ' hidden'}`)
+  : ''
 
 // Alleen gepubliceerd Halloween-aanbod tonen; in oktober extra uitlichten op de homepage.
 // De bestaande maandselectie houdt deze sectie ook na een statische build actueel.
@@ -75,6 +85,7 @@ const halloweenSection = halloween
 
 const usedImages = new Set<string>()
 const sections = [
+  sinterklaasSection,
   halloweenSection,
   seasonSections.join('') + seasonScript,
   sectionHtml('nieuwste-recepten', 'Recepten om nu te maken', recipes.length ? ['/recepten', 'Alle recepten'] : null, recipeList),
