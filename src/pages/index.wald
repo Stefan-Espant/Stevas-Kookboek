@@ -77,7 +77,7 @@ const usedImages = new Set<string>()
 const sections = [
   halloweenSection,
   seasonSections.join('') + seasonScript,
-  sectionHtml('nieuwste-recepten', 'De nieuwste recepten', recipes.length ? ['/recepten', 'Alle recepten'] : null, recipeList),
+  sectionHtml('nieuwste-recepten', 'Recepten om nu te maken', recipes.length ? ['/recepten', 'Alle recepten'] : null, recipeList),
   cuisines.length ? sectionHtml('keukens', 'Kook de wereld rond', ['/keukens', 'Alle keukens'], await tileGrid(cuisines.slice(0, 3).map(cuisine => cuisineTile(cuisine, new Set())))) : '',
   collections.length ? sectionHtml('inspiratie', 'Inspiratie', ['/inspiratie', 'Alle thema\'s'], await tileGrid(collections.slice(0, 3).map(collection => collectionTile(collection, usedImages))), true) : ''
 ].join('')
