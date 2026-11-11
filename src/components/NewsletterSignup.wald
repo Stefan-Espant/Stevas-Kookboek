@@ -1,0 +1,199 @@
+---
+// Inschrijven voor de nieuwsbrief (functions/nieuwsbrief.mjs → Brevo, met dubbele bevestiging).
+// Werkt ook zonder JavaScript: dan is het een gewone form-post met een redirect.
+type Props = { headingLevel?: 'h1' | 'h2' }
+const { headingLevel = 'h2' } = $$props
+const heading = renderTemplate`<${new SafeHtml(headingLevel)} id="nieuwsbrief-titel">Wat eten we deze week?</${new SafeHtml(headingLevel)}>`
+---
+<section class="newsletter" aria-labelledby="nieuwsbrief-titel">
+  <div class="newsletter__panel" data-reveal="fade">
+    <div class="newsletter__copy">
+      <p class="newsletter__kicker">Steva's nieuwsbrief</p>
+      {new SafeHtml(heading)}
+      <p>Eén keer per week een handvol recepten van het seizoen in je mail, plus een tip uit Steva's keuken. Nooit meer zonder inspiratie aan het fornuis.</p>
+    </div>
+    <div class="newsletter__action">
+      <form action="/api/nieuwsbrief" method="post" novalidate>
+        <label class="newsletter__label" for="nieuwsbrief-email">E-mailadres</label>
+        <input id="nieuwsbrief-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="jij@voorbeeld.nl" required />
+        <!-- Honeypot tegen spambots: onzichtbaar voor mensen en schermlezers. -->
+        <div class="newsletter__trap" aria-hidden="true">
+          <label>Website <input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
+        </div>
+        <button type="submit">Aanmelden</button>
+        <p class="newsletter__error" role="alert" hidden></p>
+      </form>
+      <p class="newsletter__success" role="status" tabindex="-1" hidden>Bijna klaar! Check je mail en klik op de bevestigingslink. Zie je niets? Kijk dan even bij je spam.</p>
+      <p class="newsletter__note">Je krijgt eerst een mail om je aanmelding te bevestigen. Afmelden kan altijd met één klik onderaan elke nieuwsbrief.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+document.querySelectorAll('.newsletter').forEach(function (root) {
+  var form = root.querySelector('form')
+  if (!form) return
+  var input = form.querySelector('input[name="email"]')
+  var button = form.querySelector('button')
+  var error = root.querySelector('.newsletter__error')
+  var success = root.querySelector('.newsletter__success')
+  var sending = false
+  var showError = function (text) { error.textContent = text; error.hidden = false; input.setAttribute('aria-invalid', 'true') }
+
+  // Na een form-post zonder JavaScript komt de bezoeker terug op /nieuwsbrief?fout=…
+  var fout = new URLSearchParams(location.search).get('fout')
+  if (fout === 'email') showError('Dat e-mailadres klopt niet helemaal. Kijk je het even na?')
+  if (fout === 'server') showError('Aanmelden lukte even niet. Probeer het later nog eens.')
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault()
+    if (sending) return
+    var email = input.value.trim()
+    if (!input.checkValidity() || !email) return showError('Vul een geldig e-mailadres in.')
+
+    sending = true
+    button.disabled = true
+    button.textContent = 'Even geduld…'
+    error.hidden = true
+    input.removeAttribute('aria-invalid')
+
+    fetch(form.action, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ email: email, website: form.elements.website.value }),
+      signal: AbortSignal.timeout(10000)
+    })
+      .then(function (response) {
+        if (response.status === 400) throw new Error('email')
+        if (!response.ok) throw new Error('server')
+        form.hidden = true
+        success.hidden = false
+        success.focus()
+      })
+      .catch(function (reason) {
+        showError(reason && reason.message === 'email'
+          ? 'Dat e-mailadres klopt niet helemaal. Kijk je het even na?'
+          : 'Aanmelden lukte even niet. Probeer het later nog eens.')
+      })
+      .finally(function () {
+        sending = false
+        button.disabled = false
+        button.textContent = 'Aanmelden'
+      })
+  })
+})
+</script>
+
+<style>
+/* Zelfde paneel als RecipeSubmissionInvite: crème kaart op de bordeaux achtergrond. */
+.newsletter {
+  max-width: var(--steva-pagina-breedte);
+  margin: 0 auto var(--byz-space-24);
+  padding: 0 var(--steva-pagina-marge);
+}
+.newsletter__panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 24rem);
+  align-items: center;
+  gap: var(--byz-space-10);
+  padding: clamp(var(--byz-space-6), 5vw, var(--byz-space-12));
+  border-radius: 1rem;
+  background: var(--steva-creme);
+  box-shadow: 0 8px 24px rgb(67 11 0 / 0.2);
+  color: var(--steva-bordeaux-donker);
+}
+.newsletter__kicker {
+  margin: 0 0 var(--byz-space-2);
+  color: var(--steva-bordeaux-licht);
+  font-family: var(--steva-font-script);
+  font-size: var(--byz-text-2xl);
+}
+.newsletter__copy :is(h1, h2) {
+  margin: 0 0 var(--byz-space-4);
+  font-size: clamp(var(--byz-text-xl), 3vw, var(--byz-text-3xl));
+  font-weight: var(--byz-font-semibold);
+  line-height: 1.2;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+.newsletter__copy > p:last-child {
+  max-width: 58ch;
+  margin: 0;
+  line-height: var(--byz-leading-relaxed);
+}
+.newsletter__action form {
+  display: grid;
+  gap: var(--byz-space-3);
+}
+/* display: grid zou het hidden-attribuut (na een geslaagde aanmelding) overschrijven. */
+.newsletter__action form[hidden] {
+  display: none;
+}
+.newsletter__label {
+  font-weight: var(--byz-font-semibold);
+}
+.newsletter__action input[type="email"] {
+  width: 100%;
+  /* 16px of meer: anders zoomt iOS Safari in bij het typen. */
+  font: inherit;
+  font-size: max(1rem, var(--byz-text-base));
+  padding: var(--byz-space-3) var(--byz-space-4);
+  border: 2px solid var(--steva-bordeaux-rand);
+  border-radius: 0.5rem;
+  background: #fff;
+  color: var(--steva-bordeaux-donker);
+}
+.newsletter__action input[aria-invalid="true"] {
+  border-color: #b3261e;
+}
+.newsletter__action button {
+  padding: var(--byz-space-4) var(--byz-space-5);
+  border: 0;
+  border-radius: 0.5rem;
+  background: var(--steva-oranje);
+  box-shadow: inset 0 -4px 0 var(--steva-oranje-donker);
+  color: var(--steva-bordeaux-donker);
+  font: inherit;
+  font-weight: var(--byz-font-semibold);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.newsletter__action button:hover {
+  filter: brightness(1.06);
+}
+.newsletter__action button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+.newsletter__error {
+  margin: 0;
+  color: #b3261e;
+  font-weight: var(--byz-font-semibold);
+}
+.newsletter__success {
+  margin: 0;
+  font-weight: var(--byz-font-semibold);
+  line-height: var(--byz-leading-relaxed);
+}
+.newsletter__note {
+  margin: var(--byz-space-3) 0 0;
+  font-size: var(--byz-text-sm);
+  line-height: var(--byz-leading-relaxed);
+}
+.newsletter__trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+@media (max-width: 760px) {
+  .newsletter__panel {
+    grid-template-columns: 1fr;
+    gap: var(--byz-space-6);
+  }
+}
+@media print {
+  .newsletter { display: none; }
+}
+</style>
