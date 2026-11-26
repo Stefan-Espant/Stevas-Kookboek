@@ -8,26 +8,27 @@ import { ADVENT, ADVENT_JAAR, adventOpenTot } from '../lib/advent'
 // lint los en scheurt het papier opzij; daarachter zit het recept. Feestdagen zijn de grote pakjes.
 // Alleen pakjes t/m de builddatum bevatten een recept (adventOpenTot); latere zijn lege dozen, zodat
 // "inspecteren" niets verklapt. De browser bepaalt welke dichte pakjes al open mogen; test met ?datum=2026-12-05.
-// NOG NIET LIVE: noindex (dus ook niet in de sitemap) en nergens gelinkt. Haal noindex weg om te lanceren.
+// Livegang vanzelf: vóór december (openTot 0) noindex en dus niet in de sitemap; de nachtelijke build van
+// 1 december haalt noindex weg en zet het adventblok op de homepage aan.
 const recipes = new Map((await getAllRecipes()).map(recipe => [recipe.slug, recipe]))
 const openTot = adventOpenTot()
 
-const PAPIER = ['streep', 'stip', 'ster', 'ruit']
+const PAPIER = ['stripes', 'dots', 'stars', 'diamonds']
 const HOOG = new Set([2, 9, 13, 20, 28])
 const BREED = new Set([7, 16, 22, 29])
 
 // Een pakje dat nog niet open mag: alleen het papier, zonder titel, foto of link.
-const leegPakje = (dag, feest) => renderTemplate`<article class="pakje pakje--${feest ? 'feest' : PAPIER[dag % PAPIER.length]}${vormVan(dag, feest)}" data-dag="${dag}" data-leeg>
-    <div class="pakje__inhoud"></div>
+const leegPakje = (dag, feest) => renderTemplate`<article class="gift gift--${feest ? 'holiday' : PAPIER[dag % PAPIER.length]}${vormVan(dag, feest)}" data-day="${dag}" data-empty>
+    <div class="gift__content"></div>
     ${new SafeHtml(papierVan(dag, feest))}
   </article>`
-const vormVan = (dag, feest) => feest ? ' pakje--groot-vak' : HOOG.has(dag) ? ' pakje--hoog' : BREED.has(dag) ? ' pakje--breed' : ''
-const papierVan = (dag, feest) => renderTemplate`<button type="button" class="pakje__papier" aria-label="Pakje ${dag} uitpakken">
-      <span class="pakje__helft pakje__helft--links" aria-hidden="true"></span>
-      <span class="pakje__helft pakje__helft--rechts" aria-hidden="true"></span>
-      <span class="pakje__lint" aria-hidden="true"></span>
-      <span class="pakje__strik" aria-hidden="true"></span>
-      <span class="pakje__label" aria-hidden="true"><b>${dag}</b>${new SafeHtml(feest ? renderTemplate`<i>${feest}</i>` : '')}</span>
+const vormVan = (dag, feest) => feest ? ' gift--large' : HOOG.has(dag) ? ' gift--tall' : BREED.has(dag) ? ' gift--wide' : ''
+const papierVan = (dag, feest) => renderTemplate`<button type="button" class="gift__wrapping" aria-label="Pakje ${dag} uitpakken">
+      <span class="gift__half gift__half--left" aria-hidden="true"></span>
+      <span class="gift__half gift__half--right" aria-hidden="true"></span>
+      <span class="gift__ribbon" aria-hidden="true"></span>
+      <span class="gift__bow" aria-hidden="true"></span>
+      <span class="gift__tag" aria-hidden="true"><b>${dag}</b>${new SafeHtml(feest ? renderTemplate`<i>${feest}</i>` : '')}</span>
     </button>`
 
 const pakjes = ADVENT.map(({ dag, slug, feest }) => {
@@ -36,15 +37,15 @@ const pakjes = ADVENT.map(({ dag, slug, feest }) => {
   const image = recipe?.image
   const srcset = image ? srcsetFor(image) : ''
   const foto = image
-    ? renderTemplate`<img src="${image}" ${new SafeHtml(srcset ? renderTemplate`srcset="${srcset}" sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 66vw"` : '')} alt="" loading="lazy" decoding="async" class="pakje__foto">`
-    : '<span class="pakje__foto pakje__foto--leeg"><img src="/logo-steva.svg" alt=""></span>'
+    ? renderTemplate`<img src="${image}" ${new SafeHtml(srcset ? renderTemplate`srcset="${srcset}" sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 66vw"` : '')} alt="" loading="lazy" decoding="async" class="gift__photo">`
+    : '<span class="gift__photo gift__photo--empty"><img src="/logo-steva.svg" alt=""></span>'
   const titel = recipe ? recipe.title : 'Een verrassing'
   const meta = recipe ? `${recipe.totalTime} min` : 'Recept volgt'
-  const tekst = renderTemplate`<span class="pakje__datum">${dag} december${feest ? ` · ${feest}` : ''}</span><span class="pakje__titel">${titel}</span><span class="pakje__meta">${meta}</span>${new SafeHtml(recipe ? '<span class="pakje__knop">Naar het recept <span aria-hidden="true">→</span></span>' : '')}`
+  const tekst = renderTemplate`<span class="gift__date">${dag} december${feest ? ` · ${feest}` : ''}</span><span class="gift__title">${titel}</span><span class="gift__meta">${meta}</span>${new SafeHtml(recipe ? '<span class="gift__button">Naar het recept <span aria-hidden="true">→</span></span>' : '')}`
   const inhoud = recipe
-    ? renderTemplate`<a class="pakje__inhoud" href="${recipePath(recipe.slug)}">${new SafeHtml(foto)}<span class="pakje__tekst">${new SafeHtml(tekst)}</span></a>`
-    : renderTemplate`<div class="pakje__inhoud">${new SafeHtml(foto)}<span class="pakje__tekst">${new SafeHtml(tekst)}</span></div>`
-  return renderTemplate`<article class="pakje pakje--${feest ? 'feest' : PAPIER[dag % PAPIER.length]}${vormVan(dag, feest)}" data-dag="${dag}" data-titel="${titel}">
+    ? renderTemplate`<a class="gift__content" href="${recipePath(recipe.slug)}">${new SafeHtml(foto)}<span class="gift__text">${new SafeHtml(tekst)}</span></a>`
+    : renderTemplate`<div class="gift__content">${new SafeHtml(foto)}<span class="gift__text">${new SafeHtml(tekst)}</span></div>`
+  return renderTemplate`<article class="gift gift--${feest ? 'holiday' : PAPIER[dag % PAPIER.length]}${vormVan(dag, feest)}" data-day="${dag}" data-title="${titel}">
     ${new SafeHtml(inhoud)}
     ${new SafeHtml(papierVan(dag, feest))}
   </article>`
@@ -52,23 +53,23 @@ const pakjes = ADVENT.map(({ dag, slug, feest }) => {
 
 const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor de feestdagen: van kruidnoten en banketstaaf tot kerststol en oliebollen.'
 ---
-<Layout title="Adventkalender: elke dag een recept in december" description={lead} path="/advent" noindex={true}>
-  <main class="advent" data-advent data-jaar={ADVENT_JAAR}>
+<Layout title="Adventkalender: elke dag een recept in december" description={lead} path="/advent" noindex={openTot === 0}>
+  <main class="advent" data-advent data-year={ADVENT_JAAR}>
     <PageHeader kicker="Steva’s adventkalender" title="Elke dag een pakje" lead={lead} />
 
-    <section class="advent__vandaag" aria-labelledby="advent-vandaag" hidden>
-      <h2 class="advent__kop" id="advent-vandaag"></h2>
-      <p class="advent__sub"></p>
-      <div class="advent__spot"></div>
+    <section class="advent__today" aria-labelledby="advent-vandaag" hidden>
+      <h2 class="advent__heading" id="advent-vandaag"></h2>
+      <p class="advent__subtitle"></p>
+      <div class="advent__spotlight"></div>
     </section>
 
-    <div class="advent__voortgang" hidden>
-      <span class="advent__balk" aria-hidden="true"><span></span></span>
-      <span class="advent__teller"></span>
+    <div class="advent__progress" hidden>
+      <span class="advent__bar" aria-hidden="true"><span></span></span>
+      <span class="advent__counter"></span>
     </div>
 
-    <h2 class="advent__kop advent__kop--alle">Alle pakjes</h2>
-    <div class="advent__stapel">{new SafeHtml(pakjes)}</div>
+    <h2 class="advent__heading advent__heading--all">Alle pakjes</h2>
+    <div class="advent__stack">{new SafeHtml(pakjes)}</div>
     <p class="advent__toast" data-toast role="status" aria-live="polite"></p>
   </main>
 </Layout>
@@ -77,7 +78,7 @@ const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor d
 ;(function () {
   var root = document.querySelector('[data-advent]')
   if (!root) return
-  var JAAR = Number(root.dataset.jaar), KEY = 'steva-advent-' + JAAR
+  var JAAR = Number(root.dataset.year), KEY = 'steva-advent-' + JAAR
   var rustig = matchMedia('(prefers-reduced-motion: reduce)').matches
 
   // Vandaag in Nederlandse tijd, of de datum uit ?datum=JJJJ-MM-DD (om te testen).
@@ -97,8 +98,8 @@ const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor d
   function bewaar(dag) { if (bewaard.indexOf(dag) === -1) bewaard.push(dag); if (testen) return; try { localStorage.setItem(KEY, JSON.stringify(bewaard)) } catch (e) {} }
   var toast = root.querySelector('[data-toast]'), toastTimer
   function melding(tekst) {
-    toast.textContent = tekst; toast.classList.add('is-zichtbaar')
-    clearTimeout(toastTimer); toastTimer = setTimeout(function () { toast.classList.remove('is-zichtbaar') }, 3200)
+    toast.textContent = tekst; toast.classList.add('is-visible')
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { toast.classList.remove('is-visible') }, 3200)
   }
 
   // Confetti in de kleuren van het pakpapier.
@@ -107,7 +108,7 @@ const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor d
     if (rustig) return
     for (var i = 0; i < 26; i++) {
       var c = document.createElement('span'), hoek = -Math.PI / 2 + (Math.random() - 0.5) * 2.6, afstand = 60 + Math.random() * 110
-      c.className = 'pakje__confetti'
+      c.className = 'gift__confetti'
       c.style.background = KLEUREN[i % KLEUREN.length]
       c.style.setProperty('--dx', Math.cos(hoek) * afstand + 'px'); c.style.setProperty('--dy', Math.sin(hoek) * afstand + 'px')
       c.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg')
@@ -118,76 +119,76 @@ const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor d
 
   var paren = {}
   function zetOpen(pakje, animatie) {
-    if (!animatie) pakje.classList.add('is-direct')
-    pakje.classList.add('is-open'); pakje.classList.remove('is-vandaag')
-    var knop = pakje.querySelector('.pakje__papier'); knop.tabIndex = -1; knop.setAttribute('aria-hidden', 'true')
-    pakje.querySelector('.pakje__inhoud').removeAttribute('inert')
-    if (!animatie) requestAnimationFrame(function () { requestAnimationFrame(function () { pakje.classList.remove('is-direct') }) })
+    if (!animatie) pakje.classList.add('is-instant')
+    pakje.classList.add('is-open'); pakje.classList.remove('is-today')
+    var knop = pakje.querySelector('.gift__wrapping'); knop.tabIndex = -1; knop.setAttribute('aria-hidden', 'true')
+    pakje.querySelector('.gift__content').removeAttribute('inert')
+    if (!animatie) requestAnimationFrame(function () { requestAnimationFrame(function () { pakje.classList.remove('is-instant') }) })
   }
   function koppel(pakje) {
-    var dag = Number(pakje.dataset.dag)
+    var dag = Number(pakje.dataset.day)
     ;(paren[dag] = paren[dag] || []).push(pakje)
-    var knop = pakje.querySelector('.pakje__papier')
-    pakje.querySelector('.pakje__inhoud').setAttribute('inert', '')
+    var knop = pakje.querySelector('.gift__wrapping')
+    pakje.querySelector('.gift__content').setAttribute('inert', '')
     // Leeg pakje (de inhoud zit nog niet in deze build): blijft dicht, ook als de datum al zover is.
-    var leeg = pakje.hasAttribute('data-leeg')
+    var leeg = pakje.hasAttribute('data-empty')
     if (dag > open || leeg) {
-      pakje.classList.add('is-dicht')
+      pakje.classList.add('is-locked')
       knop.setAttribute('aria-disabled', 'true')
       knop.setAttribute('aria-label', dag <= open ? 'Pakje ' + dag + ', wordt nog klaargelegd' : 'Pakje ' + dag + ', mag open op ' + dag + ' december')
     } else if (dag === vandaagDag && bewaard.indexOf(dag) === -1) {
-      pakje.classList.add('is-vandaag')
+      pakje.classList.add('is-today')
       knop.setAttribute('aria-label', 'Pakje ' + dag + ' uitpakken: het recept van vandaag')
     } else {
       zetOpen(pakje, false)
     }
     knop.addEventListener('click', function () {
-      if (pakje.classList.contains('is-dicht')) {
-        pakje.classList.remove('is-schud'); void pakje.offsetWidth; pakje.classList.add('is-schud')
+      if (pakje.classList.contains('is-locked')) {
+        pakje.classList.remove('is-shaking'); void pakje.offsetWidth; pakje.classList.add('is-shaking')
         melding(dag <= open ? 'Pakje ' + dag + ' wordt nog klaargelegd. Kijk zo nog eens!'
-          : open === 0 ? 'Het eerste pakje mag open op 1 december.' : 'Niet stiekem schudden! Pakje ' + dag + ' mag open op ' + dag + ' december.')
+          : open === 0 ? 'Het eerste pakje mag open op 1 december.' : 'Niet stiekem spieken! Pakje ' + dag + ' mag open op ' + dag + ' december.')
         return
       }
       bewaar(dag)
       paren[dag].forEach(function (p) { zetOpen(p, true) })
       confetti(pakje)
-      if (dag === spotDag) vak.querySelector('.advent__sub').textContent = 'Het recept van vandaag'
-      melding('Pakje ' + dag + ': ' + pakje.dataset.titel)
-      var link = pakje.querySelector('a.pakje__inhoud')
+      if (dag === spotDag) vak.querySelector('.advent__subtitle').textContent = 'Het recept van vandaag'
+      melding('Pakje ' + dag + ': ' + pakje.dataset.title)
+      var link = pakje.querySelector('a.gift__content')
       if (link) setTimeout(function () { link.focus({ preventScroll: true }) }, rustig ? 0 : 900)
       voortgang()
     })
   }
 
   // Uitgelicht bovenaan: het pakje van vandaag, of vóór december pakje 1 met een aftelling.
-  var vak = root.querySelector('.advent__vandaag'), spotDag = vandaagDag || (open === 0 ? 1 : 0)
+  var vak = root.querySelector('.advent__today'), spotDag = vandaagDag || (open === 0 ? 1 : 0)
   if (spotDag && !voorbij) {
-    var kopie = root.querySelector('.advent__stapel .pakje[data-dag="' + spotDag + '"]').cloneNode(true)
-    kopie.classList.add('pakje--uitgelicht')
-    var foto = kopie.querySelector('img.pakje__foto'); if (foto) { foto.loading = 'eager'; foto.sizes = '(min-width: 640px) 560px, 92vw' }
-    vak.querySelector('.advent__spot').appendChild(kopie)
+    var kopie = root.querySelector('.advent__stack .gift[data-day="' + spotDag + '"]').cloneNode(true)
+    kopie.classList.add('gift--featured')
+    var foto = kopie.querySelector('img.gift__photo'); if (foto) { foto.loading = 'eager'; foto.sizes = '(min-width: 640px) 560px, 92vw' }
+    vak.querySelector('.advent__spotlight').appendChild(kopie)
     if (open === 0) {
       var dagen = Math.ceil((Date.UTC(JAAR, 11, 1) - Date.UTC(nu.j, nu.m - 1, nu.d)) / 864e5)
-      vak.querySelector('.advent__kop').textContent = dagen === 1 ? 'Nog één nachtje slapen!' : 'Nog ' + dagen + ' nachtjes slapen'
-      vak.querySelector('.advent__sub').textContent = 'dan mag het eerste pakje open'
+      vak.querySelector('.advent__heading').textContent = dagen === 1 ? 'Nog één nachtje slapen!' : 'Nog ' + dagen + ' nachtjes slapen'
+      vak.querySelector('.advent__subtitle').textContent = 'dan mag het eerste pakje open'
     } else {
-      vak.querySelector('.advent__kop').textContent = 'Vandaag: pakje ' + spotDag
-      vak.querySelector('.advent__sub').textContent = bewaard.indexOf(spotDag) === -1 ? 'Trek aan het lint en pak het recept van vandaag uit' : 'Het recept van vandaag'
+      vak.querySelector('.advent__heading').textContent = 'Vandaag: pakje ' + spotDag
+      vak.querySelector('.advent__subtitle').textContent = bewaard.indexOf(spotDag) === -1 ? 'Trek aan het lint en pak het recept van vandaag uit' : 'Het recept van vandaag'
     }
     vak.hidden = false
   } else if (voorbij) {
-    root.querySelector('.advent__kop--alle').textContent = 'Alles is uitgepakt. Gelukkig nieuwjaar!'
+    root.querySelector('.advent__heading--all').textContent = 'Alles is uitgepakt. Gelukkig nieuwjaar!'
   }
 
-  root.querySelectorAll('.pakje').forEach(koppel)
+  root.querySelectorAll('.gift').forEach(koppel)
 
   function voortgang() {
     if (open === 0) return
-    var n = root.querySelectorAll('.advent__stapel .pakje.is-open').length
-    var balk = root.querySelector('.advent__voortgang')
+    var n = root.querySelectorAll('.advent__stack .gift.is-open').length
+    var balk = root.querySelector('.advent__progress')
     balk.hidden = false
-    balk.querySelector('.advent__balk span').style.width = (n / 31 * 100) + '%'
-    balk.querySelector('.advent__teller').textContent = n + ' van 31 pakjes uitgepakt'
+    balk.querySelector('.advent__bar span').style.width = (n / 31 * 100) + '%'
+    balk.querySelector('.advent__counter').textContent = n + ' van 31 pakjes uitgepakt'
   }
   voortgang()
 })()
@@ -199,23 +200,23 @@ const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor d
   margin: 0 auto;
   padding: var(--byz-space-12) var(--steva-pagina-marge) var(--byz-space-24);
 
-  & .advent__vandaag { margin: 0 auto var(--byz-space-12); text-align: center; }
-  & .advent__kop {
+  & .advent__today { margin: 0 auto var(--byz-space-12); text-align: center; }
+  & .advent__heading {
     margin: 0;
     font-size: var(--byz-text-2xl);
     font-weight: var(--byz-font-semibold);
     text-transform: uppercase;
     text-shadow: var(--steva-tekst-schaduw);
   }
-  & .advent__sub {
+  & .advent__subtitle {
     margin: var(--byz-space-1) 0 var(--byz-space-8);
     color: var(--steva-goud);
     font-family: var(--steva-font-script);
     font-size: var(--byz-text-2xl);
   }
-  & .advent__spot { max-width: 35rem; margin: 0 auto; }
+  & .advent__spotlight { max-width: 35rem; margin: 0 auto; }
 
-  & .advent__voortgang {
+  & .advent__progress {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -225,25 +226,25 @@ const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor d
     font-size: var(--byz-text-sm);
     font-weight: var(--byz-font-semibold);
   }
-  & .advent__voortgang[hidden] { display: none; }
-  & .advent__balk { width: min(14rem, 40vw); height: 0.5rem; border-radius: 999px; background: rgb(252 246 234 / 0.15); overflow: hidden; }
-  & .advent__balk span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #d4342b, var(--steva-goud)); transition: width 0.6s ease; }
-  & .advent__kop--alle { margin-bottom: var(--byz-space-6); text-align: center; font-size: var(--byz-text-xl); }
+  & .advent__progress[hidden] { display: none; }
+  & .advent__bar { width: min(14rem, 40vw); height: 0.5rem; border-radius: 999px; background: rgb(252 246 234 / 0.15); overflow: hidden; }
+  & .advent__bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #d4342b, var(--steva-goud)); transition: width 0.6s ease; }
+  & .advent__heading--all { margin-bottom: var(--byz-space-6); text-align: center; font-size: var(--byz-text-xl); }
 
   /* ── De stapel: pakjes in verschillende maten, zoals onder de boom ─────── */
-  & .advent__stapel {
+  & .advent__stack {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-auto-rows: 8.5rem;
     grid-auto-flow: dense;
     gap: var(--byz-space-3);
   }
-  & .pakje--hoog { grid-row: span 2; }
-  & .pakje--breed { grid-column: span 2; }
-  & .pakje--groot-vak { grid-column: span 2; grid-row: span 2; }
+  & .gift--tall { grid-row: span 2; }
+  & .gift--wide { grid-column: span 2; }
+  & .gift--large { grid-column: span 2; grid-row: span 2; }
 
   /* Alle versiering is in em, zodat het uitgelichte pakje alles groter krijgt met één font-size. */
-  & .pakje {
+  & .gift {
     --lint: #c8322a;
     --lint-licht: #f05a48;
     --lint-breed: 0.55em;
@@ -255,36 +256,36 @@ const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor d
     background: #1a0300;
     box-shadow: 0 10px 22px rgb(0 0 0 / 0.4);
   }
-  & .pakje--streep {
+  & .gift--stripes {
     --papier: repeating-linear-gradient(45deg, #fcf6ea 0 0.6em, #f3e6cc 0.6em 0.75em, #c8322a 0.75em 1em, #f3e6cc 1em 1.15em);
     --lint: #2f6b4a; --lint-licht: #4f9a6e;
   }
-  & .pakje--stip {
+  & .gift--dots {
     --papier: radial-gradient(circle, #ffc471 0.13em, transparent 0.16em) 0 0 / 1em 1em, radial-gradient(circle, #ffc471 0.13em, transparent 0.16em) 0.5em 0.5em / 1em 1em, linear-gradient(160deg, #2f6b4a, #1d4632);
     --lint: #c8322a; --lint-licht: #f05a48;
   }
-  & .pakje--ster {
+  & .gift--stars {
     --papier: radial-gradient(circle, #fcf6ea 0.08em, transparent 0.11em) 0 0 / 0.8em 0.8em, radial-gradient(circle, rgb(252 246 234 / 0.6) 0.06em, transparent 0.09em) 0.4em 0.4em / 0.8em 0.8em, linear-gradient(160deg, #d4342b, #9d1d16);
     --lint: #ffc471; --lint-licht: #fff1c9;
   }
-  & .pakje--ruit {
+  & .gift--diamonds {
     --papier: repeating-linear-gradient(0deg, transparent 0 0.9em, rgb(87 17 3 / 0.28) 0.9em 1.1em), repeating-linear-gradient(90deg, transparent 0 0.9em, rgb(87 17 3 / 0.28) 0.9em 1.1em), linear-gradient(160deg, #f0c27a, #c98f45);
     --lint: #571103; --lint-licht: #8c230e;
   }
-  & .pakje--feest {
+  & .gift--holiday {
     --papier: repeating-linear-gradient(60deg, transparent 0 1.1em, rgb(255 196 113 / 0.35) 1.1em 1.2em), repeating-linear-gradient(-60deg, transparent 0 1.1em, rgb(255 196 113 / 0.35) 1.1em 1.2em), linear-gradient(160deg, #8c230e, #430b00);
     --lint: #ffc471; --lint-licht: #fff1c9;
     --lint-breed: 0.8em;
   }
 
   /* Achter het papier: foto met de titel eroverheen; de hele kaart is de link. */
-  & .pakje__inhoud { position: absolute; inset: 0; display: block; overflow: hidden; color: var(--steva-creme); text-decoration: none; }
-  & .pakje__foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
-  & .pakje__foto--leeg { display: grid; place-items: center; background: var(--steva-bordeaux); }
-  & .pakje__foto--leeg img { width: 60%; }
-  & a.pakje__inhoud:hover .pakje__foto, & a.pakje__inhoud:focus-visible .pakje__foto { transform: scale(1.05); }
-  & a.pakje__inhoud:focus-visible { outline: 3px solid var(--byz-color-focus); outline-offset: -3px; }
-  & .pakje__tekst {
+  & .gift__content { position: absolute; inset: 0; display: block; overflow: hidden; color: var(--steva-creme); text-decoration: none; }
+  & .gift__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+  & .gift__photo--empty { display: grid; place-items: center; background: var(--steva-bordeaux); }
+  & .gift__photo--empty img { width: 60%; }
+  & a.gift__content:hover .gift__photo, & a.gift__content:focus-visible .gift__photo { transform: scale(1.05); }
+  & a.gift__content:focus-visible { outline: 3px solid var(--byz-color-focus); outline-offset: -3px; }
+  & .gift__text {
     position: absolute;
     inset: auto 0 0;
     display: flex;
@@ -294,15 +295,15 @@ const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor d
     background: linear-gradient(to top, rgb(26 3 0 / 0.95), rgb(26 3 0 / 0.7) 55%, transparent);
     text-align: center;
   }
-  & .pakje__datum { color: var(--steva-goud); font-size: 0.65rem; font-weight: var(--byz-font-semibold); text-transform: uppercase; letter-spacing: 0.04em; }
-  & .pakje__titel { font-size: 0.8rem; font-weight: var(--byz-font-semibold); line-height: 1.15; text-transform: uppercase; overflow-wrap: break-word; hyphens: auto; }
-  & .pakje__meta { font-size: 0.7rem; opacity: 0.8; }
-  & .pakje__knop { display: none; }
-  & :is(.pakje--groot-vak, .pakje--uitgelicht) .pakje__datum { font-size: var(--byz-text-sm); }
-  & :is(.pakje--groot-vak, .pakje--uitgelicht) .pakje__titel { font-size: var(--byz-text-lg); }
+  & .gift__date { color: var(--steva-goud); font-size: 0.65rem; font-weight: var(--byz-font-semibold); text-transform: uppercase; letter-spacing: 0.04em; }
+  & .gift__title { font-size: 0.8rem; font-weight: var(--byz-font-semibold); line-height: 1.15; text-transform: uppercase; overflow-wrap: break-word; hyphens: auto; }
+  & .gift__meta { font-size: 0.7rem; opacity: 0.8; }
+  & .gift__button { display: none; }
+  & :is(.gift--large, .gift--featured) .gift__date { font-size: var(--byz-text-sm); }
+  & :is(.gift--large, .gift--featured) .gift__title { font-size: var(--byz-text-lg); }
 
   /* ── Het pakpapier ─────────────────────────────────────────────────────── */
-  & .pakje__papier {
+  & .gift__wrapping {
     position: absolute;
     inset: 0;
     padding: 0;
@@ -312,16 +313,16 @@ const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor d
     cursor: pointer;
   }
   /* Twee helften van hetzelfde vel (clip-path), zodat het patroon doorloopt tot het opengescheurd wordt. */
-  & .pakje__helft {
+  & .gift__half {
     position: absolute;
     inset: 0;
     background: var(--papier);
     box-shadow: inset 0 -1.5em 2.5em rgb(0 0 0 / 0.22), inset 0 1em 1.5em rgb(255 255 255 / 0.08);
     transition: transform 0.75s cubic-bezier(0.55, 0, 0.25, 1) 0.3s, opacity 0.4s ease 0.65s;
   }
-  & .pakje__helft--links { clip-path: polygon(0 0, 51% 0, 48% 18%, 52% 36%, 47% 55%, 52% 74%, 48% 90%, 51% 100%, 0 100%); }
-  & .pakje__helft--rechts { clip-path: polygon(51% 0, 100% 0, 100% 100%, 51% 100%, 48% 90%, 52% 74%, 47% 55%, 52% 36%, 48% 18%); }
-  & .pakje__lint {
+  & .gift__half--left { clip-path: polygon(0 0, 51% 0, 48% 18%, 52% 36%, 47% 55%, 52% 74%, 48% 90%, 51% 100%, 0 100%); }
+  & .gift__half--right { clip-path: polygon(51% 0, 100% 0, 100% 100%, 51% 100%, 48% 90%, 52% 74%, 47% 55%, 52% 36%, 48% 18%); }
+  & .gift__ribbon {
     position: absolute;
     inset: 0;
     background:
@@ -330,7 +331,7 @@ const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor d
     filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.3));
     transition: transform 0.45s ease, opacity 0.35s ease;
   }
-  & .pakje__strik {
+  & .gift__bow {
     position: absolute;
     left: 50%;
     top: var(--kruis);
@@ -341,8 +342,8 @@ const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor d
     filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.35));
     transition: transform 0.5s cubic-bezier(0.5, 0, 0.8, 0.3), opacity 0.4s ease 0.1s;
   }
-  & .pakje__strik::before,
-  & .pakje__strik::after {
+  & .gift__bow::before,
+  & .gift__bow::after {
     content: "";
     position: absolute;
     bottom: 0.15em;
@@ -351,9 +352,9 @@ const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor d
     border: 0.36em solid var(--lint);
     border-radius: 50% 50% 45% 45%;
   }
-  & .pakje__strik::before { left: 0; rotate: -18deg; border-right-color: var(--lint-licht); }
-  & .pakje__strik::after { right: 0; rotate: 18deg; border-left-color: var(--lint-licht); }
-  & .pakje__label {
+  & .gift__bow::before { left: 0; rotate: -18deg; border-right-color: var(--lint-licht); }
+  & .gift__bow::after { right: 0; rotate: 18deg; border-left-color: var(--lint-licht); }
+  & .gift__tag {
     position: absolute;
     left: 50%;
     top: var(--kruis);
@@ -371,7 +372,7 @@ const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor d
     rotate: 9deg;
     transition: transform 0.45s ease, opacity 0.35s ease;
   }
-  & .pakje__label::before {
+  & .gift__tag::before {
     content: "";
     position: absolute;
     left: 0.32em;
@@ -382,31 +383,31 @@ const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor d
     border-radius: 50%;
     background: rgb(87 17 3 / 0.5);
   }
-  & .pakje__label b { font-size: 1.45em; font-weight: var(--byz-font-semibold); line-height: 1.05; }
-  & .pakje__label i { font-family: var(--steva-font-script); font-size: 0.95em; font-style: normal; white-space: nowrap; }
-  & .pakje--groot-vak { font-size: 1.05rem; }
+  & .gift__tag b { font-size: 1.45em; font-weight: var(--byz-font-semibold); line-height: 1.05; }
+  & .gift__tag i { font-family: var(--steva-font-script); font-size: 0.95em; font-style: normal; white-space: nowrap; }
+  & .gift--large { font-size: 1.05rem; }
 
   /* Uitpakken: eerst gaat het lint eraf, dan scheurt het papier opzij. */
-  & .pakje.is-open .pakje__papier { pointer-events: none; }
-  & .pakje.is-open .pakje__strik { transform: translateY(-260%) rotate(-25deg) scale(0.8); opacity: 0; }
-  & .pakje.is-open .pakje__lint { transform: scale(1.25); opacity: 0; }
-  & .pakje.is-open .pakje__label { transform: translate(40%, 160%) rotate(25deg); opacity: 0; }
-  & .pakje.is-open .pakje__helft--links { transform: translateX(-75%) rotate(-7deg); opacity: 0; }
-  & .pakje.is-open .pakje__helft--rechts { transform: translateX(75%) rotate(7deg); opacity: 0; }
-  & .pakje.is-direct :is(.pakje__helft, .pakje__lint, .pakje__strik, .pakje__label) { transition: none; }
+  & .gift.is-open .gift__wrapping { pointer-events: none; }
+  & .gift.is-open .gift__bow { transform: translateY(-260%) rotate(-25deg) scale(0.8); opacity: 0; }
+  & .gift.is-open .gift__ribbon { transform: scale(1.25); opacity: 0; }
+  & .gift.is-open .gift__tag { transform: translate(40%, 160%) rotate(25deg); opacity: 0; }
+  & .gift.is-open .gift__half--left { transform: translateX(-75%) rotate(-7deg); opacity: 0; }
+  & .gift.is-open .gift__half--right { transform: translateX(75%) rotate(7deg); opacity: 0; }
+  & .gift.is-instant :is(.gift__half, .gift__ribbon, .gift__bow, .gift__tag) { transition: none; }
 
   /* Vandaag: gouden gloed en een hupje. */
-  & .pakje.is-vandaag { box-shadow: 0 0 0 3px var(--steva-goud), 0 0 34px rgb(255 174 61 / 0.6); overflow: visible; }
-  & .pakje.is-vandaag .pakje__papier { animation: pakje-hup 2.8s ease-in-out infinite; }
-  & .pakje.is-vandaag .pakje__helft { border-radius: 0.5rem; }
-  & .pakje.is-open { overflow: hidden; }
+  & .gift.is-today { box-shadow: 0 0 0 3px var(--steva-goud), 0 0 34px rgb(255 174 61 / 0.6); overflow: visible; }
+  & .gift.is-today .gift__wrapping { animation: gift-bob 2.8s ease-in-out infinite; }
+  & .gift.is-today .gift__half { border-radius: 0.5rem; }
+  & .gift.is-open { overflow: hidden; }
   /* Nog niet aan de beurt: wat doffer, met een slotje op het label. */
-  & .pakje.is-dicht .pakje__papier { cursor: not-allowed; filter: saturate(0.75) brightness(0.78); }
-  & .pakje.is-dicht .pakje__label::after { content: "🔒"; position: absolute; top: -0.55em; right: -0.5em; font-size: 0.7em; }
-  & .pakje.is-schud .pakje__papier { animation: pakje-schud 0.5s ease-in-out; }
-  & .pakje__papier:focus-visible { outline: 3px solid var(--byz-color-focus); outline-offset: 3px; }
+  & .gift.is-locked .gift__wrapping { cursor: not-allowed; filter: saturate(0.75) brightness(0.78); }
+  & .gift.is-locked .gift__tag::after { content: "🔒"; position: absolute; top: -0.55em; right: -0.5em; font-size: 0.7em; }
+  & .gift.is-shaking .gift__wrapping { animation: gift-shake 0.5s ease-in-out; }
+  & .gift__wrapping:focus-visible { outline: 3px solid var(--byz-color-focus); outline-offset: 3px; }
 
-  & .pakje__confetti {
+  & .gift__confetti {
     position: absolute;
     left: 50%;
     top: 40%;
@@ -415,15 +416,15 @@ const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor d
     border-radius: 1px;
     pointer-events: none;
     z-index: 3;
-    animation: pakje-confetti 1.2s cubic-bezier(0.2, 0.6, 0.4, 1) forwards;
+    animation: gift-confetti 1.2s cubic-bezier(0.2, 0.6, 0.4, 1) forwards;
   }
 
   /* Het uitgelichte pakje van vandaag. */
-  & .advent__spot .pakje--uitgelicht { aspect-ratio: 4 / 3; font-size: clamp(1.4rem, 5vw, 2.1rem); }
-  & .pakje--uitgelicht .pakje__tekst { gap: 0.35rem; padding: 4rem 1.2rem 1.3rem; }
-  & .pakje--uitgelicht .pakje__titel { font-size: var(--byz-text-xl); }
-  & .pakje--uitgelicht .pakje__meta { font-size: var(--byz-text-sm); }
-  & .pakje--uitgelicht .pakje__knop {
+  & .advent__spotlight .gift--featured { aspect-ratio: 4 / 3; font-size: clamp(1.4rem, 5vw, 2.1rem); }
+  & .gift--featured .gift__text { gap: 0.35rem; padding: 4rem 1.2rem 1.3rem; }
+  & .gift--featured .gift__title { font-size: var(--byz-text-xl); }
+  & .gift--featured .gift__meta { font-size: var(--byz-text-sm); }
+  & .gift--featured .gift__button {
     display: inline-block;
     align-self: center;
     margin-top: 0.4rem;
@@ -456,33 +457,33 @@ const lead = 'Elke dag in december ligt er een pakje klaar met een recept voor d
     pointer-events: none;
     transition: opacity 0.25s ease, transform 0.25s ease;
   }
-  & .advent__toast.is-zichtbaar { opacity: 1; transform: translate(-50%, 0); }
+  & .advent__toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
 
   /* Media queries binnen het blok: alleen geneste (&) selectors raken ook de server-HTML. */
   @media (min-width: 640px) {
-    & .advent__stapel { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 10rem; gap: var(--byz-space-4); }
-    & .pakje { font-size: 1.1rem; }
-    & .pakje--groot-vak { font-size: 1.5rem; }
+    & .advent__stack { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 10rem; gap: var(--byz-space-4); }
+    & .gift { font-size: 1.1rem; }
+    & .gift--large { font-size: 1.5rem; }
   }
   @media (min-width: 1024px) {
-    & .advent__stapel { grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: 11rem; }
+    & .advent__stack { grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: 11rem; }
   }
   @media (prefers-reduced-motion: reduce) {
-    & :is(.pakje__helft, .pakje__lint, .pakje__strik, .pakje__label, .pakje__foto, .advent__toast, .advent__balk span) { transition: none; }
-    & .pakje.is-vandaag .pakje__papier, & .pakje.is-schud .pakje__papier { animation: none; }
+    & :is(.gift__half, .gift__ribbon, .gift__bow, .gift__tag, .gift__photo, .advent__toast, .advent__bar span) { transition: none; }
+    & .gift.is-today .gift__wrapping, & .gift.is-shaking .gift__wrapping { animation: none; }
   }
 }
-@keyframes pakje-hup {
+@keyframes gift-bob {
   0%, 78%, 100% { transform: none; }
   83% { transform: translateY(-6%) rotate(-2deg); }
   88% { transform: translateY(0) rotate(1.5deg); }
   92% { transform: translateY(-2%) rotate(-1deg); }
 }
-@keyframes pakje-schud {
+@keyframes gift-shake {
   20%, 60% { transform: rotate(-4deg); }
   40%, 80% { transform: rotate(4deg); }
 }
-@keyframes pakje-confetti {
+@keyframes gift-confetti {
   from { transform: translate(-50%, -50%) rotate(0); opacity: 1; }
   to { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + 60px)) rotate(var(--r)); opacity: 0; }
 }

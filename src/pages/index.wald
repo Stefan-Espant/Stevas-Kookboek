@@ -10,6 +10,7 @@ import { getPage, getSiteSettings } from '../lib/cms'
 import { collectionPath, collectionTile, cuisineTile, getAllRecipes, getCollections, getCuisines, getLatestRecipes } from '../lib/recipes'
 import { SEASONS, seasonFor, seasonRecipes } from '../lib/seasons'
 import { clipDescription } from '../lib/site'
+import { ADVENT, ADVENT_JAAR, adventOpenTot } from '../lib/advent'
 const [site, page, recipes, cuisines, collections, allRecipes] = await Promise.all([
   getSiteSettings(),
   getPage('home'),
@@ -83,8 +84,20 @@ const halloweenSection = halloween
   ? sectionHtml('halloween-recepten', 'Griezelig lekker: Halloween', [collectionPath(halloween.slug), 'Alle Halloweenrecepten'], await RecipeGrid.render({ recipes: halloween.recipes.slice(0, 3) }), true, ` data-season-months="10"${new Date().getMonth() === 9 ? '' : ' hidden'}`)
   : ''
 
+// Adventkalender: alleen in december (de site wordt dan elke nacht gebouwd); de drie laatst uitgepakte
+// recepten, nieuwste eerst. Het script verbergt het blok weer als december voorbij is.
+const adventOpen = adventOpenTot()
+const adventBuildJaar = Number(new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam', year: 'numeric' }).format(new Date()))
+const adventPicks = ADVENT.filter(({ dag }) => dag <= adventOpen).reverse()
+  .map(({ slug }) => allRecipes.find(recipe => recipe.slug === slug)).filter(Boolean).slice(0, 3)
+const adventSection = adventOpen > 0 && (process.env.ADVENT_DATUM || adventBuildJaar === ADVENT_JAAR) && adventPicks.length
+  ? sectionHtml('adventkalender', `Steva’s adventkalender: elke dag een pakje`, ['/advent', 'Naar de adventkalender'], await RecipeGrid.render({ recipes: adventPicks }), true, ' data-advent-season')
+    + `<script data-wald-no-hoist>(function(){var d=new Date();var s=document.querySelector('[data-advent-season]');if(s)s.hidden=!(d.getFullYear()===${ADVENT_JAAR}&&d.getMonth()===11)})()</script>`
+  : ''
+
 const usedImages = new Set<string>()
 const sections = [
+  adventSection,
   sinterklaasSection,
   halloweenSection,
   seasonSections.join('') + seasonScript,
