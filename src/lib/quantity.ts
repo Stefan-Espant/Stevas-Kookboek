@@ -11,7 +11,7 @@ export interface Ingredient {
   note: string
 }
 
-const FRACTIONS: Array<[number, string]> = [[0, ''], [0.25, '¼'], [1 / 3, '⅓'], [0.5, '½'], [2 / 3, '⅔'], [0.75, '¾'], [1, '']]
+const FRACTIONS: Array<[number, string]> = [[0, ''], [0.125, '⅛'], [0.25, '¼'], [1 / 3, '⅓'], [0.5, '½'], [2 / 3, '⅔'], [0.75, '¾'], [1, '']]
 
 /** Vanaf 10 hele getallen ("225"), daaronder keukenbreuken ("1½", "¾") en anders één decimaal met komma. */
 export function formatQuantity(value: number): string {

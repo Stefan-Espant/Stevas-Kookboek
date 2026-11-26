@@ -15,16 +15,21 @@ const recipe = await getRecipe($$props.recept)
 if (!recipe) throw new Error(`Recept "${$$props.recept}" staat niet (gepubliceerd) in Centaur`)
 
 const path = recipePath(recipe.slug)
+const isPepernoten = recipe.tags.some(tag => tag.toLowerCase() === 'pepernoten')
 const crumbs: Array<[string, string]> = [
   ['Home', '/'],
   ['Recepten', '/recepten'],
-  ...(recipe.cuisine ? [[recipe.cuisine.name, `/keukens/${recipe.cuisine.slug}`] as [string, string]] : []),
+  ...(isPepernoten
+    ? [['Pepernoten', '/inspiratie/pepernoten'] as [string, string]]
+    : recipe.cuisine ? [[recipe.cuisine.name, `/keukens/${recipe.cuisine.slug}`] as [string, string]] : []),
   [recipe.title, path]
 ]
 const schema = [breadcrumbSchema(crumbs)]
 const breadcrumbs = await Breadcrumbs.render({ items: crumbs })
 const view = await RecipeView.render({ recipe })
-const related = await getRelatedRecipes(recipe)
+const related = isPepernoten
+  ? (await getAllRecipes()).filter(other => other.slug !== recipe.slug && other.tags.some(tag => tag.toLowerCase() === 'pepernoten')).slice(0, 3)
+  : await getRelatedRecipes(recipe)
 const relatedHtml = related.length
   ? `<section class="more-recipes" aria-labelledby="meer-recepten"><h2 id="meer-recepten" class="more-recipes__title">Meer recepten</h2>${await RecipeGrid.render({ recipes: related })}</section>`
   : ''

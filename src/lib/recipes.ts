@@ -153,7 +153,7 @@ function toRecipe(entry: CentaurEntry, cuisinesById: Map<string, Cuisine>): Reci
 
 let allRecipes: Promise<Recipe[]> | null = null
 
-/** Alle recepten, nieuwste eerst. Items zonder slug of titel (bv. testitems) worden overgeslagen. */
+/** Alle recepten, nieuwste eerst binnen de gewone recepten en daarna Halloween. Items zonder slug of titel worden overgeslagen. */
 export function getAllRecipes(): Promise<Recipe[]> {
   allRecipes ??= (async () => {
     const [entries, cuisines] = await Promise.all([getCollection('recepten'), getAllCuisineEntries()])
@@ -172,7 +172,9 @@ export function getAllRecipes(): Promise<Recipe[]> {
         seen.add(recipe.slug)
         return true
       })
-    return unique
+    // Halloween onderaan; de stabiele sortering behoudt de datumvolgorde per groep.
+    const halloween = (recipe: Recipe) => Number(recipe.tags.some(tag => tag.toLowerCase() === 'halloween'))
+    return unique.sort((a, b) => halloween(a) - halloween(b))
   })()
   return allRecipes
 }
@@ -329,6 +331,20 @@ export async function getCollections(): Promise<Collection[]> {
       seoTitle: 'Recepten om samen te eten',
       description: 'Gerechten om midden op tafel te zetten, met vrienden of familie eromheen.',
       recipes: tagged('gezellig', 'feest', 'fondue', 'delen', 'barbecue')
+    },
+    {
+      slug: 'sinterklaas',
+      title: 'Sinterklaasrecepten',
+      seoTitle: 'Sinterklaasrecepten: kruidnoten, speculaas en banketstaaf',
+      description: 'Maak er een heerlijk avondje van met zelfgebakken kruidnoten, speculaasjes, banketstaaf en warme chocolademelk. Recepten voor de sinterklaastijd en pakjesavond.',
+      recipes: tagged('sinterklaas')
+    },
+    {
+      slug: 'pepernoten',
+      title: 'Zelf pepernoten maken',
+      seoTitle: 'Zelf pepernoten maken: van klassiek tot pandan',
+      description: 'Traditioneel, maar top! Bak zelf knapperige kruidnoten: van klassieke roomboter tot pandan-kokos, pumpkin spice en chocolade.',
+      recipes: tagged('pepernoten').sort((a, b) => Number(hasTag(b, 'klassiek')) - Number(hasTag(a, 'klassiek')) || a.title.localeCompare(b.title, 'nl'))
     },
     {
       slug: 'halloween',
